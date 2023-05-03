@@ -11,6 +11,10 @@
     "json-server": "json-server --watch ./mockData/db.json"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.6.0",
+    "@emotion/react": "^11.10.8",
+    "@emotion/styled": "^11.10.8",
+    "framer-motion": "^10.12.7",
     "json-server": "^0.17.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -23,6 +27,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
+    "react-router-dom": "^6.11.0",
     "vite": "^4.3.2"
   }
 }
