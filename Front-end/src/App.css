@@ -1,0 +1,11 @@
+aside .active{
+    background: #FFFFFF;
+}
+header svg{
+    color: #6E2594;
+    cursor: pointer;
+}
+
+header svg:hover{
+    color: #a54ed4;
+}
