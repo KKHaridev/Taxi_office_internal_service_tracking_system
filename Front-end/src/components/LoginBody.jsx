@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Container, Heading, Flex } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import {
@@ -10,8 +10,10 @@ import {
 } from "@chakra-ui/react";
 
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export const LoginBody = ({ title }) => {
+  const auth = useAuth();
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -20,14 +22,19 @@ export const LoginBody = ({ title }) => {
   } = useForm();
 
   function onSubmit(values) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (values.name === values.password) {
-          navigate("/dashboard", { replace: true });
-        }
-        resolve();
-      }, 1000);
-    });
+    async function fetchData() {
+      const response = await fetch(
+        `http://localhost:3000/drivers?name=${values.name}`
+      );
+      const data = await response.json();
+      if (data.length === 0) {
+        console.log("error");
+      } else {
+        auth.login(data[0]);
+        navigate("/", { replace: true });
+      }
+    }
+    fetchData();
   }
   return (
     <Container
@@ -52,7 +59,7 @@ export const LoginBody = ({ title }) => {
         alignItems="center"
       >
         <Heading as="h4" fontSize="22px" fontWeight="500" mb={10}>
-          {title} Login
+          {title} Login {auth.user && auth.user.name}
         </Heading>
 
         <form
