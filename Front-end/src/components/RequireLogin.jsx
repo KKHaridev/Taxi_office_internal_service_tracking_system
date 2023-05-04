@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom";
 export const RequireLogin = ({ children }) => {
   const auth = useAuth();
   if (!auth.user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace={true} />;
   }
   return children;
 };
