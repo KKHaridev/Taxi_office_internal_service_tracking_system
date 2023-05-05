@@ -10,9 +10,8 @@ export const Layout = () => {
       <Header />
       <SideBar />
       <Box
-        marginLeft="80px"
-        padding="10px"
-        bg="red"
+        marginLeft={["75px","80px"]}
+        padding={["5px","10px"]}
         h="calc(100vh - 70px)"
         w="calc(100vw - 90px)"
       >

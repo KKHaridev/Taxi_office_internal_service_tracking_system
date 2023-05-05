@@ -15,17 +15,21 @@ import {
 } from "@chakra-ui/react";
 import { VscBellDot } from "react-icons/vsc";
 import { Link as _Link } from "react-router-dom";
+import { useAuth } from "@context/AuthContext";
 
 export const Header = () => {
+  const auth = useAuth();
   return (
     <Container
       as="header"
-      maxW="96%"
+      maxW="100%"
       py={5}
+      px="2%"
       h="60px"
       display="flex"
       alignItems="center"
       justifyContent="center"
+      borderBottom="1px solid #808080"
     >
       <Heading
         as="h4"
@@ -39,7 +43,7 @@ export const Header = () => {
       <Stack direction="row" alignItems="center">
         <VscBellDot fontSize="1.2rem" />
         <Text fontSize="md" px="20px" cursor="pointer">
-          Hello User
+          Hello {auth?.user?.name}
         </Text>
         <Popover>
           <PopoverTrigger>
@@ -50,7 +54,12 @@ export const Header = () => {
               cursor="pointer"
             />
           </PopoverTrigger>
-          <PopoverContent w="200px" mr="50px" py="15px" _focusVisible={{outline:"none"}}>
+          <PopoverContent
+            w="200px"
+            mr="50px"
+            py="15px"
+            _focusVisible={{ outline: "none" }}
+          >
             <PopoverBody
               display="flex"
               flexDir="column"
