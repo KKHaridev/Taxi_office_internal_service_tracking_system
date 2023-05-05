@@ -18,7 +18,13 @@ const theme = extendTheme({
     body: `'Poppins', sans-serif`,
     heading: `'Poppins', sans-serif`,
     button: `'Poppins', sans-serif`,
-
+  },
+  styles: {
+    global: () => ({
+      body: {
+        bg: "#FCFBF9",
+      },
+    }),
   },
 });
 
