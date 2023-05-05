@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useTable } from "react-table";
 import { Table as TableC, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 
