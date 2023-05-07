@@ -21,10 +21,10 @@ class Driver(models.Model):
     taxi_test_date = models.DateField(auto_now=False, auto_now_add=False,max_length=12) 
     taxi_pollution_validity = models.DateField(auto_now=False, auto_now_add=False,max_length=12)
     taxi_insurance = models.DateField(auto_now=False, auto_now_add=False,max_length=12)
-    taxi_type = models.CharField(max_length=10)
-    taxi_model= models.CharField(max_length=10)
+    taxi_type = models.CharField(max_length=10,default='')
+    taxi_model= models.CharField(max_length=10,default='')
     driver_status = models.CharField(max_length=10, default="available")
-    driver_upi = models.CharField(max_length=10, unique=True)
+    driver_upi = models.CharField(max_length=10, default='', unique=True)
 
     
     
