@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Driver
-from .models import ReceivedTrip
+from .models import Driver, Ride
+
 
 
 class DriverSerializer(serializers.ModelSerializer):
@@ -15,5 +15,23 @@ class CreateDriverSerializer(serializers.ModelSerializer):
 
 class ReceivedSerializer(serializers.ModelSerializer):
      class Meta:
-            model = ReceivedTrip
+            model = Ride
             fields = ('user_name', 'start_from', 'destination','requested_time', 'status')
+
+
+class CompletedRideSerializer(serializers.ModelSerializer):
+      class Meta:
+            model = Ride
+            fields = ('RideId','user_name','start_from', 'destination','reachedtime','status')
+
+
+class EarningsSerializer(serializers.ModelSerializer):
+      class Meta:
+            model = Ride
+            fields = ('total_rides','total_earnings','total_paid','total_pending')
+
+class OngoingRideSerializer(serializers.ModelSerializer):
+      class Meta:
+            model = Ride
+            fields = ('RideId','user_name','start_from', 'destination','starting_time','reachedtime','expectedDriverPay','status','carpoolPercent')
+

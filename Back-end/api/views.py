@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from .serializers import DriverSerializer, CreateDriverSerializer, ReceivedSerializer
-from .models import Driver, ReceivedTrip
+from .serializers import DriverSerializer, CreateDriverSerializer, ReceivedSerializer, CompletedRideSerializer
+from .models import Driver, Ride
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -28,8 +28,8 @@ class CreateDriverView(APIView):
             queryset = Driver.objects.filter(driver_id=driver_id)
 
 
-class ReceivedView(generics.CreateAPIView):
-    queryset = ReceivedTrip.objects.all()
+class ReceivedView(generics.ListAPIView):
+    queryset = Ride.objects.all()
     serializer_class = ReceivedSerializer
 
 
@@ -46,3 +46,36 @@ class CreateNewReqView(APIView):
             start_from = serializer.data.start_from
             destination = serializer.data.destination
             status = serializer.data.status
+
+
+
+class CompletedRideView(generics.ListAPIView):
+    queryset = Ride.objects.all()
+    serializer_class = CompletedRideSerializer
+
+
+
+
+# Driver login 
+# Dashboard
+# Received 
+# New ride
+# Driver sign up
+# Driver profile 
+# Completed ride 
+# 		->details
+# Ongoing ride
+# Earnings
+# Canceled
+
+
+# Admin login
+# Dashboard
+# Profile 
+# Received requests
+# 		-> details
+# Cars and Drivers
+# Earnings 
+# Canceled 
+# Completed 
+# 		-> details

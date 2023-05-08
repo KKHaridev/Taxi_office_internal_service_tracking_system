@@ -28,11 +28,22 @@ class Driver(models.Model):
     taxi_model= models.CharField(max_length=10,default='')
     driver_status = models.CharField(max_length=10, default="available")
     driver_upi = models.CharField(max_length=10, default='', unique=True)
+    total_earnings = models.IntegerField(default=0)
 
 
-class ReceivedTrip(models.Model):
+class Ride(models.Model):
+    rideId = models.CharField(max_length=10,unique=True)
     user_name = models.CharField(max_length=250)
     start_from = models.CharField(max_length=250)
     destination = models.CharField(max_length=250)
     requested_time = models.DateTimeField(auto_now_add=True)
+    starting_time = models.DateTimeField(auto_now_add=False)
+    reachedtime = models.DateTimeField(auto_now_add=False)
+    expectedReachingtime = models.TimeField(auto_now_add=False)
     status = models.CharField(max_length=20)
+    carpool = models.BooleanField(default=False)
+    expectedDriverPay = models.CharField(max_length=7)
+    carpoolPercent = models.IntegerField(max_length=3, default=0)
+
+
+
