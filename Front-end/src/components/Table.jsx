@@ -2,7 +2,7 @@ import React from "react";
 import { useTable } from "react-table";
 import { Table as TableC, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 
-export const Table = ({ columns, data }) => {
+export const Table = ({ columns, data, width }) => {
   const tableInstance = useTable({
     columns,
     data,
@@ -12,7 +12,11 @@ export const Table = ({ columns, data }) => {
     tableInstance;
 
   return (
-    <TableC {...getTableProps()} sx={{ borderCollapse: 'separate', borderSpacing: '0 10px', }}>
+    <TableC
+      {...getTableProps()}
+      sx={{ borderCollapse: "separate", borderSpacing: "0 10px" }}
+      w={width}
+    >
       <Thead>
         {headerGroups.map((headerGroup) => {
           const { key, ...restHeaderGroupProps } =
