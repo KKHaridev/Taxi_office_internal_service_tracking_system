@@ -7,7 +7,7 @@ export const Login = () => {
   return (
     <>
       <LoginHeader />
-      <LoginBody title="Admin"/>
+      <LoginBody title="Driver"/>
     </>
   );
 };
