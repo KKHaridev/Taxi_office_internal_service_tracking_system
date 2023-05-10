@@ -5,7 +5,7 @@ import { Dashboard } from "@driver/Dashboard";
 import { Layout } from "@components";
 import { AuthProvider } from "@context/AuthContext.jsx";
 import { RequireLogin } from "@components/RequireLogin";
-import { Test } from "@driver/Test";
+import { RideRequests } from "@driver/RideRequests";
 
 function App() {
   return (
@@ -24,10 +24,10 @@ function App() {
                 }
               />
               <Route
-                path="test"
+                path="received_rides"
                 element={
                   <RequireLogin>
-                    <Test />
+                    <RideRequests />
                   </RequireLogin>
                 }
               />

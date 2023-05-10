@@ -15,6 +15,10 @@ table {
     border-collapse: separate;
     border-spacing: 01em 1em;
 }
+table thead tr th{
+    text-align: center !important;
+
+}
 
 table th:first-child,
 table td:first-child {
@@ -32,10 +36,14 @@ table tbody tr {
 
 table tbody tr:nth-child(2n+1) td {
     background: #ffffff;
+    text-align: center;
+
 }
 
 
 
 table tbody tr:nth-child(2n) td {
     background: #F2EDED;
+    text-align: center;
+
 }

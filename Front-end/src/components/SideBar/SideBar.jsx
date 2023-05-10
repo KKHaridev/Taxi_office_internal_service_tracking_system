@@ -30,16 +30,16 @@ export const SideBar = () => {
       <Box pos="relative" top="20px">
         <NavItem
           icon={<Icon as={AiOutlineHome} />}
-          title="test"
+          title="home"
           size={size}
           link="/"
         />
 
         <NavItem
           icon={<Icon as={FaProductHunt} />}
-          title="test"
+          title="Received Rides"
           size={size}
-          link="test"
+          link="received_rides"
         />
 
         <NavItem

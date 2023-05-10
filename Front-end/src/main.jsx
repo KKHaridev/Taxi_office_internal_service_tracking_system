@@ -13,8 +13,11 @@ const theme = extendTheme({
   colors: {
     brand: {
       purple: "#6E2594",
+      purpleHover:"#8344a5",
       yellow: "#ECD444",
       offwhite: "#FCFBF9",
+      green:"#19E32D",
+      red:"#EA0000"
     },
   },
   fonts: {
