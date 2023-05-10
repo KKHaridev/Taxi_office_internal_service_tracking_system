@@ -13,7 +13,7 @@ const ViewButton = ({ row }) => {
 
   const id = row.values.id;
   return (
-    <button onClick={() => navigate(`/received_request/${id}`)}>View</button>
+    <button onClick={() => navigate(`/received_rides/${id}`)}>View</button>
   );
 };
 
