@@ -6,8 +6,10 @@ import {
 } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Breadcrumb = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const locations = location.pathname.split("/").splice(1);
   return (
@@ -20,7 +22,14 @@ export const Breadcrumb = () => {
           key={index}
           isCurrentPage={index === locations.length - 1}
         >
-          <BreadcrumbLink href={location}>{location}</BreadcrumbLink>
+          <BreadcrumbLink
+            onClick={() => {
+              navigate(-1);
+            }}
+            textTransform="capitalize"
+          >
+            {location.replace("_", " ")}
+          </BreadcrumbLink>
         </BreadcrumbItem>
       ))}
     </BreadCrumb>
