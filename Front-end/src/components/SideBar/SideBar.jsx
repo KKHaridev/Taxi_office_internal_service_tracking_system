@@ -55,7 +55,7 @@ export const SideBar = () => {
           icon={<Icon as={GrCompliance} />}
           title="Completed Rides"
           size={size}
-          link="comleted_rides"
+          link="completed_rides"
           handler={size ? setSize.toggle : ""}
         />
         <NavItem

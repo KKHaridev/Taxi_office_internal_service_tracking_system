@@ -8,7 +8,7 @@ export const Dashboard = () => {
   const cardData = [
     {
       title: "Earnings",
-      number: `&#8377; ${auth?.user.earnings.total}`,
+      number: `&#8377; ${auth?.user.earnings.total_earnings}`,
     },
 
     {
