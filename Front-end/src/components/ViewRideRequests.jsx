@@ -17,7 +17,7 @@ export default function InputField({ label, width, value ,status}) {
 
 export const ViewRideRequests = () => {
   let { id } = useParams();
-  const { isLoading, error, data } = useData("req", `req_rides/${id}`);
+  const { isLoading, error, data } = useData("ride data", `req_rides/${id}`);
   console.log(data);
   if (isLoading) return "Loading...";
 
