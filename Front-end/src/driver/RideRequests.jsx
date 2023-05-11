@@ -103,7 +103,7 @@ const COLUMNS = [
 
 export const RideRequests = () => {
   const { isLoading, error, data } = useData(
-    "req",
+    "req_rides",
     "req_rides?driverId=1&status=pending&status=accepted"
   );
 

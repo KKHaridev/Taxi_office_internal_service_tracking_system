@@ -58,7 +58,7 @@ const COLUMNS = [
 
 export const Ongoing = () => {
   const { isLoading, error, data } = useData(
-    "req",
+    "ongoing_req",
     "req_rides?driverId=1&status_ne=pending&status_ne=canceled&status_ne=reached"
   );
 
