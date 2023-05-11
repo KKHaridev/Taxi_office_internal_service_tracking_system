@@ -25,7 +25,7 @@ class CreateDriverView(APIView):
             driver_name = serializer.data.driver_name
             driver_email = serializer.data.driver_email
             taxi_num = serializer.data.taxi_num
-            queryset = Driver.objects.filter(driver_id=driver_id)
+            #queryset = Driver.objects.filter(driver_id=driver_id)
 
 
 class ReceivedView(generics.ListAPIView):
