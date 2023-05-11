@@ -61,7 +61,10 @@ class EarningsView(APIView):
         try:
             driver = Driver.objects.get(driver_id=driver_id)
             earnings = driver.total_earnings
-            return Response({'earnings': earnings})
+            total_rides = driver.total_rides
+            total_pending = driver.total_pending
+            total_paid = driver.total_paid
+            return Response({'earnings': earnings,'total_rides':total_rides,'total_pending':total_pending,'total_paid':total_paid })
         except Driver.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
