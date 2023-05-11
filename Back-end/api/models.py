@@ -7,7 +7,7 @@ def generate_unique_code():
     length = 6
 
     while True:
-        driver_id = ''.join(random.choices(string.ascii_uppercase, k=length))
+        driver_id = ''.join(random.choices(string.digits, k=length))
         if Driver.objects.filter(driver_id=driver_id).count() == 0:
             break
 
