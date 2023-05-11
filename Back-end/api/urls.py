@@ -2,6 +2,7 @@ from django.urls import include, path
 from . import views
 urlpatterns = [
     path('home', views.DriverView.as_view()),
+    path('createdriver', views.CreateDriverView.as_view()),
     path('received', views.ReceivedView.as_view()),
     path('completedrides', views.CompletedRideView.as_view()),
     path('earnings/<str:driver_id>/', views.EarningsView.as_view()),

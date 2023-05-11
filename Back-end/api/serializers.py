@@ -12,7 +12,14 @@ class CreateDriverSerializer(serializers.ModelSerializer):
       class Meta:
             model = Driver
             fields = ('driver_name','driver_email','taxi_num')
-
+class CreateNewRideSerializer(serializers.ModelSerializer):
+      class Meta:
+            model = Ride
+            fields = ('rideId', 'user_name', 'start_from', 'destination',
+                       #'requested_time', 'starting_time', 'reachedtime', 'expectedReachingtime', 
+                       'status', 
+                       #'carpool', 'expectedDriverPay', 'carpoolPercent'
+                       )
 class ReceivedSerializer(serializers.ModelSerializer):
      class Meta:
             model = Ride
