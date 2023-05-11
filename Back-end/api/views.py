@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from .serializers import DriverSerializer, CreateDriverSerializer, ReceivedSerializer, CompletedRideSerializer
+from .serializers import DriverSerializer, CreateDriverSerializer, ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer
 from .models import Driver, Ride
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -33,7 +33,7 @@ class ReceivedView(generics.ListAPIView):
     serializer_class = ReceivedSerializer
 
 
-class CreateNewReqView(APIView):
+'''class CreateNewReqView(APIView):
     serializer_class = ReceivedSerializer
 
     def post(self, request, format=None):
@@ -45,24 +45,40 @@ class CreateNewReqView(APIView):
             user_name = serializer.data.user_name
             start_from = serializer.data.start_from
             destination = serializer.data.destination
-            status = serializer.data.status
-
+            status = serializer.data.status'''
 
 
 class CompletedRideView(generics.ListAPIView):
-    queryset = Ride.objects.all()
+    queryset = Ride.objects.filter(status='Completed')
     serializer_class = CompletedRideSerializer
 
 
+class EarningsView(APIView):
+    serializer_class = EarningsSerializer
+
+    def get(self, request, driver_id):
+        try:
+            driver = Driver.objects.get(driver_id=driver_id)
+            earnings = driver.total_earnings
+            return Response({'earnings': earnings})
+        except Driver.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-# Driver login 
+class OngoingRideView(generics.ListAPIView):
+    serializer_class = OngoingRideSerializer
+
+    def get_queryset(self):
+        return Ride.objects.filter(status='ongoing')
+
+
+# Driver login
 # Dashboard
-# Received 
+# Received
 # New ride
 # Driver sign up
-# Driver profile 
-# Completed ride 
+# Driver profile
+# Completed ride
 # 		->details
 # Ongoing ride
 # Earnings
@@ -71,11 +87,11 @@ class CompletedRideView(generics.ListAPIView):
 
 # Admin login
 # Dashboard
-# Profile 
+# Profile
 # Received requests
 # 		-> details
 # Cars and Drivers
-# Earnings 
-# Canceled 
-# Completed 
+# Earnings
+# Canceled
+# Completed
 # 		-> details
