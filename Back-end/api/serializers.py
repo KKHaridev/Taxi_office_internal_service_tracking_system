@@ -25,7 +25,7 @@ class ReceivedSerializer(serializers.ModelSerializer):
 class CompletedRideSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ride
-        fields = ('RideId', 'user_name', 'start_from',
+        fields = ('rideId', 'user_name', 'start_from',
                   'destination', 'reachedtime', 'status')
 
 
@@ -39,5 +39,5 @@ class EarningsSerializer(serializers.ModelSerializer):
 class OngoingRideSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ride
-        fields = ('RideId', 'user_name', 'start_from', 'destination', 'starting_time',
+        fields = ('rideId', 'user_name', 'start_from', 'destination', 'starting_time',
                   'expectedDriverPay', 'status', 'carpoolPercent')
