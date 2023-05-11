@@ -40,5 +40,5 @@ class EarningsSerializer(serializers.ModelSerializer):
 class OngoingRideSerializer(serializers.ModelSerializer):
       class Meta:
             model = Ride
-            fields = ('RideId','user_name','start_from', 'destination','starting_time','reachedtime','expectedDriverPay','status','carpoolPercent')
+            fields = ('RideId','user_name','start_from', 'destination','starting_time','expectedDriverPay','status','carpoolPercent')
 
