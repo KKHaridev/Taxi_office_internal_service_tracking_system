@@ -15,8 +15,7 @@ class DriverView(generics.ListAPIView):
 
 class CreateDriverView(APIView):
     serializer_class = CreateDriverSerializer
-    
-    
+
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
@@ -30,7 +29,7 @@ class CreateDriverView(APIView):
             queryset = Driver.objects.all()
 
 
-class ReceivedView(generics.CreateAPIView):
+class ReceivedView(generics.ListAPIView):
     queryset = Ride.objects.all()
     serializer_class = ReceivedSerializer
 
@@ -51,7 +50,7 @@ class ReceivedView(generics.CreateAPIView):
 
 
 class CompletedRideView(generics.ListAPIView):
-    queryset = Ride.objects.filter(status='Completed')
+    queryset = Ride.objects.filter(status='completed')
     serializer_class = CompletedRideSerializer
 
 

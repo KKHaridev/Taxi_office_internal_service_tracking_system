@@ -51,4 +51,3 @@ class Ride(models.Model):
     carpool = models.BooleanField(default=False)
     expectedDriverPay = models.CharField(max_length=7)
     carpoolPercent = models.IntegerField(max_length=3, default=0)
-
