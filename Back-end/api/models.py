@@ -4,7 +4,7 @@ import random
 
 
 def generate_unique_code():
-    length = 6
+    length = 8
 
     while True:
         driver_id = ''.join(random.choices(string.digits, k=length))
@@ -39,7 +39,7 @@ class Driver(models.Model):
 
 
 class Ride(models.Model):
-    rideId = models.CharField(max_length=10, unique=True)
+    rideId = models.CharField(max_length=10,default=generate_unique_code, unique=True)
     user_name = models.CharField(max_length=250)
     start_from = models.CharField(max_length=250)
     destination = models.CharField(max_length=250)

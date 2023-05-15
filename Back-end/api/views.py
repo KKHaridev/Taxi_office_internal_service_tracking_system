@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from .serializers import DriverSerializer, CreateDriverSerializer, ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer
+from .serializers import DriverSerializer, CreateDriverSerializer, ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer
 from .models import Driver, Ride
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -49,10 +49,50 @@ class ReceivedView(generics.ListAPIView):
             status = serializer.data.status'''
 
 
+
 class CompletedRideView(generics.ListAPIView):
     queryset = Ride.objects.filter(status='completed')
     serializer_class = CompletedRideSerializer
 
+class CompletedRideDetailsView(APIView):
+    serializer_class = CompletedRideSerializer
+
+    def get(self, request, rideId):
+        try:
+            ride = Ride.objects.get(rideId=rideId)
+            user_name = ride.user_name
+            start_from = ride.start_from
+            destination = ride.destination
+            reachedtime = ride.reachedtime
+            _status = ride.status
+            return Response({'rideId':rideId,'user_name': user_name,'start_from':start_from,'destination':destination,'reachedtime':reachedtime, 'status':_status})
+        except Ride.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+class CancelledRideView(generics.ListAPIView):
+    queryset = Ride.objects.filter(status='cancelled')
+    serializer_class = CancelledRideSerializer
+
+class CancelledRideDetailsView(APIView):
+    serializer_class = CancelledRideSerializer
+
+    def get(self, request, rideId):
+        try:
+            ride = Ride.objects.get(rideId=rideId)
+            user_name = ride.user_name
+            start_from = ride.start_from
+            destination = ride.destination
+            _status = ride.status
+            return Response({'rideId':rideId,'user_name': user_name,'start_from':start_from,'destination':destination, 'status':_status})
+        except Ride.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class CreateNewRideView(generics.CreateAPIView):
+    queryset = Driver.objects.all()
+    serializer_class = CreateNewRideSerializer
 
 class EarningsView(APIView):
     serializer_class = EarningsSerializer
@@ -76,16 +116,14 @@ class OngoingRideView(generics.ListAPIView):
         return Ride.objects.filter(status='ongoing')
 
 
-# Driver login
 # Dashboard
-# Received
+
 # New ride
 # Driver sign up
 # Driver profile
-# Completed ride
-# 		->details
-# Ongoing ride
-# Earnings
+
+
+
 # Canceled
 
 
