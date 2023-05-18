@@ -7,9 +7,11 @@ import {
   FormControl,
   Input,
   Button,
+  Box,
+  Text,
 } from "@chakra-ui/react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export const LoginBody = ({ title }) => {
@@ -39,26 +41,39 @@ export const LoginBody = ({ title }) => {
   return (
     <Container
       as="section"
-      maxW={{
-        base: "container.sm",
-        md: "container.md",
-        lg: "container.lg",
-        xl: "container.xl",
-      }}
-      py={5}
+      maxW="100vw"
+      m={0}
+      px={0}
       display="flex"
       alignItems="center"
       justifyContent="center"
-      flexDir="column"
     >
+      <Flex w={[0, 0, "50%"]} h="100vh"></Flex>
       <Flex
-        minH="calc(85vh - 120px)"
-        w="400px"
+        w={["100%", "100%", "50%"]}
+        h="100vh"
+        backgroundImage="url('/bg.png')"
+        backgroundPosition="center"
+        backgroundRepeat="no-repeat"
+        objectFit="cover"
+        pos="fixed"
+        left="0"
+        top={0}
+        zIndex={0}
+        opacity={[0.5, 0.5, 1]}
+      ></Flex>
+      <Flex
+        background={["white","white","transparent"]}
+        borderRadius={["md","lg"]}
+        w={["90%","80%","50%"]}
         flexDir="column"
         justifyContent="center"
         alignItems="center"
+        zIndex={1}
+        py={10}
+        px={5}
       >
-        <Heading as="h4" fontSize="22px" fontWeight="500" mb={10}>
+        <Heading as="h4" fontSize={["18px","20px","22px"]} fontWeight="500" mb={10}>
           {title} Login {auth.user && auth.user.name}
         </Heading>
 
@@ -75,7 +90,7 @@ export const LoginBody = ({ title }) => {
                 required: "This is required",
                 minLength: { value: 1, message: "Minimum length should be 1" },
               })}
-              borderColor="black"
+              borderColor="gray"
               _hover={{ borderColor: "grey" }}
             />
             <FormErrorMessage>
@@ -91,7 +106,7 @@ export const LoginBody = ({ title }) => {
                 required: "This is required",
                 minLength: { value: 1, message: "Minimum length should be 1" },
               })}
-              borderColor="black"
+              borderColor="gray"
               _hover={{ borderColor: "grey" }}
             />
             <FormErrorMessage>
@@ -112,6 +127,18 @@ export const LoginBody = ({ title }) => {
             Submit
           </Button>
         </form>
+        <Flex mt={8} fontSize={["16px","18px"]}>
+          New User?{" "}
+          <Link to="/signup">
+            <Text
+              color="blue"
+              transition="0.2s ease"
+              _hover={{ color: "blue.500" }}
+            >
+              &nbsp;Sign Up
+            </Text>
+          </Link>
+        </Flex>
       </Flex>
     </Container>
   );
