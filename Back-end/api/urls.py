@@ -8,15 +8,11 @@ urlpatterns = [
     path('completedrides/<str:rideId>/', views.CompletedRideDetailsView.as_view()),
     path('cancelledrides', views.CancelledRideView.as_view()),
     path('cancelledrides/<str:rideId>/',views.CancelledRideDetailsView.as_view()),
-    path('earnings/<str:driver_id>/', views.EarningsView.as_view()),
+    path('<str:driver_id>/earnings', views.EarningsView.as_view()),
     path('ongoingrides', views.OngoingRideView.as_view()),
     path('createnewride',views.CreateNewRideView.as_view()),
-    # path('completedride',),done
-    # path('earnings',),done
-    # path('dashboard'),
-   
-    # path('ongoingride'),
-    # path('newride'),
+    path('dashboard',views.DriverDashboardView.as_view()),
+    
 
 ]
 

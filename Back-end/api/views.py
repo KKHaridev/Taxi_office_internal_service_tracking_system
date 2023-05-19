@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from .serializers import DriverSerializer, CreateDriverSerializer, ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer
+from .serializers import DriverSerializer, CreateDriverSerializer, ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer
 from .models import Driver, Ride
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,20 +13,24 @@ class DriverView(generics.ListAPIView):
     serializer_class = DriverSerializer
 
 
-class CreateDriverView(APIView):
+class CreateDriverView(generics.CreateAPIView):
+    queryset = Driver.objects.all()
     serializer_class = CreateDriverSerializer
 
-    def post(self, request, format=None):
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
+# class CreateDriverView(APIView):
+#     serializer_class = CreateDriverSerializer
 
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            driver_name = serializer.data.driver_name
-            driver_email = serializer.data.driver_email
-            taxi_num = serializer.data.taxi_num
-            #queryset = Driver.objects.filter(driver_id=driver_id)
-            queryset = Driver.objects.all()
+#     def post(self, request, format=None):
+#         if not self.request.session.exists(self.request.session.session_key):
+#             self.request.session.create()
+
+#         serializer = self.serializer_class(data=request.data)
+#         if serializer.is_valid():
+#             driver_name = serializer.data.driver_name
+#             driver_email = serializer.data.driver_email
+#             taxi_num = serializer.data.taxi_num
+#             #queryset = Driver.objects.filter(driver_id=driver_id)
+#             queryset = Driver.objects.all()
 
 
 class ReceivedView(generics.ListAPIView):
@@ -114,6 +118,13 @@ class OngoingRideView(generics.ListAPIView):
 
     def get_queryset(self):
         return Ride.objects.filter(status='ongoing')
+    
+
+class DriverDashboardView(generics.ListAPIView):
+    serializer_class = DriverDashboardSerializer
+
+    def get_queryset(self):
+        return Driver.objects.all()
 
 
 # Dashboard
