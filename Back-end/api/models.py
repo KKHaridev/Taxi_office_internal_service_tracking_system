@@ -50,4 +50,4 @@ class Ride(models.Model):
     status = models.CharField(max_length=20)
     carpool = models.BooleanField(default=False)
     expectedDriverPay = models.CharField(max_length=7)
-    carpoolPercent = models.IntegerField(max_length=3, default=0)
+    carpoolPercent = models.IntegerField(default=0)
