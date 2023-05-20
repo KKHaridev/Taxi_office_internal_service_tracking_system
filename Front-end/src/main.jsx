@@ -5,13 +5,19 @@ import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 import "@fontsource/poppins/400.css";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 const theme = extendTheme({
   colors: {
     brand: {
       purple: "#6E2594",
+      purpleHover:"#8344a5",
       yellow: "#ECD444",
       offwhite: "#FCFBF9",
+      green:"#19E32D",
+      red:"#EA0000"
     },
   },
   fonts: {
@@ -31,7 +37,9 @@ const theme = extendTheme({
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>
 );
