@@ -1,8 +1,7 @@
-from django.http import JsonResponse
+from rest_framework.serializers import ModelSerializer
+from base.models import Note
 
-def getRoutes(request):
-    routes = [
-        '/api/token',
-        '/api/token/refresh',
-	]
-    return JsonResponse(routes, safe=False)
+class NoteSerializer(ModelSerializer):
+    class Meta:
+        model = Note
+        fields = '__all__'

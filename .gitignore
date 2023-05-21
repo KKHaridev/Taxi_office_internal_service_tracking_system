@@ -1,6 +1,4 @@
 Front-end/node_modules
 .DS_Store
 virtualenv
-
-.DS_store
-virtualenv
+.idea
