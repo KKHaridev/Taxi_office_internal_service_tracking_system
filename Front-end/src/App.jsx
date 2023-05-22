@@ -14,8 +14,8 @@ import { Earnings } from "./driver/Earnings";
 function App() {
   return (
     <>
-      <AuthProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Layout />}>
@@ -69,8 +69,8 @@ function App() {
               />
             </Route>
           </Routes>
-        </BrowserRouter>
-      </AuthProvider>
+        </AuthProvider>
+      </BrowserRouter>
     </>
   );
 }
