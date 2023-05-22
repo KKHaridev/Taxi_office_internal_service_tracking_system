@@ -43,7 +43,7 @@ export const Header = () => {
       <Stack direction="row" alignItems="center">
         <VscBellDot fontSize="1.2rem" />
         <Text fontSize="md" px="20px" cursor="pointer">
-          Hello {auth?.user?.name}
+          Hello {auth?.user?.username}
         </Text>
         <Popover>
           <PopoverTrigger>
@@ -84,6 +84,9 @@ export const Header = () => {
                 paddingX="25px"
                 h="35px"
                 fontSize="16px"
+                onClick={() => {
+                  auth.logout();
+                }}
               >
                 Log Out
               </Button>
