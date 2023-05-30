@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
-    'authentication',
+    # 'authentication',
     'base.apps.BaseConfig',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
@@ -128,8 +128,12 @@ WSGI_APPLICATION = 'taxioffice.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'taxioffice',
+        'USER': 'root',
+        'PASSWORD': 'admin123',
+        'PORT': 3306,
+        'HOST': '127.0.0.1',
     }
 }
 
