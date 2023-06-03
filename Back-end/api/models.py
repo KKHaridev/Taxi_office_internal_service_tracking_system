@@ -54,7 +54,7 @@ def generate_unique_code():
 
 
 class TaxiDetails(models.Model):
-    taxi_num = models.CharField(max_length=10,  primary_key=True, on_delete=models.DO_NOTHING)
+    taxi_num = models.CharField(max_length=10, primary_key=True)
     taxi_test_date = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
     taxi_pollution_validity = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
     taxi_insurance = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
@@ -63,17 +63,14 @@ class TaxiDetails(models.Model):
     taxi_model = models.CharField(max_length=10, default='')
 
 class NewDriver(models.Model):
-    driver_id = models.CharField(max_length=10, default=generate_unique_code, primary_key=True, on_delete=models.DO_NOTHING)
+    driver_id = models.CharField(max_length=10, default=generate_unique_code, primary_key=True, )
     driver_name = models.CharField(max_length=30, default="", unique=False)
     driver_email = models.CharField(max_length=50)
     driver_upi = models.CharField(max_length=15, default='', unique=True)
     driver_phone = models.CharField(max_length=11)
-    taxi_num = models.OneToOneField(TaxiDetails, max_length=10, unique=True,on_delete=models.DO_NOTHING)
+    # taxi_num = models.OneToOneField(TaxiDetails, max_length=10, unique=True,on_delete=models.DO_NOTHING)
     driver_dob = models.DateTimeField(auto_now_add=False)
-   
-
-
-
+    driver_status = models.CharField(max_length=10, default="available")
 
 
 class NewRideDetails(models.Model):
@@ -93,7 +90,6 @@ class NewRideDetails(models.Model):
 
 class Earnings(models.Model):
     driver_id = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
-    driver_name = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
     total_earnings = models.IntegerField(default=0)
     total_rides = models.IntegerField(default=0)
     total_paid = models.IntegerField(default=0)
