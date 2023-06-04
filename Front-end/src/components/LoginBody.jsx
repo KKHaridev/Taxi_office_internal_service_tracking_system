@@ -15,7 +15,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export const LoginBody = ({ title }) => {
-  const auth = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -24,19 +24,7 @@ export const LoginBody = ({ title }) => {
   } = useForm();
 
   function onSubmit(values) {
-    async function fetchData() {
-      const response = await fetch(
-        `http://localhost:3000/drivers?name=${values.name}`
-      );
-      const data = await response.json();
-      if (data.length === 0) {
-        console.log("error");
-      } else {
-        auth.login(data[0]);
-        navigate("/", { replace: true });
-      }
-    }
-    fetchData();
+    login(values);
   }
   return (
     <Container
@@ -63,9 +51,9 @@ export const LoginBody = ({ title }) => {
         opacity={[0.5, 0.5, 1]}
       ></Flex>
       <Flex
-        background={["white","white","transparent"]}
-        borderRadius={["md","lg"]}
-        w={["90%","80%","50%"]}
+        background={["white", "white", "transparent"]}
+        borderRadius={["md", "lg"]}
+        w={["90%", "80%", "50%"]}
         flexDir="column"
         justifyContent="center"
         alignItems="center"
@@ -73,8 +61,13 @@ export const LoginBody = ({ title }) => {
         py={10}
         px={5}
       >
-        <Heading as="h4" fontSize={["18px","20px","22px"]} fontWeight="500" mb={10}>
-          {title} Login {auth.user && auth.user.name}
+        <Heading
+          as="h4"
+          fontSize={["18px", "20px", "22px"]}
+          fontWeight="500"
+          mb={10}
+        >
+          {title} Login
         </Heading>
 
         <form
@@ -127,7 +120,7 @@ export const LoginBody = ({ title }) => {
             Submit
           </Button>
         </form>
-        <Flex mt={8} fontSize={["16px","18px"]}>
+        <Flex mt={8} fontSize={["16px", "18px"]}>
           New User?{" "}
           <Link to="/signup">
             <Text
