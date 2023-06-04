@@ -3,7 +3,7 @@ import string
 import random
 
 
-def generate_unique_code():
+def generate_unique_code_for_driverid():
     length = 8
 
     while True:
@@ -13,6 +13,17 @@ def generate_unique_code():
 
     return driver_id
 
+
+
+def generate_unique_code_for_rideid():
+    length = 8
+
+    while True:
+        rideId = ''.join(random.choices(string.digits, k=length))
+        if NewDriver.objects.filter(rideId=rideId).count() == 0:
+            break
+
+    return rideId
 
 # Create your models here.
 # class Driver(models.Model):
@@ -63,7 +74,7 @@ class TaxiDetails(models.Model):
     taxi_model = models.CharField(max_length=10, default='')
 
 class NewDriver(models.Model):
-    driver_id = models.CharField(max_length=10, default=generate_unique_code, primary_key=True, )
+    driver_id = models.CharField(max_length=10, default=generate_unique_code_for_driverid, primary_key=True, )
     driver_name = models.CharField(max_length=30, default="", unique=False)
     driver_email = models.CharField(max_length=50)
     driver_upi = models.CharField(max_length=15, default='', unique=True)
@@ -74,7 +85,7 @@ class NewDriver(models.Model):
 
 
 class NewRideDetails(models.Model):
-    rideId = models.CharField(max_length=10,default=generate_unique_code, primary_key=True)
+    rideId = models.CharField(max_length=10,default=generate_unique_code_for_rideid, primary_key=True)
     passenger_name = models.CharField(max_length=250)
     driver_name = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
     start_from = models.CharField(max_length=250)
