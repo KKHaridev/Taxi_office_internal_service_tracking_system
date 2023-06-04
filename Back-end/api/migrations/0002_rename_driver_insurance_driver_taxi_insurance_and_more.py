@@ -49,6 +49,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='driver',
             name='driver_id',
-            field=models.CharField(default=api.models.generate_unique_code_for_driverid, max_length=10, unique=True),
+            field=models.CharField(default=api.models.generate_unique_code, max_length=10, unique=True),
         ),
     ]
