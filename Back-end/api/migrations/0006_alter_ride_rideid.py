@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='ride',
             name='rideId',
-            field=models.CharField(default=api.models.generate_unique_code, max_length=10, unique=True),
+            field=models.CharField(default=api.models.generate_unique_code_for_rideid, max_length=10, unique=True),
         ),
     ]

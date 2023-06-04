@@ -1,23 +1,6 @@
 from rest_framework import serializers
 # from .models import Driver, Ride
 from .models import TaxiDetails, NewDriver, NewRideDetails, Earnings
-import string
-import random
-
-def generate_unique_code():
-    length = 8
-
-    while True:
-        driver_id = ''.join(random.choices(string.digits, k=length))
-        if NewDriver.objects.filter(driver_id=driver_id).count() == 0:
-            break
-
-    return driver_id
-
-
-
-
-
 
 
 
@@ -124,4 +107,4 @@ class CancelledRideSerializer(serializers.ModelSerializer):
 class DriverDashboardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Earnings
-        fields = ('total_earnings','total_rides')
+        fields = ('driver_id','total_earnings','total_rides')

@@ -112,7 +112,7 @@ class EarningsView(APIView):
 
     def get(self, request, driver_id):
         try:
-            driver = NewDriver.objects.get(driver_id=driver_id)
+            driver = Earnings.objects.get(driver_id=driver_id)
             earnings = driver.total_earnings
             total_rides = driver.total_rides
             total_pending = driver.total_pending

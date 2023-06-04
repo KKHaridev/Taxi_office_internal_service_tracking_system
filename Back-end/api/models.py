@@ -20,7 +20,7 @@ def generate_unique_code_for_rideid():
 
     while True:
         rideId = ''.join(random.choices(string.digits, k=length))
-        if NewDriver.objects.filter(rideId=rideId).count() == 0:
+        if NewRideDetails.objects.filter(rideId=rideId).count() == 0:
             break
 
     return rideId
@@ -28,7 +28,7 @@ def generate_unique_code_for_rideid():
 # Create your models here.
 # class Driver(models.Model):
 #     driver_id = models.CharField(
-#         max_length=10, default=generate_unique_code, unique=True)
+#         max_length=10, default=generate_unique_code_driverid, unique=True)
 #     driver_name = models.CharField(max_length=30, default="", unique=False)
 #     driver_email = models.CharField(max_length=50)
 #     taxi_num = models.CharField(max_length=10, unique=True)

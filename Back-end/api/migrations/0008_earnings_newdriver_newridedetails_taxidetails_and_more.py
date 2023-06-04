@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='NewDriver',
             fields=[
-                ('driver_id', models.CharField(default=api.models.generate_unique_code, max_length=10, primary_key=True, serialize=False)),
+                ('driver_id', models.CharField(default=api.models.generate_unique_code_for_driverid, max_length=10, primary_key=True, serialize=False)),
                 ('driver_name', models.CharField(default='', max_length=30)),
                 ('driver_email', models.CharField(max_length=50)),
                 ('driver_upi', models.CharField(default='', max_length=15, unique=True)),
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='NewRideDetails',
             fields=[
-                ('rideId', models.CharField(default=api.models.generate_unique_code, max_length=10, primary_key=True, serialize=False)),
+                ('rideId', models.CharField(default=api.models.generate_unique_code_for_rideid, max_length=10, primary_key=True, serialize=False)),
                 ('passenger_name', models.CharField(max_length=250)),
                 ('start_from', models.CharField(max_length=250)),
                 ('destination', models.CharField(max_length=250)),
