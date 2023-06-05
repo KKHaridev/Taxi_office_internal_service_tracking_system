@@ -64,7 +64,7 @@ def generate_unique_code_for_rideid():
 #     carpoolPercent = models.IntegerField(default=0)
 
 
-class TaxiDetails(models.Model):
+class TaxiDetail(models.Model):
     taxi_num = models.CharField(max_length=10, primary_key=True)
     taxi_test_date = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
     taxi_pollution_validity = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
@@ -84,7 +84,7 @@ class NewDriver(models.Model):
     driver_status = models.CharField(max_length=10, default="available")
 
 
-class NewRideDetails(models.Model):
+class NewRideDetail(models.Model):
     rideId = models.CharField(max_length=10,default=generate_unique_code_for_rideid, primary_key=True)
     passenger_name = models.CharField(max_length=250)
     driver_name = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
@@ -99,7 +99,7 @@ class NewRideDetails(models.Model):
     expectedDriverPay = models.CharField(max_length=7)
     carpoolPercent = models.IntegerField(default=0)
 
-class Earnings(models.Model):
+class Earning(models.Model):
     driver_id = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
     total_earnings = models.IntegerField(default=0)
     total_rides = models.IntegerField(default=0)

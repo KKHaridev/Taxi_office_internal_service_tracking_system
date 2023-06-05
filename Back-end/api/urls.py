@@ -1,19 +1,38 @@
 from django.urls import include, path
 from . import views
 urlpatterns = [
-    path('viewdriver', views.DriverView.as_view()),
+    #path('viewdriver', views.DriverView.as_view()),
+    path('viewdriver',views.getViewDriver),
+
     path('createdriver', views.CreateDriverView.as_view()),
-    path('viewtaxi',views.TaxiView.as_view()),
+
+    #path('viewtaxi',views.TaxiView.as_view()),
+    path('viewtaxi',views.getViewTaxiDetails),
+
     path('createtaxi',views.CreateTaxiView.as_view()),
-    path('received', views.ReceivedView.as_view()),
-    path('completedrides', views.CompletedRideView.as_view()),
+
+    #path('received', views.ReceivedView.as_view()),
+    path('received',views.getViewReceived),
+         
+    #path('completedrides', views.CompletedRideView.as_view()),
+    path('completedrides',views.getViewCompleted),
+
     path('completedrides/<str:rideId>/', views.CompletedRideDetailsView.as_view()),
-    path('cancelledrides', views.CancelledRideView.as_view()),
+    
+    #path('cancelledrides', views.CancelledRideView.as_view()),
+    path('cancelledrides',views.getViewCancelled),
+
     path('cancelledrides/<str:rideId>/',views.CancelledRideDetailsView.as_view()),
     path('<str:driver_id>/earnings', views.EarningsView.as_view()),
-    path('ongoingrides', views.OngoingRideView.as_view()),
+
+    #path('ongoingrides', views.OngoingRideView.as_view()),
+    path('ongoingrides',views.getViewOngoing),
+
     path('createnewride',views.CreateNewRideView.as_view()),
-    path('dashboard',views.DriverDashboardView.as_view()),
+
+    #path('dashboard',views.DriverDashboardView.as_view()),
+    path('dashboard',views.getViewDashboard)
+
     
 
 ]

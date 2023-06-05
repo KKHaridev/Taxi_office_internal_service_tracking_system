@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from .models import Driver, Ride
-from .models import TaxiDetails, NewDriver, NewRideDetails, Earnings
+from .models import TaxiDetail, NewDriver, NewRideDetail, Earning
 
 
 
@@ -63,48 +63,48 @@ class CreateDriverSerializer(serializers.ModelSerializer):
 
 class CreateTaxiDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TaxiDetails
+        model = TaxiDetail
         fields = '__all__'
 
 class CreateNewRideSerializer(serializers.ModelSerializer):
     class Meta:
-        model = NewRideDetails
+        model = NewRideDetail
         fields = ('passenger_name','driver_name', 'start_from', 'destination', 'requested_time','status')
 
 class ReceivedSerializer(serializers.ModelSerializer):
     class Meta:
-        model = NewRideDetails
+        model = NewRideDetail
         fields = ('passenger_name', 'start_from', 'destination',
                   'requested_time', 'status')
 
 
 class CompletedRideSerializer(serializers.ModelSerializer):
     class Meta:
-        model = NewRideDetails
+        model = NewRideDetail
         fields = ('rideId', 'passenger_name', 'start_from',
                   'destination', 'reachedtime', 'status')
 
 
 class EarningsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Earnings
+        model = Earning
         fields = ('total_rides', 'total_earnings',
                   'total_paid', 'total_pending')
 
 
 class OngoingRideSerializer(serializers.ModelSerializer):
     class Meta:
-        model = NewRideDetails
+        model = NewRideDetail
         fields = ('rideId','passenger_name', 'start_from', 'destination', 'starting_time',
                   'expectedDriverPay', 'status', 'carpoolPercent')
 
 class CancelledRideSerializer(serializers.ModelSerializer):
     class Meta:
-        model = NewRideDetails
+        model = NewRideDetail
         fields = ('rideId', 'passenger_name', 'start_from',
                   'destination', 'status')
     
 class DriverDashboardSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Earnings
+        model = Earning
         fields = ('driver_id','total_earnings','total_rides')
