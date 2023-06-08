@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Container, Heading, Flex } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import {
@@ -10,11 +10,12 @@ import {
   Box,
   Text,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
 export const LoginBody = ({ title }) => {
+  const toast = useToast();
   const { login } = useAuth();
   const navigate = useNavigate();
   const {
@@ -22,10 +23,17 @@ export const LoginBody = ({ title }) => {
     register,
     formState: { errors, isSubmitting },
   } = useForm();
-
-  function onSubmit(values) {
-    login(values);
-  }
+  let errormsg = "";
+  const onSubmit = async (values) => {
+    errormsg = await login(values);
+    errormsg &&
+      toast({
+        position: "top-center",
+        title: `${errormsg}`,
+        status: "error",
+        isClosable: true,
+      });
+  };
   return (
     <Container
       as="section"
@@ -106,6 +114,7 @@ export const LoginBody = ({ title }) => {
               {errors.password && errors.password.message}
             </FormErrorMessage>
           </FormControl>
+
           <Button
             colorScheme="teal"
             isLoading={isSubmitting}
