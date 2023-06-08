@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("authTokens", JSON.stringify(data));
       navigate("/", { replace: true });
     } else {
-      alert("Something went wrong");
+      return "Username or password invalid";
     }
   };
 
