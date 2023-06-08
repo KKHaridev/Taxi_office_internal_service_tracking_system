@@ -4,17 +4,13 @@ const fetchData = (path) => {
   return fetch(`http://localhost:3000/${path}`).then((res) => res.json());
 };
 
-export const useData = (key, path, onSuccess, onError) => {
+export const useData = (key, path, options = {}) => {
   return useQuery(key, () => fetchData(path), {
-    onSuccess,
-    onError,
-    refetchInterval:1000
+    ...options,
   });
 };
 
-
-
-const patchReq = ({id, data}) => {
+const patchReq = ({ id, data }) => {
   return fetch(`http://localhost:3000/req_rides/${id}`, {
     method: "PATCH",
     body: JSON.stringify(data),

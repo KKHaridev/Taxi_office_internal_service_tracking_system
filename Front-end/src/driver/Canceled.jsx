@@ -34,7 +34,7 @@ const COLUMNS = [
 
 export const Canceled = () => {
   const { isLoading, error, data } = useData(
-    "req",
+    "canceled_req",
     "req_rides?driverId=1&status=canceled"
   );
 
