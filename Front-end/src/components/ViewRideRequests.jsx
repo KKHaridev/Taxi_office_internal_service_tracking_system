@@ -3,31 +3,7 @@ import { Breadcrumb } from "./Breadcrumb";
 import { useParams } from "react-router-dom";
 import { useData } from "../hooks/useData";
 import { Box, Input, Heading, Flex, Select, Button } from "@chakra-ui/react";
-
-export default function InputField({ label, width, value, status, select }) {
-  return (
-    <>
-      <Box w={width ? width : "400px"}>
-        {label && <label htmlFor="">{label}</label>}
-        {select ? (
-          <Select id="" name="" mt="5px" size="md" textTransform={"capitalize"}>
-            <option value="none" selected disabled hidden>
-              {value}
-            </option>
-            <option value="Waiting">Waiting</option>
-            <option value="In-Progress">In-Progress</option>
-            <option value="Arrived">Arrived</option>
-            <option value="Delayed By User">Delayed By User</option>
-            <option value="Taxi Malfunction">Taxi Malfunction</option>
-            <option value="Delayed By User">Delayed By User</option>
-          </Select>
-        ) : (
-          <Input id="" name="" mt="5px" isDisabled={status} value={value} />
-        )}
-      </Box>
-    </>
-  );
-}
+import { InputField } from "./InputComponents";
 
 export const ViewRideRequests = () => {
   let { id } = useParams();
