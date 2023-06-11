@@ -59,7 +59,7 @@ class DriverSerializer(serializers.ModelSerializer):
 class CreateDriverSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewDriver
-        fields = ('driver_name', 'driver_email', 'driver_phone', 'driver_status', 'driver_upi')
+        fields = ('driver_name', 'driver_email', 'driver_phone', 'driver_status', 'driver_upi','driver_dob')
 
 class CreateTaxiDetailSerializer(serializers.ModelSerializer):
     class Meta:

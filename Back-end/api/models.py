@@ -20,7 +20,7 @@ def generate_unique_code_for_rideid():
 
     while True:
         rideId = ''.join(random.choices(string.digits, k=length))
-        if NewRideDetails.objects.filter(rideId=rideId).count() == 0:
+        if NewRideDetail.objects.filter(rideId=rideId).count() == 0:
             break
 
     return rideId
@@ -80,7 +80,7 @@ class NewDriver(models.Model):
     driver_upi = models.CharField(max_length=15, default='', unique=True)
     driver_phone = models.CharField(max_length=11)
     # taxi_num = models.OneToOneField(TaxiDetails, max_length=10, unique=True,on_delete=models.DO_NOTHING)
-    driver_dob = models.DateTimeField(auto_now_add=False)
+    driver_dob = models.DateField(auto_now_add=False)
     driver_status = models.CharField(max_length=10, default="available")
 
 

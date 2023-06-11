@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import NoteSerializer
 from base.models import Note
 
+from api.models import NewDriver
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -17,6 +18,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['username'] = user.username
+        driver = NewDriver.objects.get(driver_name=user.username)
+        token['driver_id'] = driver.driver_id
         # ...
 
         return token
