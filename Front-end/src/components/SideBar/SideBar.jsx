@@ -9,11 +9,13 @@ import { AiFillCar } from "react-icons/ai";
 import { GrCompliance } from "react-icons/gr";
 
 import { ImBlocked } from "react-icons/im";
+import { useLocation } from "react-router-dom";
 
 export const SideBar = () => {
   //true ==> big
   const [size, setSize] = useBoolean(false);
-
+  const path = useLocation();
+  const admin = path.pathname.includes("admin");
   return (
     <Flex
       as="aside"
@@ -32,7 +34,7 @@ export const SideBar = () => {
           icon={<Icon as={BsFillGridFill} />}
           title="Home"
           size={size}
-          link="/"
+          link={admin ? "/admin/" : "/"}
           handler={size ? setSize.toggle : ""}
         />
 
