@@ -11,11 +11,15 @@ import { useNavigate } from "react-router-dom";
 export const Breadcrumb = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const locations = location.pathname.split("/").splice(1);
+  const admin = location.pathname.includes("admin");
+  const locations = admin
+    ? location.pathname.split("/").splice(2)
+    : location.pathname.split("/").splice(1);
+
   return (
     <BreadCrumb spacing="8px" separator={<ChevronRightIcon color="gray.500" />}>
       <BreadcrumbItem isCurrentPage={location.pathname == "/"}>
-        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+        <BreadcrumbLink href={admin ? "/admin" : "/"}>Home</BreadcrumbLink>
       </BreadcrumbItem>
       {locations.map((location, index) => (
         <BreadcrumbItem
