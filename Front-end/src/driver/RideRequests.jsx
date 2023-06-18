@@ -13,7 +13,7 @@ const ViewButton = ({ row }) => {
 
   const id = row.values.id;
   return (
-    <button onClick={() => navigate(`/received_request/${id}`)}>View</button>
+    <button onClick={() => navigate(`/received_rides/${id}`)}>View</button>
   );
 };
 
@@ -103,7 +103,7 @@ const COLUMNS = [
 
 export const RideRequests = () => {
   const { isLoading, error, data } = useData(
-    "req",
+    "req_rides",
     "req_rides?driverId=1&status=pending&status=accepted"
   );
 

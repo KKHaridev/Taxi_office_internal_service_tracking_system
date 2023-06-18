@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("authTokens", JSON.stringify(data));
       navigate("/", { replace: true });
     } else {
-      alert("Something went wrong");
+      return "Username or password invalid";
     }
   };
 
@@ -61,7 +61,6 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-      navigate("/", { replace: true });
     } else {
       setUser(null);
       setAuthTokens(null);

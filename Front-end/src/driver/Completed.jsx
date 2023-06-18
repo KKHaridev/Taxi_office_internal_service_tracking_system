@@ -60,7 +60,7 @@ const COLUMNS = [
 
 export const Completed = () => {
   const { isLoading, error, data } = useData(
-    "req",
+    "completed_req",
     "req_rides?driverId=1&status=reached"
   );
 

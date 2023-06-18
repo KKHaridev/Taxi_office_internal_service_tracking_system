@@ -6,10 +6,12 @@ import { Layout } from "@components";
 import { AuthProvider } from "@context/AuthContext.jsx";
 import { RequireLogin } from "@components/RequireLogin";
 import { RideRequests } from "@driver/RideRequests";
-import { Ongoing } from "./driver/Ongoing";
-import { Completed } from "./driver/Completed";
-import { Canceled } from "./driver/Canceled";
-import { Earnings } from "./driver/Earnings";
+import { Ongoing } from "@driver/Ongoing";
+import { Completed } from "@driver/Completed";
+import { Canceled } from "@driver/Canceled";
+import { Earnings } from "@driver/Earnings";
+import { ViewRideRequests } from "@components/ViewRideRequests";
+import { Profile } from "@driver/Profile";
 
 function App() {
   return (
@@ -27,11 +29,20 @@ function App() {
                   </RequireLogin>
                 }
               />
+
               <Route
                 path="received_rides"
                 element={
                   <RequireLogin>
                     <RideRequests />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="received_rides/:id"
+                element={
+                  <RequireLogin>
+                    <ViewRideRequests />
                   </RequireLogin>
                 }
               />
@@ -44,10 +55,26 @@ function App() {
                 }
               />
               <Route
+                path="ongoing_rides/:id"
+                element={
+                  <RequireLogin>
+                    <ViewRideRequests />
+                  </RequireLogin>
+                }
+              />
+              <Route
                 path="completed_rides"
                 element={
                   <RequireLogin>
                     <Completed />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="completed_rides/:id"
+                element={
+                  <RequireLogin>
+                    <ViewRideRequests />
                   </RequireLogin>
                 }
               />
@@ -64,6 +91,14 @@ function App() {
                 element={
                   <RequireLogin>
                     <Earnings />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="profile"
+                element={
+                  <RequireLogin>
+                    <Profile />
                   </RequireLogin>
                 }
               />

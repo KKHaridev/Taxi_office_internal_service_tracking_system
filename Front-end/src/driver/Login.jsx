@@ -5,7 +5,7 @@ import { LoginBody } from "@components/LoginBody";
 export const Login = () => {
   return (
     <>
-      <LoginBody title="Admin" />
+      <LoginBody title="Driver" />
     </>
   );
 };
