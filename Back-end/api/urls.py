@@ -4,12 +4,14 @@ urlpatterns = [
     #path('viewdriver', views.DriverView.as_view()),
     path('viewdriver',views.getViewDriver),
 
-    path('createdriver', views.CreateDriverView.as_view()),
+    #path('createdriver', views.CreateDriverView.as_view()),
+    path('createdriver',views.CreateDriverView),
 
     #path('viewtaxi',views.TaxiView.as_view()),
     path('viewtaxi',views.getViewTaxiDetails),
 
-    path('createtaxi',views.CreateTaxiView.as_view()),
+    #path('createtaxi',views.CreateTaxiView.as_view()),
+    path('createtaxi',views.CreateTaxiView),
 
     #path('received', views.ReceivedView.as_view()),
     path('received',views.getViewReceived),

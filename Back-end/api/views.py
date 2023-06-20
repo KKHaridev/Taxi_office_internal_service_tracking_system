@@ -13,6 +13,85 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
+
+
+
+
+
+
+
+# from rest_framework_simplejwt.authentication import JWTAuthentication
+
+# def your_view(request):
+#     # Get the Authorization header from the request
+#     auth_header = request.headers.get('Authorization')
+
+#     if auth_header:
+#         # Split the header value into the authentication scheme and the token
+#         auth_scheme, token = auth_header.split(' ')
+
+#         if auth_scheme.lower() == 'bearer':
+#             # Token is the JWT access token
+#             jwt_access_token = token
+
+#             # You can then use the JWT access token as needed
+#             # For example, you can decode and verify the token using the JWTAuthentication class
+#             authentication = JWTAuthentication()
+
+#             try:
+#                 validated_token = authentication.get_validated_token(jwt_access_token)
+#                 http_driver_id= validated_token['driver_id']
+#                 print(http_driver_id)
+#                 return http_driver_id
+            
+#                 # Access token is valid
+#                 # You can access the token claims or user details if needed
+#                 # validated_token['username'], validated_token['driver_id'], etc.
+#             except:
+#                 # Access token is invalid or expired
+#                 # Handle the error accordingly
+#                 pass
+
+    
+
+
+import jwt
+from django.conf import settings
+from django.http import JsonResponse
+
+
+def your_view(request):
+    # Get the token from the Authorization header
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        # Extract the token from the header (e.g., "Bearer <token>")
+        token = auth_header.split(' ')[1]
+        
+        try:
+            # Verify and decode the token using your secret key
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            # Access the claims or data from the payload
+            driver_id = payload['driver_id']
+            return driver_id
+            # ... Your code here ...
+            
+            # Return a JSON response or perform other actions
+            #return JsonResponse({'message': 'Token verified and processed successfully.'})
+        except jwt.ExpiredSignatureError:
+            return JsonResponse({'error': 'Token expired.'}, status=401)
+        except jwt.InvalidTokenError:
+            return JsonResponse({'error': 'Invalid token.'}, status=401)
+    else:
+        return JsonResponse({'error': 'Authorization header not found.'}, status=401)
+
+
+
+
+
+
+
+
+
 # Create your views here.
 
 
@@ -28,13 +107,38 @@ def getViewDriver(request):
     serializer = DriverSerializer(drivers, many=True)
     return Response(serializer.data)
     
-class CreateDriverView(generics.CreateAPIView):
-    queryset = NewDriver.objects.all()
-    serializer_class = CreateDriverSerializer
 
-class CreateTaxiView(generics.CreateAPIView):
-    queryset = TaxiDetail.objects.all()
-    serializer_class = CreateTaxiDetailSerializer
+
+
+# class CreateDriverView(generics.CreateAPIView):
+#     queryset = NewDriver.objects.all()
+#     serializer_class = CreateDriverSerializer
+
+
+@api_view(['POST'])
+def CreateDriverView(request):
+    NewDriver.driver_id = your_view(request)
+    serializer = CreateDriverSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+
+
+
+# class CreateTaxiView(generics.CreateAPIView):
+#     queryset = TaxiDetail.objects.all()
+#     serializer_class = CreateTaxiDetailSerializer
+
+@api_view(['POST'])
+def CreateTaxiView(request):
+    serializer = CreateTaxiDetailSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
 
 class TaxiView(generics.ListAPIView):
     queryset = TaxiDetail.objects.all()

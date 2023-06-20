@@ -13,6 +13,7 @@ from .serializers import NoteSerializer, UserSerializer
 from base.models import Note
 from django.contrib.auth.models import User
 from api.models import NewDriver
+from api.models import unique_generator
 
 from rest_framework.authtoken.models import Token
 #from rest_framework_simplejwt.tokens import Token
@@ -69,14 +70,10 @@ class RegisterUser(APIView):
 
         refresh = RefreshToken.for_user(user)
         refresh['username'] = user.username
+        refresh['driver_id'] = unique_generator.generate_unique_code_for_driverid()
         
 
-
-        return Response({'status': 200, 'payload': serializer.data,
-                         'refresh':str(refresh),
-                         'access':str(refresh.access_token),
-                          #'token' : str(token_obj),
-                          'messge': 'your data is saved'})
+        return Response({'status': 200, 'payload': serializer.data,'refresh':str(refresh),'access':str(refresh.access_token),'messge': 'your data is saved'})
     
 
 

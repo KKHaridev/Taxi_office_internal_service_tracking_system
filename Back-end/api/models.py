@@ -2,28 +2,29 @@ from django.db import models
 import string
 import random
 
+class unique_generator:
 
-def generate_unique_code_for_driverid():
-    length = 8
+    def generate_unique_code_for_driverid():
+        length = 8
 
-    while True:
-        driver_id = ''.join(random.choices(string.digits, k=length))
-        if NewDriver.objects.filter(driver_id=driver_id).count() == 0:
-            break
+        while True:
+            driver_id = ''.join(random.choices(string.digits, k=length))
+            if NewDriver.objects.filter(driver_id=driver_id).count() == 0:
+                break
 
-    return driver_id
+        return driver_id
 
 
 
-def generate_unique_code_for_rideid():
-    length = 8
+    def generate_unique_code_for_rideid():
+        length = 8
 
-    while True:
-        rideId = ''.join(random.choices(string.digits, k=length))
-        if NewRideDetail.objects.filter(rideId=rideId).count() == 0:
-            break
+        while True:
+            rideId = ''.join(random.choices(string.digits, k=length))
+            if NewRideDetail.objects.filter(rideId=rideId).count() == 0:
+                break
 
-    return rideId
+        return rideId
 
 # Create your models here.
 # class Driver(models.Model):
@@ -74,10 +75,12 @@ class TaxiDetail(models.Model):
     taxi_model = models.CharField(max_length=10, default='')
 
 class NewDriver(models.Model):
-    driver_id = models.CharField(max_length=10, default=generate_unique_code_for_driverid, primary_key=True, )
-    driver_name = models.CharField(max_length=30, default="", unique=False)
+    driver_id = models.CharField(max_length=10,
+                                  #default=unique_generator.generate_unique_code_for_driverid, 
+                                  primary_key=True, )
+    driver_name = models.CharField(max_length=30, unique=False)
     driver_email = models.CharField(max_length=50)
-    driver_upi = models.CharField(max_length=15, default='', unique=True)
+    driver_upi = models.CharField(max_length=15, unique=True)
     driver_phone = models.CharField(max_length=11)
     # taxi_num = models.OneToOneField(TaxiDetails, max_length=10, unique=True,on_delete=models.DO_NOTHING)
     driver_dob = models.DateField(auto_now_add=False)
@@ -85,7 +88,7 @@ class NewDriver(models.Model):
 
 
 class NewRideDetail(models.Model):
-    rideId = models.CharField(max_length=10,default=generate_unique_code_for_rideid, primary_key=True)
+    rideId = models.CharField(max_length=10,default=unique_generator.generate_unique_code_for_rideid, primary_key=True)
     passenger_name = models.CharField(max_length=250)
     driver_name = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
     start_from = models.CharField(max_length=250)
