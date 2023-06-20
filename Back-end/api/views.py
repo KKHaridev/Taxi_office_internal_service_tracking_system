@@ -22,7 +22,7 @@ class DriverView(generics.ListAPIView):
 
 
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getViewDriver(request):
     drivers = NewDriver.objects.all()
     serializer = DriverSerializer(drivers, many=True)
