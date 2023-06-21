@@ -18,7 +18,7 @@
             "taxi_details": {
                 "taxi_no": "KL 01 GS 3546",
                 "test_date": "2024-02-12",
-                "insurance_val": "2025-01-13",
+                "insurance_val": "2025-01-01",
                 "car_model": "Toyota",
                 "type": "sedan"
             },
@@ -28,7 +28,8 @@
                 "total_paid": 5000,
                 "total_pending": 5000
             },
-            "status": "active"
+            "status": "active",
+            "availability":"Available"
         },
         {
             "id": 2,
@@ -51,7 +52,8 @@
                 "total_paid": 5000,
                 "total_pending": 5000
             },
-            "status": "disabled"
+            "status": "disabled",
+            "availability":"In Ride"
         },
         {
             "id": 3,
@@ -74,7 +76,8 @@
                 "total_paid": 5000,
                 "total_pending": 5000
             },
-            "status": "active"
+            "status": "active",
+            "availability":"Available"
         },
         {
             "id": 4,
@@ -97,7 +100,8 @@
                 "total_paid": 5000,
                 "total_pending": 5000
             },
-            "status": "disabled"
+            "status": "disabled",
+            "availability":"Available"
         },
         {
             "id": 5,
@@ -120,7 +124,8 @@
                 "total_paid": 5000,
                 "total_pending": 5000
             },
-            "status": "active"
+            "status": "active",
+            "availability":"Not Available"
         },
         {
             "id": 6,
@@ -143,7 +148,8 @@
                 "total_paid": 5000,
                 "total_pending": 5000
             },
-            "status": "active"
+            "status": "active",
+            "availability":"Available"
         },
         {
             "id": 7,
@@ -166,7 +172,8 @@
                 "total_paid": 5000,
                 "total_pending": 5000
             },
-            "status": "disabled"
+            "status": "disabled",
+            "availability":"Not Available"
         }
     ],
     "req_rides": [
