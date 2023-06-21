@@ -109,7 +109,23 @@ def CreateDriverView(request):
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
 
+@api_view(['GET', 'PUT'])
+def updatedriverdetails(request, driver_id):
+    try:
+        driver = NewDriver.objects.get(driver_id=driver_id)
+    except NewDriver.DoesNotExist:
+        raise Http404
 
+    if request.method == 'GET':
+        serializer = CreateDriverSerializer(driver)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = CreateDriverSerializer(driver, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
 
 
 # class CreateTaxiView(generics.CreateAPIView):
@@ -248,6 +264,14 @@ class CancelledRideDetailsView(APIView):
 # class CreateNewRideView(generics.CreateAPIView):
 #     queryset = NewDriver.objects.all()
 #     serializer_class = CreateNewRideSerializer
+
+@api_view(['POST'])
+def CreateNewRideView(request):
+    serializer = CreateTaxiDetailSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
 
 class EarningsView(APIView):
     serializer_class = EarningsSerializer
