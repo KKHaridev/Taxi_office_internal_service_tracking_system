@@ -65,15 +65,6 @@ class unique_generator:
 #     carpoolPercent = models.IntegerField(default=0)
 
 
-class TaxiDetail(models.Model):
-    taxi_num = models.CharField(max_length=10, primary_key=True)
-    taxi_test_date = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
-    taxi_pollution_validity = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
-    taxi_insurance = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
-    taxi_type = models.CharField(max_length=10, default='')
-    taxi_manufacturer = models.CharField(max_length=10, default='')
-    taxi_model = models.CharField(max_length=10, default='')
-
 class NewDriver(models.Model):
     driver_id = models.CharField(max_length=10,
                                   #default=unique_generator.generate_unique_code_for_driverid, 
@@ -86,11 +77,23 @@ class NewDriver(models.Model):
     driver_dob = models.DateField(auto_now_add=False)
     driver_status = models.CharField(max_length=10, default="available")
 
+class TaxiDetail(models.Model):
+    driver_id = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
+    taxi_num = models.CharField(max_length=10, primary_key=True)
+    taxi_test_date = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
+    taxi_pollution_validity = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
+    taxi_insurance = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
+    taxi_type = models.CharField(max_length=10, default='')
+    taxi_manufacturer = models.CharField(max_length=10, default='')
+    taxi_model = models.CharField(max_length=10, default='')
+
 
 class NewRideDetail(models.Model):
     rideId = models.CharField(max_length=10,default=unique_generator.generate_unique_code_for_rideid, primary_key=True)
     passenger_name = models.CharField(max_length=250)
-    driver_name = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
+    driver_id = models.ForeignKey(NewDriver,on_delete=models.DO_NOTHING, default="")
+    #driver_name = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
+    driver_name = models.CharField(max_length=100)
     start_from = models.CharField(max_length=250)
     destination = models.CharField(max_length=250)
     requested_time = models.DateTimeField(auto_now_add=True)

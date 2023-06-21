@@ -30,7 +30,8 @@ urlpatterns = [
     #path('ongoingrides', views.OngoingRideView.as_view()),
     path('ongoingrides',views.getViewOngoing),
 
-    path('createnewride',views.CreateNewRideView.as_view()),
+    #path('createnewride',views.CreateNewRideView.as_view()),
+    path('createnewride',views.CreateNewRideView),
 
     #path('dashboard',views.DriverDashboardView.as_view()),
     path('dashboard',views.getViewDashboard)

@@ -95,9 +95,12 @@ def your_view(request):
 # Create your views here.
 
 
-class DriverView(generics.ListAPIView):
-    queryset = NewDriver.objects.all()
-    serializer_class = DriverSerializer
+#Create your views here.
+
+
+# class DriverView(generics.ListAPIView):
+#     queryset = NewDriver.objects.all()
+#     serializer_class = DriverSerializer
 
 
 @api_view(['GET'])
@@ -117,13 +120,13 @@ def getViewDriver(request):
 
 @api_view(['POST'])
 def CreateDriverView(request):
-    NewDriver.driver_id = your_view(request)
+    driver_id = your_view(request)  # Fetch the driver_id from the request
+    
     serializer = CreateDriverSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(driver_id=driver_id)  # Pass the driver_id to the serializer's save method
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
-
 
 
 
@@ -140,9 +143,9 @@ def CreateTaxiView(request):
     return Response(serializer.errors, status=400)
 
 
-class TaxiView(generics.ListAPIView):
-    queryset = TaxiDetail.objects.all()
-    serializer_class = CreateTaxiDetailSerializer
+# class TaxiView(generics.ListAPIView):
+#     queryset = TaxiDetail.objects.all()
+#     serializer_class = CreateTaxiDetailSerializer
 
 
 @api_view(['GET'])
@@ -168,9 +171,9 @@ def getViewTaxiDetails(request):
 #             queryset = Driver.objects.all()
 
 
-class ReceivedView(generics.ListAPIView):
-    queryset = NewRideDetail.objects.all()
-    serializer_class = ReceivedSerializer
+# class ReceivedView(generics.ListAPIView):
+#     queryset = NewRideDetail.objects.all()
+#     serializer_class = ReceivedSerializer
 
 
 @api_view(['GET'])
@@ -196,9 +199,9 @@ def getViewReceived(request):
 
 
 
-class CompletedRideView(generics.ListAPIView):
-    queryset = NewRideDetail.objects.filter(status='completed')
-    serializer_class = CompletedRideSerializer
+# class CompletedRideView(generics.ListAPIView):
+#     queryset = NewRideDetail.objects.filter(status='completed')
+#     serializer_class = CompletedRideSerializer
 
 
 @api_view(['GET'])
@@ -225,9 +228,9 @@ class CompletedRideDetailsView(APIView):
 
 
 
-class CancelledRideView(generics.ListAPIView):
-    queryset = NewRideDetail.objects.filter(status='cancelled')
-    serializer_class = CancelledRideSerializer
+# class CancelledRideView(generics.ListAPIView):
+#     queryset = NewRideDetail.objects.filter(status='cancelled')
+#     serializer_class = CancelledRideSerializer
 
 
 @api_view(['GET'])
@@ -254,9 +257,30 @@ class CancelledRideDetailsView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class CreateNewRideView(generics.CreateAPIView):
-    queryset = NewDriver.objects.all()
-    serializer_class = CreateNewRideSerializer
+# class CreateNewRideView(generics.CreateAPIView):
+#     queryset = NewDriver.objects.all()
+#     serializer_class = CreateNewRideSerializer
+
+
+
+@api_view(['POST'])
+def CreateNewRideView(request):
+    serializer = CreateTaxiDetailSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+    # driver_id = your_view(request)  # Fetch the driver_id from the request
+    
+    # serializer = CreateNewRideSerializer(data=request.data)
+    # if serializer.is_valid():
+    #     serializer.save(driver_id=driver_id)  # Pass the driver_id to the serializer's save method
+    #     return Response(serializer.data, status=201)
+    # return Response(serializer.errors, status=400)
+
+    
+
+
 
 class EarningsView(APIView):
     serializer_class = EarningsSerializer
@@ -273,11 +297,11 @@ class EarningsView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class OngoingRideView(generics.ListAPIView):
-    serializer_class = OngoingRideSerializer
+# class OngoingRideView(generics.ListAPIView):
+#     serializer_class = OngoingRideSerializer
 
-    def get_queryset(self):
-        return NewRideDetail.objects.filter(status='ongoing')
+#     def get_queryset(self):
+#         return NewRideDetail.objects.filter(status='ongoing')
     
 
 @api_view(['GET'])
@@ -290,11 +314,11 @@ def getViewOngoing(request):
 
 
 
-class DriverDashboardView(generics.ListAPIView):
-    serializer_class = DriverDashboardSerializer
+# class DriverDashboardView(generics.ListAPIView):
+#     serializer_class = DriverDashboardSerializer
 
-    def get_queryset(self):
-        return NewDriver.objects.all()
+#     def get_queryset(self):
+#         return NewDriver.objects.all()
 
 
 @api_view(['GET'])
