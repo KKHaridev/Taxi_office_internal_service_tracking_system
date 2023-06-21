@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
   let [loading, setLoading] = useState(true);
 
-  let login = async (formValues) => {
+  let login = async (formValues, title) => {
     let response = await fetch("http://127.0.0.1:8000/authapi/token/", {
       method: "POST",
       body: JSON.stringify({
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-      navigate("/", { replace: true });
+      navigate(title == "Admin" ? "/admin" : "/", { replace: true });
     } else {
       return "Username or password invalid";
     }
