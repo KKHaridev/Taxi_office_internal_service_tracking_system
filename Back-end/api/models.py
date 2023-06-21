@@ -66,16 +66,16 @@ class unique_generator:
 
 
 class NewDriver(models.Model):
-    driver_id = models.CharField(max_length=10,
+    driver_id = models.IntegerField(max_length=10,
                                   #default=unique_generator.generate_unique_code_for_driverid, 
                                   primary_key=True, )
     driver_name = models.CharField(max_length=30, unique=False)
-    driver_email = models.CharField(max_length=50)
+    driver_email = models.EmailField()
     driver_upi = models.CharField(max_length=15, unique=True)
-    driver_phone = models.CharField(max_length=11)
+    driver_phone = models.IntegerField(max_length=11)
     # taxi_num = models.OneToOneField(TaxiDetails, max_length=10, unique=True,on_delete=models.DO_NOTHING)
     driver_dob = models.DateField(auto_now_add=False)
-    driver_status = models.CharField(max_length=10, default="available")
+    driver_status = models.CharField(max_length=20, default="available")
 
 class TaxiDetail(models.Model):
     driver_id = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
