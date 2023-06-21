@@ -13,6 +13,7 @@ export default defineConfig({
       "@src": path.resolve(__dirname, "./src"),
       "@components": path.resolve(__dirname, "./src/components"),
       "@driver": path.resolve(__dirname, "./src/driver"),
+      "@admin": path.resolve(__dirname, "./src/admin"),
       "@context": path.resolve(__dirname, "./src/context"),
       "@hooks": path.resolve(__dirname, "./src/hooks"),
       "@sections": path.resolve(__dirname, "./src/sections"),
