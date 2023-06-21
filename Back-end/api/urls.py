@@ -4,6 +4,8 @@ urlpatterns = [
     #path('viewdriver', views.DriverView.as_view()),
     path('viewdriver',views.getViewDriver),
 
+    path('driver/<int:driver_id>/me', views.updatedriverdetails),
+
     #path('createdriver', views.CreateDriverView.as_view()),
     path('createdriver',views.CreateDriverView),
 
