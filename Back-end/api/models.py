@@ -89,7 +89,7 @@ class TaxiDetail(models.Model):
 
 
 class NewRideDetail(models.Model):
-    rideId = models.CharField(max_length=10,default=unique_generator.generate_unique_code_for_rideid, primary_key=True)
+    rideId = models.IntegerField(max_length=10,default=unique_generator.generate_unique_code_for_rideid, primary_key=True)
     passenger_name = models.CharField(max_length=250)
     driver_id = models.ForeignKey(NewDriver,on_delete=models.DO_NOTHING, default="")
     #driver_name = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
