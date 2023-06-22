@@ -7,13 +7,15 @@ import { BsFillGridFill, BsCurrencyDollar } from "react-icons/bs";
 import { RiUserReceived2Fill } from "react-icons/ri";
 import { AiFillCar } from "react-icons/ai";
 import { GrCompliance } from "react-icons/gr";
-
+import { MdModeOfTravel } from "react-icons/md";
 import { ImBlocked } from "react-icons/im";
+import { useLocation } from "react-router-dom";
 
 export const SideBar = () => {
   //true ==> big
   const [size, setSize] = useBoolean(false);
-
+  const path = useLocation();
+  const admin = path.pathname.includes("admin");
   return (
     <Flex
       as="aside"
@@ -32,7 +34,7 @@ export const SideBar = () => {
           icon={<Icon as={BsFillGridFill} />}
           title="Home"
           size={size}
-          link="/"
+          link={admin ? "/admin/" : "/"}
           handler={size ? setSize.toggle : ""}
         />
 
@@ -44,8 +46,20 @@ export const SideBar = () => {
           handler={size ? setSize.toggle : ""}
         />
 
+        {admin ? (
+          <NavItem
+            icon={<Icon as={AiFillCar} />}
+            title="Cars and Drivers "
+            size={size}
+            link="cars_and_drivers"
+            handler={size ? setSize.toggle : ""}
+          />
+        ) : (
+          <></>
+        )}
+
         <NavItem
-          icon={<Icon as={AiFillCar} />}
+          icon={<Icon as={MdModeOfTravel} />}
           title="Ongoing Rides"
           size={size}
           link="ongoing_rides"

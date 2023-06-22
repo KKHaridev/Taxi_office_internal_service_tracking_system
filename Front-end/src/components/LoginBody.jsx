@@ -25,7 +25,7 @@ export const LoginBody = ({ title }) => {
   } = useForm();
   let errormsg = "";
   const onSubmit = async (values) => {
-    errormsg = await login(values);
+    errormsg = await login(values,title);
     errormsg &&
       toast({
         position: "top-center",

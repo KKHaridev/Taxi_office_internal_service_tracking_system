@@ -47,3 +47,6 @@ table tbody tr:nth-child(2n) td {
     text-align: center;
 
 }
+:disabled{
+    opacity: 0.45 !important;
+}
