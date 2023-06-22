@@ -31,7 +31,7 @@ export const Breadcrumb = () => {
             onClick={() => {
               index === locations.length - 1
                 ? ""
-                : navigate(admin?`/admin${locations[locations.length-2]}`:`/${locations[locations.length-2]}`);
+                : navigate(admin?`/admin/${locations[locations.length-2]}`:`/${locations[locations.length-2]}`);
             }}
             textTransform="capitalize"
           >
