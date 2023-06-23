@@ -32,7 +32,7 @@ export const LoginHeader = () => {
         color="white"
         paddingX="25px"
       >
-        Sign Up
+        Sign In
       </Button>
     </Container>
   );

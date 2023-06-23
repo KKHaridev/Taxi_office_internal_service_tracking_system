@@ -16,6 +16,7 @@ import { Profile } from "@driver/Profile";
 import { AdminLogin } from "@admin/AdminLogin";
 import { CarsAndDrivers } from "./admin/CarsAndDrivers";
 import { CarsAndDriversDetails } from "./admin/CarAndDriverDetails";
+import {SignUp} from "./driver/SignUp";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Layout />}>
               <Route
