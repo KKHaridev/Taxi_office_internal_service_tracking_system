@@ -69,20 +69,50 @@ class CreateTaxiDetailSerializer(serializers.ModelSerializer):
 class CreateNewRideSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewRideDetail
-        fields = ('passenger_name','driver_name', 'start_from', 'destination', 'requested_time','status')
+        fields = ('rideId','passenger_name','start_from', 'destination','status')
+        # extra_kwargs = {
+        #     'rideId': {'read_only': True},
+        # }
+
+       
 
 class ReceivedSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewRideDetail
         fields = ('passenger_name', 'start_from', 'destination',
-                  'requested_time', 'status')
+                  'requested_time', 'status','driver_name')
+
+
+# class CompletedRideSerializer(serializers.ModelSerializer):
+#     driver = serializers.StringRelatedField()
+
+#     def get_driver_name(self, obj):
+#         # Retrieve the driver name from the related NewDriver model
+#         return obj.driver_id.driver_name
+#     class Meta:
+#         model = NewRideDetail
+#         fields = ('rideId', 'passenger_name', 'start_from',
+#                   'destination', 'reachedtime', 'status','driver_name')
+
 
 
 class CompletedRideSerializer(serializers.ModelSerializer):
+    driver_name = serializers.SerializerMethodField()
+
+    def get_driver_name(self, obj):
+        # Retrieve the driver name from the related NewDriver model
+        return obj.driver_id.driver_name
+
     class Meta:
         model = NewRideDetail
         fields = ('rideId', 'passenger_name', 'start_from',
-                  'destination', 'reachedtime', 'status')
+                  'destination', 'reachedtime', 'status', 'driver_name')
+        # Exclude the 'driver' field from the serialized output
+        extra_kwargs = {
+            'driver': {'write_only': True},
+        }
+
+
 
 
 class EarningsSerializer(serializers.ModelSerializer):

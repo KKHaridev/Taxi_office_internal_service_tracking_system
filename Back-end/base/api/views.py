@@ -29,7 +29,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['username'] = user.username
         driver = NewDriver.objects.get(driver_name=user.username)
-        token['driver_id'] = driver.driver_id
+        token['driver_id'] = driver.new_driver
         # ...
 
         return token

@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from .ride_service import assign_driver_to_ride
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # def your_view(request):
@@ -265,13 +266,43 @@ class CancelledRideDetailsView(APIView):
 #     queryset = NewDriver.objects.all()
 #     serializer_class = CreateNewRideSerializer
 
+# @api_view(['POST'])
+# def CreateNewRideView(request):
+#     serializer = CreateNewRideSerializer(data=request.data)
+#     if serializer.is_valid():
+#         new_ride = serializer.save()
+
+       
+#         # Retrieve the rideId from the created instance
+#         ride_id = new_ride.rideId
+        
+#         # Call assign_driver_to_ride(ride_id) method here
+#         assign_driver_to_ride(ride_id)
+
+#         return Response(serializer.data, status=201)
+#     return Response(serializer.errors, status=400)
+
+
+
+
 @api_view(['POST'])
 def CreateNewRideView(request):
-    serializer = CreateTaxiDetailSerializer(data=request.data)
+    serializer = CreateNewRideSerializer(data=request.data)
     if serializer.is_valid():
+        ac = serializer.save()
+        # print(serializer.validated_data)
+        # print(
+        # ride_id = serializer.validated_data['rideId']
+        
+        ride_id = ac.rideId
+        #print(ride_id)
+        ass_dri = assign_driver_to_ride(ride_id)
+        ac.driver_id = ass_dri
         serializer.save()
+
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
+
 
 class EarningsView(APIView):
     serializer_class = EarningsSerializer

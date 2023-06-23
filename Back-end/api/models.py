@@ -66,16 +66,15 @@ class unique_generator:
 
 
 class NewDriver(models.Model):
-    driver_id = models.IntegerField(max_length=10,
-                                  #default=unique_generator.generate_unique_code_for_driverid, 
-                                  primary_key=True, )
+    driver_id = models.IntegerField(max_length=10,primary_key=True, )
     driver_name = models.CharField(max_length=30, unique=False)
     driver_email = models.EmailField()
     driver_upi = models.CharField(max_length=15, unique=True)
     driver_phone = models.IntegerField(max_length=11)
-    # taxi_num = models.OneToOneField(TaxiDetails, max_length=10, unique=True,on_delete=models.DO_NOTHING)
-    driver_dob = models.DateField(auto_now_add=False)
+    driver_dob = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
     driver_status = models.CharField(max_length=20, default="available")
+
+
 
 class TaxiDetail(models.Model):
     driver_id = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
@@ -91,19 +90,24 @@ class TaxiDetail(models.Model):
 class NewRideDetail(models.Model):
     rideId = models.IntegerField(max_length=10,default=unique_generator.generate_unique_code_for_rideid, primary_key=True)
     passenger_name = models.CharField(max_length=250)
-    driver_id = models.ForeignKey(NewDriver,on_delete=models.DO_NOTHING, default="")
+    driver_id = models.ForeignKey(NewDriver, on_delete=models.DO_NOTHING, default="", null=True)
     #driver_name = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
-    driver_name = models.CharField(max_length=100)
+    #driver_name = models.CharField(max_length=100)
     start_from = models.CharField(max_length=250)
     destination = models.CharField(max_length=250)
     requested_time = models.DateTimeField(auto_now_add=True)
-    starting_time = models.DateTimeField(auto_now_add=False)
-    reachedtime = models.DateTimeField(auto_now_add=False)
-    expectedReachingtime = models.TimeField(auto_now_add=False)
-    status = models.CharField(max_length=20)
+    starting_time = models.DateTimeField(auto_now_add=False,null=True)
+    reachedtime = models.DateTimeField(auto_now_add=False,null=True)
+    expectedReachingtime = models.TimeField(auto_now_add=False,null=True)
+    status = models.CharField(max_length=20,default="requested")
     carpool = models.BooleanField(default=False)
-    expectedDriverPay = models.CharField(max_length=7)
+    expectedDriverPay = models.CharField(max_length=7,null=True)
     carpoolPercent = models.IntegerField(default=0)
+
+    
+
+
+
 
 class Earning(models.Model):
     driver_id = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
