@@ -48,6 +48,18 @@ const deleteUser = ({ id }) => {
     .then((json) => console.log(json));
 };
 
+const createDriver = async(data) => {
+  return await fetch(`http://localhost:3000/drivers/`, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  })
+    .then((response) => response.json())
+    .then((json) => console.log(json));
+};
+
 export const useAcceptRide = () => {
   return useMutation(patchReq);
 };
@@ -58,4 +70,8 @@ export const useDelete = () => {
 
 export const useUpdateStatus = () => {
   return useMutation(updateStatus);
+};
+
+export const useCreateDriver = () => {
+  return useMutation(createDriver);
 };
