@@ -16,9 +16,9 @@ import { LoginHeader } from "../components/LoginHeader";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCreateDriver } from "../hooks/useData";
-import { SignUp2 } from "../components/SigUp/SignUp2";
-import { SignUp1 } from "../components/SigUp/SignUp1";
-import { SignUp3 } from "../components/SigUp/SignUp3";
+import { SignUp2 } from "../components/SignUp/SignUp2";
+import { SignUp1 } from "../components/SignUp/SignUp1";
+import { SignUp3 } from "../components/SignUp/SignUp3";
 
 export const SignUp = () => {
   const [first, setFirst] = useState(false);
