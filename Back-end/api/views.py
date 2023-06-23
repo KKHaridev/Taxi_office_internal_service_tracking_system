@@ -51,7 +51,7 @@ from django.conf import settings
 from django.http import JsonResponse, Http404
 
 
-def your_view(request):
+def get_driver_id(request):
     # Get the token from the Authorization header
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -102,7 +102,7 @@ def getViewDriver(request):
 
 @api_view(['POST'])
 def CreateDriverView(request):
-    driver_id = your_view(request)  # Fetch the driver_id from the request
+    driver_id = get_driver_id(request)  # Fetch the driver_id from the request
     
     serializer = CreateDriverSerializer(data=request.data)
     if serializer.is_valid():
@@ -133,8 +133,20 @@ def updatedriverdetails(request, driver_id):
 #     queryset = TaxiDetail.objects.all()
 #     serializer_class = CreateTaxiDetailSerializer
 
+
+
 @api_view(['POST'])
 def CreateTaxiView(request):
+    driver_id_create_taxi = get_driver_id(request)
+    #print(driver_id_create_taxi)
+
+    try:
+        driver = NewDriver.objects.get(pk=driver_id_create_taxi)
+    except NewDriver.DoesNotExist:
+        raise Http404('Driver not found.')
+
+    request.data['driver_id'] = driver.driver_id
+    print(request.data)
     serializer = CreateTaxiDetailSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -142,9 +154,10 @@ def CreateTaxiView(request):
     return Response(serializer.errors, status=400)
 
 
-class TaxiView(generics.ListAPIView):
-    queryset = TaxiDetail.objects.all()
-    serializer_class = CreateTaxiDetailSerializer
+
+# class TaxiView(generics.ListAPIView):
+#     queryset = TaxiDetail.objects.all()
+#     serializer_class = CreateTaxiDetailSerializer
 
 
 @api_view(['GET'])

@@ -64,7 +64,10 @@ class CreateDriverSerializer(serializers.ModelSerializer):
 class CreateTaxiDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaxiDetail
-        fields = '__all__'
+        fields = ('taxi_num','taxi_test_date','taxi_pollution_validity','taxi_insurance','taxi_type','taxi_manufacturer','taxi_model','driver_id')
+        extra_kwargs = {
+             'driver_id': {'write_only': True},
+        }
 
 class CreateNewRideSerializer(serializers.ModelSerializer):
     class Meta:
