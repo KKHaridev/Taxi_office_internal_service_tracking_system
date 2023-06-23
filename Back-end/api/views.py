@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -160,12 +160,25 @@ def CreateTaxiView(request):
 #     serializer_class = CreateTaxiDetailSerializer
 
 
+# BOTH VIEW TAXI IS WORKING CORRECTLY 
+
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-def getViewTaxiDetails(request):
+@permission_classes([IsAdminUser])
+def getViewAllTaxiDetails(request):
     taxi = TaxiDetail.objects.all()
     serailizer = CreateTaxiDetailSerializer(taxi, many=True)
     return Response(serailizer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getViewTaxiDetails(request):
+    driver_id_view_taxi = get_driver_id(request)
+
+    taxi = TaxiDetail.objects.filter(driver_id = driver_id_view_taxi).first()
+    serailizer = CreateTaxiDetailSerializer(taxi)
+    return Response(serailizer.data)
+
 
 
 # class CreateDriverView(APIView):

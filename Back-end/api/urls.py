@@ -12,6 +12,8 @@ urlpatterns = [
     #path('viewtaxi',views.TaxiView.as_view()),
     path('viewtaxi',views.getViewTaxiDetails),
 
+    path('viewalltaxi',views.getViewAllTaxiDetails),
+
     #path('createtaxi',views.CreateTaxiView.as_view()),
     path('createtaxi',views.CreateTaxiView),
 
