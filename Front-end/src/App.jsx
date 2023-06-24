@@ -13,12 +13,18 @@ import { Earnings } from "@driver/Earnings";
 import { ViewRideRequests } from "@components/ViewRideRequests";
 import { Profile } from "@driver/Profile";
 
+import { AdminLogin } from "@admin/AdminLogin";
+import { CarsAndDrivers } from "./admin/CarsAndDrivers";
+import { CarsAndDriversDetails } from "./admin/CarAndDriverDetails";
+import {SignUp} from "./driver/SignUp";
+
 function App() {
   return (
     <>
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Layout />}>
               <Route
@@ -43,6 +49,110 @@ function App() {
                 element={
                   <RequireLogin>
                     <ViewRideRequests />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="Ongoing_rides"
+                element={
+                  <RequireLogin>
+                    <Ongoing />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="ongoing_rides/:id"
+                element={
+                  <RequireLogin>
+                    <ViewRideRequests />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="completed_rides"
+                element={
+                  <RequireLogin>
+                    <Completed />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="completed_rides/:id"
+                element={
+                  <RequireLogin>
+                    <ViewRideRequests />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="canceled_rides"
+                element={
+                  <RequireLogin>
+                    <Canceled />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="earnings"
+                element={
+                  <RequireLogin>
+                    <Earnings />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="profile"
+                element={
+                  <RequireLogin>
+                    <Profile />
+                  </RequireLogin>
+                }
+              />
+            </Route>
+          </Routes>
+
+          {/* Admin */}
+          <Routes>
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="admin/" element={<Layout />}>
+              <Route
+                index
+                element={
+                  <RequireLogin>
+                    <Dashboard />
+                  </RequireLogin>
+                }
+              />
+
+              <Route
+                path="received_rides"
+                element={
+                  <RequireLogin>
+                    <RideRequests />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="received_rides/:id"
+                element={
+                  <RequireLogin>
+                    <ViewRideRequests />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="cars_and_drivers"
+                element={
+                  <RequireLogin>
+                    <CarsAndDrivers />
+                  </RequireLogin>
+                }
+              />
+              <Route
+                path="cars_and_drivers/:id"
+                element={
+                  <RequireLogin>
+                    <CarsAndDriversDetails />
                   </RequireLogin>
                 }
               />

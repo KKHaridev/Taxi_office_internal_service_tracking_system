@@ -55,6 +55,7 @@ export const DateComponent = ({ label, width, value, status, select }) => {
           type="date"
           value={date}
           onChange={(e)=>setDate(e.target.value)}
+          isDisabled={status}
         />
       </Box>
     </>

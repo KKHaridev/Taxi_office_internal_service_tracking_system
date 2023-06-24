@@ -132,7 +132,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'taxioffice',
         'USER': 'root',
-        'PASSWORD': 'admin123',
+        'PASSWORD': 'password',
         'PORT': 3306,
         'HOST': '127.0.0.1',
     }

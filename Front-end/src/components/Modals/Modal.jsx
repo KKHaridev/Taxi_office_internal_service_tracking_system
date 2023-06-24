@@ -7,18 +7,34 @@ import {
   ModalCloseButton,
   Button,
   HStack,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 
-export const Modal = ({color,hColor,title,handler,children}) => {
+export const Modal = ({ color, hColor, title, handler, disable, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const clickHandler = () => {
+    handler();
+    onClose();
+  };
 
   return (
     <>
-      <Button background="transparent" onClick={onOpen} w="30px">{children}</Button>
+      <Button
+        background="transparent"
+        isDisabled={disable}
+        onClick={onOpen}
+        minW="30px"
+      >
+        {children}
+      </Button>
 
-      <_Modal isCentered closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} >
+      <_Modal
+        isCentered
+        closeOnOverlayClick={true}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <ModalOverlay />
         <ModalContent h="55vh" w="90%">
           <ModalCloseButton />
@@ -42,7 +58,9 @@ export const Modal = ({color,hColor,title,handler,children}) => {
                 fill={color}
               />
             </svg>
-            <Text fontSize={18} fontWeight="bolder" color={color} my="30px">{title}</Text>
+            <Text fontSize={18} fontWeight="bolder" color={color} my="30px">
+              {title}
+            </Text>
             <HStack>
               <Button
                 colorScheme="white"
@@ -60,7 +78,7 @@ export const Modal = ({color,hColor,title,handler,children}) => {
                 transition={"0.2s ease"}
                 _hover={{ bg: hColor }}
                 mr={3}
-                onClick={handler}
+                onClick={clickHandler}
                 w="150px"
               >
                 Confirm

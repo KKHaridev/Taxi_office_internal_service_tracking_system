@@ -1,10 +1,11 @@
 import React from "react";
 import { Container, Heading, Spacer, Button } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 export const LoginHeader = () => {
-  
   return (
-    <Container as="header"
+    <Container
+      as="header"
       maxW={{
         base: "container.sm",
         md: "container.md",
@@ -27,12 +28,14 @@ export const LoginHeader = () => {
       </Heading>
       <Spacer />
       <Button
+        as={Link}
+        to="/login"
         bg="brand.purple"
-        _hover={{ bg: "purple.700" }}
+        _hover={{ bg: "purple.700",color:"white" }}
         color="white"
         paddingX="25px"
       >
-        Sign Up
+        Sign In
       </Button>
     </Container>
   );

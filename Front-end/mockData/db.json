@@ -18,7 +18,7 @@
       "taxi_details": {
         "taxi_no": "KL 01 GS 3546",
         "test_date": "2024-02-12",
-        "insurance_val": "2025-01-13",
+        "insurance_val": "2025-01-01",
         "car_model": "Toyota",
         "type": "sedan"
       },
@@ -28,7 +28,8 @@
         "total_paid": 5000,
         "total_pending": 5000
       },
-      "status": "active"
+      "status": "active",
+      "availability": "Available"
     },
     {
       "id": 2,
@@ -51,7 +52,8 @@
         "total_paid": 5000,
         "total_pending": 5000
       },
-      "status": "disabled"
+      "status": "disabled",
+      "availability": "In Ride"
     },
     {
       "id": 3,
@@ -74,7 +76,8 @@
         "total_paid": 5000,
         "total_pending": 5000
       },
-      "status": "active"
+      "status": "active",
+      "availability": "Available"
     },
     {
       "id": 4,
@@ -97,7 +100,8 @@
         "total_paid": 5000,
         "total_pending": 5000
       },
-      "status": "disabled"
+      "status": "disabled",
+      "availability": "Available"
     },
     {
       "id": 5,
@@ -120,7 +124,8 @@
         "total_paid": 5000,
         "total_pending": 5000
       },
-      "status": "active"
+      "status": "active",
+      "availability": "Not Available"
     },
     {
       "id": 6,
@@ -143,7 +148,8 @@
         "total_paid": 5000,
         "total_pending": 5000
       },
-      "status": "active"
+      "status": "active",
+      "availability": "Available"
     },
     {
       "id": 7,
@@ -166,7 +172,14 @@
         "total_paid": 5000,
         "total_pending": 5000
       },
-      "status": "disabled"
+      "status": "disabled",
+      "availability": "Not Available"
+    },
+    {
+      "name": "cyrilckurian",
+      "password": "david@123",
+      "confirm_password": "david@123",
+      "id": 8
     }
   ],
   "req_rides": [
@@ -192,7 +205,7 @@
       "start_time": "22:00",
       "expected_time": "24:00",
       "date": "2-6-2023",
-      "status": "accepted",
+      "status": "pending",
       "exp_amount": 1000,
       "interested_in_car_pooled": "yes",
       "percentage": 50,
