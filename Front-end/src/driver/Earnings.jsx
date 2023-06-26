@@ -2,6 +2,7 @@ import React from "react";
 import { Breadcrumb } from "@components/Breadcrumb";
 import { Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { useAuth } from "@context/AuthContext";
+import { useData1 } from "../hooks/useData";
 
 const Row = ({ heading, count, price }) => {
   return (
@@ -15,7 +16,17 @@ const Row = ({ heading, count, price }) => {
 };
 
 export const Earnings = () => {
-  const auth = useAuth();
+  const { user } = useAuth();
+  const id = user?.driver_id;
+
+  const { isLoading, error, data } = useData1(
+    "earnings",
+    `api/${user?.driver_id}/earnings`
+  );
+  if (isLoading) {
+    return <h1>Loading</h1>;
+  }
+  console.log(data);
 
   return (
     <>
@@ -41,11 +52,15 @@ export const Earnings = () => {
           Earnings
         </Heading>
         <Flex direction="column" gap="24px" w="90%" alignItems="center">
-          <Row heading="Total Rides" count={auth?.user.total_rides} />
+          <Row heading="Total Rides" count={data.total_rides} />
 
-          {Object.entries(auth?.user.earnings).map(([heading, count]) => (
-            <Row heading={heading} count={[count]} price={true} />
-          ))}
+          {Object.entries(data).map(([heading, count]) =>
+            heading === "total_rides" ? (
+              ""
+            ) : (
+              <Row heading={heading} count={[count]} price={true} />
+            )
+          )}
         </Flex>
       </Flex>
     </>
