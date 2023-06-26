@@ -10,6 +10,16 @@ export const useData = (key, path, options = {}) => {
   });
 };
 
+const fetchData1 = (path) => {
+  return fetch(`http://127.0.0.1:8000/${path}`).then((res) => res.json());
+};
+
+export const useData1 = (key, path, options = {}) => {
+  return useQuery(key, () => fetchData1(path), {
+    ...options,
+  });
+};
+
 const patchReq = ({ id, data }) => {
   return fetch(`http://localhost:3000/req_rides/${id}`, {
     method: "PATCH",
@@ -48,7 +58,7 @@ const deleteUser = ({ id }) => {
     .then((json) => console.log(json));
 };
 
-const createDriver = async(data) => {
+const createDriver = async (data) => {
   return await fetch(`http://localhost:3000/drivers/`, {
     method: "POST",
     body: JSON.stringify(data),
