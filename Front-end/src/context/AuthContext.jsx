@@ -17,9 +17,7 @@ export const AuthProvider = ({ children }) => {
       ? JSON.parse(localStorage.getItem("authTokens"))
       : null
   );
-
   let [loading, setLoading] = useState(true);
-
   let login = async (formValues, title) => {
     let response = await fetch("http://127.0.0.1:8000/authapi/token/", {
       method: "POST",
@@ -37,6 +35,7 @@ export const AuthProvider = ({ children }) => {
     if (response.status == 200) {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
+      console.log(data);
       localStorage.setItem("authTokens", JSON.stringify(data));
       navigate(title == "Admin" ? "/admin" : "/", { replace: true });
     } else {
