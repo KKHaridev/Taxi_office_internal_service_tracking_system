@@ -14,6 +14,10 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .ride_service import assign_driver_to_ride
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # def your_view(request):
@@ -525,6 +529,105 @@ def getDriverViewDashboard(request):
 
     serializer = DriverDashboardSerializer(dashboard_data)
     return Response(serializer.data)
+
+
+
+
+@api_view(['PUT'])
+def update_ride_status(request, ride_id):
+    ride = get_object_or_404(NewRideDetail, rideId=ride_id)
+
+    if request.method == 'POST':
+        status = request.POST.get('status')
+
+        # Update the status of the ride
+        ride.status = status
+        ride.save()
+
+        return JsonResponse({'message': 'Ride status updated successfully.'})
+
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
+@api_view(['PUT'])
+def update_driver_status(request, driver_id):
+    driver = get_object_or_404(NewDriver, driver_id=driver_id)
+
+    if request.method == 'POST':
+        status = request.POST.get('status')
+
+        # Update the status of the driver
+        driver.driver_status = status
+        driver.save()
+
+        return JsonResponse({'message': 'Driver status updated successfully.'})
+
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
+
+@api_view(['PUT'])
+def change_driver_availability(request, driver_id):
+    driver = get_object_or_404(NewDriver, driver_id=driver_id)
+
+    if request.method == 'POST':
+        is_available = request.POST.get('is_available')
+
+        # Update the availability status of the driver
+        driver.driver_status = 'available' if is_available == 'true' else 'unavailable'
+        driver.save()
+
+        return JsonResponse({'message': 'Driver availability status updated successfully.'})
+
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
+
+
+@api_view(['POST'])
+def delete_or_disable_driver(request, driver_id):
+    driver = get_object_or_404(NewDriver, driver_id=driver_id)
+
+    if request.method == 'POST':
+        # Check if the driver is involved in any ongoing rides
+        ongoing_rides = NewRideDetail.objects.filter(driver_id=driver, status__in=['requested', 'accepted'])
+        if ongoing_rides.exists():
+            return JsonResponse({'message': 'Driver cannot be deleted or disabled while involved in ongoing rides.'}, status=400)
+
+        # Delete or disable the driver based on the action specified
+        action = request.POST.get('action')
+        if action == 'delete':
+            driver.delete()
+            return JsonResponse({'message': 'Driver deleted successfully.'})
+        elif action == 'disable':
+            driver.driver_status = 'disabled'
+            driver.save()
+            return JsonResponse({'message': 'Driver disabled successfully.'})
+        else:
+            return JsonResponse({'message': 'Invalid action specified.'}, status=400)
+
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def list_all_drivers(request):
+    drivers = NewDriver.objects.all()
+    drivers_data = []
+
+    for driver in drivers:
+        taxi = TaxiDetail.objects.get(driver_id=driver)
+        driver_data = {
+            'driver_id': driver.driver_id,
+            'driver_name': driver.driver_name,
+            'driver_email': driver.driver_email,
+            'taxi_num': taxi.taxi_num,
+            'taxi_test_date': taxi.taxi_test_date,
+            'taxi_pollution_validity': taxi.taxi_pollution_validity,
+            'taxi_insurance': taxi.taxi_insurance,
+            'taxi_type': taxi.taxi_type,
+            'taxi_manufacturer': taxi.taxi_manufacturer,
+            'taxi_model': taxi.taxi_model,
+        }
+        drivers_data.append(driver_data)
+
+    return JsonResponse({'drivers': drivers_data})
+
 
 # Dashboard
 

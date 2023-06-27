@@ -34,13 +34,22 @@ urlpatterns = [
     #path('ongoingrides', views.OngoingRideView.as_view()),
     path('ongoingrides',views.getViewOngoing),
 
+    path('<str:driver_id>/updatedriverdetails',views.updatedriverdetails),
     #path('createnewride',views.CreateNewRideView.as_view()),
     path('createnewride',views.CreateNewRideView),
 
     #path('dashboard',views.DriverDashboardView.as_view()),
-    path('dashboard',views.getDriverViewDashboard)
+    path('dashboard',views.getDriverViewDashboard),
 
-    
+    path('rides/<int:ride_id>/update-status/', views.update_ride_status, name='update_ride_status'),
+
+    path('drivers/<int:driver_id>/update-status/', views.update_driver_status, name='update_driver_status'),
+
+    path('admin/drivers/<int:driver_id>/change-availability/', views.change_driver_availability, name='change_driver_availability'),
+
+    path('admin/drivers/<int:driver_id>/delete-or-disable/', views.delete_or_disable_driver, name='delete_or_disable_driver'),
+
+    path('admin/drivers/list/', views.list_all_drivers, name='list_all_drivers'),
 
 ]
 
