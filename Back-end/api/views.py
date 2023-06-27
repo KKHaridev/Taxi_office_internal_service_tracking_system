@@ -1,6 +1,7 @@
+from datetime import date, timedelta
 from django.shortcuts import render
 from rest_framework import generics, status
-from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer
+from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer, AdminDashboardSerializer
 #from .models import Driver, Ride
 from .models import NewDriver, TaxiDetail,NewRideDetail,Earning
 from rest_framework.views import APIView
@@ -88,9 +89,19 @@ def get_driver_id(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getAllViewDriver(request):
+    drivers = NewDriver.objects.all()
+    serializer = DriverSerializer(drivers, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getViewDriver(request):
-    drivers = NewDriver.objects.all()
+
+    driver_id_view_driver = get_driver_id(request)
+    drivers = NewDriver.objects.filter(driver_id=driver_id_view_driver).first()
     serializer = DriverSerializer(drivers, many=True)
     return Response(serializer.data)
 
@@ -101,6 +112,7 @@ def getViewDriver(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def CreateDriverView(request):
     driver_id = get_driver_id(request)  # Fetch the driver_id from the request
     
@@ -111,6 +123,7 @@ def CreateDriverView(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
 def updatedriverdetails(request, driver_id):
     try:
         driver = NewDriver.objects.get(driver_id=driver_id)
@@ -128,6 +141,18 @@ def updatedriverdetails(request, driver_id):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def delete_driver(request, driver_id):
+    try:
+        driver = NewDriver.objects.get(driver_id=driver_id)
+    except NewDriver.DoesNotExist:
+        raise Http404
+
+    driver.delete()
+
+    return Response({'message': 'Driver deleted successfully'})
 
 # class CreateTaxiView(generics.CreateAPIView):
 #     queryset = TaxiDetail.objects.all()
@@ -203,7 +228,7 @@ def getViewTaxiDetails(request):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getViewReceived(request):
     received = NewRideDetail.objects.all()
     serailizer = ReceivedSerializer(received, many=True)
@@ -226,15 +251,20 @@ def getViewReceived(request):
 
 
 
-class CompletedRideView(generics.ListAPIView):
-    queryset = NewRideDetail.objects.filter(status='completed')
-    serializer_class = CompletedRideSerializer
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def getAllViewCompleted(request):
+    completed = NewRideDetail.objects.filter(status='completed')
+    serailizer = CompletedRideSerializer(completed, many=True)
+    return Response(serailizer.data)
+
 
 
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def getViewCompleted(request):
-    completed = NewRideDetail.objects.filter(status='completed')
+    driver_id_view_completed = get_driver_id(request)
+    completed = NewRideDetail.objects.filter(driver_id = driver_id_view_completed, status='completed')
     serailizer = CompletedRideSerializer(completed, many=True)
     return Response(serailizer.data)
 
@@ -265,8 +295,17 @@ class CancelledRideView(generics.ListAPIView):
 
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def getViewCancelled(request):
+def getAllViewCancelled(request):
     cancelled = NewRideDetail.objects.filter(status='cancelled')
+    serailizer = CancelledRideSerializer(cancelled, many=True)
+    return Response(serailizer.data)
+
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def getViewCancelled(request):
+    driver_id_view_cancelled = get_driver_id(request)
+    cancelled = NewRideDetail.objects.filter(driver_id = driver_id_view_cancelled,status='cancelled')
     serailizer = CancelledRideSerializer(cancelled, many=True)
     return Response(serailizer.data)
 
@@ -335,22 +374,29 @@ class EarningsView(APIView):
 
     def get(self, request, driver_id):
         try:
-            driver = Earning.objects.get(driver_id=driver_id)
-            earnings = driver.total_earnings
-            total_rides = driver.total_rides
-            total_pending = driver.total_pending
-            total_paid = driver.total_paid
-            return Response({'earnings': earnings, 'total_rides': total_rides, 'total_pending': total_pending,
-                             'total_paid': total_paid})
+            driver = NewDriver.objects.get(driver_id=driver_id)
+            driver_name = driver.driver_name
+
+            # Retrieve earnings data from Earnings model
+            earnings = Earning.objects.get(driver_id=driver_id)
+            total_earnings = earnings.total_earnings
+            total_rides = earnings.total_rides
+            total_pending = earnings.total_pending
+            total_paid = earnings.total_paid
+
+            return Response({
+                'driver_id': driver_id,
+                'driver_name': driver_name,
+                'total_earnings': total_earnings,
+                'total_rides': total_rides,
+                'total_pending': total_pending,
+                'total_paid': total_paid
+            })
         except NewDriver.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-# class OngoingRideView(generics.ListAPIView):
-#     serializer_class = OngoingRideSerializer
 
-    def get_queryset(self):
-        return NewRideDetail.objects.filter(status='ongoing')
     
 
 @api_view(['GET'])
@@ -360,22 +406,125 @@ def getViewOngoing(request):
     serailizer = OngoingRideSerializer(ongoing, many=True)
     return Response(serailizer.data)
 
+@api_view(['GET'])
+# permission_classes([IsAuthenticated])
+def getAllViewOngoing(request):
+    driver_id_view_ongoing = get_driver_id(request)
+    ongoing = NewRideDetail.objects.filter(driver_id = driver_id_view_ongoing,status='ongoing')
+    serailizer = OngoingRideSerializer(ongoing,many = True)
+    return Response(serailizer.data)
 
 
 
-class DriverDashboardView(generics.ListAPIView):
-    serializer_class = DriverDashboardSerializer
-
-#     def get_queryset(self):
-#         return NewDriver.objects.all()
 
 
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def getViewDashboard(request):
-    dashboard = NewDriver.objects.all()
-    serailizer = DriverDashboardSerializer(dashboard, many=True)
-    return Response(serailizer.data)
+def getAdminViewDashboard(request):
+    # Calculate the date range for the previous three days
+    today = date.today()
+    three_days_ago = today - timedelta(days=3)
+
+    # Initialize dictionaries to store driver information and daily totals
+    driver_data = {}
+    daily_totals = {}
+
+    # Iterate over each driver
+    drivers = NewDriver.objects.all()
+    for driver in drivers:
+        driver_id = driver.driver_id
+
+        # Calculate the total rides and earnings for the driver
+        rides = NewRideDetail.objects.filter(driver_id=driver_id)
+        total_rides = rides.count()
+        total_earnings = sum(ride.earnings for ride in rides)
+
+        # Store the driver information in the dictionary
+        driver_data[driver_id] = {
+            'driver_id': driver_id,
+            'driver_name': driver.driver_name,
+            'total_rides': total_rides,
+            'total_earnings': total_earnings
+        }
+
+        # Calculate the total rides and earnings for each day in the date range
+        current_date = three_days_ago
+        while current_date <= today:
+            rides_per_day = rides.filter(created_at__date=current_date)
+
+            # Calculate total rides and earnings for the current day
+            total_rides_per_day = rides_per_day.count()
+            total_earnings_per_day = sum(ride.earnings for ride in rides_per_day)
+
+            # Store the daily totals in the dictionary
+            if current_date.strftime('%Y-%m-%d') not in daily_totals:
+                daily_totals[current_date.strftime('%Y-%m-%d')] = {
+                    'total_rides': 0,
+                    'total_earnings': 0
+                }
+            daily_totals[current_date.strftime('%Y-%m-%d')]['total_rides'] += total_rides_per_day
+            daily_totals[current_date.strftime('%Y-%m-%d')]['total_earnings'] += total_earnings_per_day
+
+            current_date += timedelta(days=1)
+
+    # Find the day with the highest number of rides
+    max_rides_day = max(daily_totals, key=lambda k: daily_totals[k]['total_rides'])
+
+    # Add the day with the highest number of rides to the dashboard data
+    dashboard_data = {
+        'drivers': driver_data,
+        'daily_totals': daily_totals,
+        'max_rides_day': max_rides_day
+    }
+
+    serializer = AdminDashboardSerializer(dashboard_data)
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getDriverViewDashboard(request):
+    driver_id_dashboard = get_driver_id(request)
+
+    # Calculate the date range for the previous three days
+    today = date.today()
+    three_days_ago = today - timedelta(days=3)
+
+    # Initialize a dictionary to store daily totals
+    daily_totals = {}
+
+    # Calculate the total rides and earnings for each day in the date range
+    current_date = three_days_ago
+    while current_date <= today:
+        rides = NewRideDetail.objects.filter(driver_id=driver_id_dashboard, created_at__date=current_date)
+
+        # Calculate total rides and earnings for the current day
+        total_rides = rides.count()
+        total_earnings = sum(ride.earnings for ride in rides)
+
+        # Store the daily totals in the dictionary
+        daily_totals[current_date.strftime('%Y-%m-%d')] = {
+            'total_rides': total_rides,
+            'total_earnings': total_earnings
+        }
+
+        current_date += timedelta(days=1)
+
+    # Retrieve the driver's information from NewDriver model
+    driver = NewDriver.objects.get(driver_id=driver_id_dashboard)
+
+    # Create the dashboard data dictionary
+    dashboard_data = {
+        'driver_id': driver.driver_id,
+        'driver_name': driver.driver_name,
+        'total_rides': sum(totals['total_rides'] for totals in daily_totals.values()),
+        'total_earnings': sum(totals['total_earnings'] for totals in daily_totals.values()),
+        'daily_totals': daily_totals
+    }
+
+    serializer = DriverDashboardSerializer(dashboard_data)
+    return Response(serializer.data)
 
 # Dashboard
 

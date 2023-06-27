@@ -38,7 +38,7 @@ urlpatterns = [
     path('createnewride',views.CreateNewRideView),
 
     #path('dashboard',views.DriverDashboardView.as_view()),
-    path('dashboard',views.getViewDashboard)
+    path('dashboard',views.getDriverViewDashboard)
 
     
 

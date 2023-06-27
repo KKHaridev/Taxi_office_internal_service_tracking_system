@@ -137,7 +137,44 @@ class CancelledRideSerializer(serializers.ModelSerializer):
         fields = ('rideId', 'passenger_name', 'start_from',
                   'destination', 'status')
     
-class DriverDashboardSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Earning
-        fields = ('driver_id','total_earnings','total_rides')
+# class DriverDashboardSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Earning
+#         fields = ('driver_id','total_earnings','total_rides')
+
+
+
+class DailyTotalsSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    total_rides = serializers.IntegerField()
+    total_earnings = serializers.FloatField()
+
+class DriverDataSerializer(serializers.Serializer):
+    driver_id = serializers.CharField()
+    driver_name = serializers.CharField()
+    total_rides = serializers.IntegerField()
+    total_earnings = serializers.FloatField()
+
+
+class AdminDashboardSerializer(serializers.Serializer):
+    drivers = serializers.DictField()
+    daily_totals = serializers.DictField()
+    max_rides_day = serializers.CharField()  # Add this field
+
+    def to_representation(self, instance):
+        # Override the to_representation method to include the max_rides_day field
+
+        # Get the serialized data from the parent serializer
+        data = super().to_representation(instance)
+
+        # Add the max_rides_day field
+        data['max_rides_day'] = instance['max_rides_day']
+
+        return data
+
+class DriverDashboardSerializer(serializers.Serializer):
+    driver_id = serializers.CharField()
+    driver_name = serializers.CharField()
+    total_rides = serializers.IntegerField()
+    total_earnings = serializers.FloatField()
+    daily_totals = DailyTotalsSerializer(many=True)
