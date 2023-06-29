@@ -25,7 +25,20 @@ export const Earnings = () => {
 
   const { isLoading, error, data } = useData("earnings", `api/earnings`);
   if (isLoading) {
-    return <h1>Loading</h1>;
+    return (
+      <>
+        <Breadcrumb />
+        <Text mt={6}>Loading</Text>
+      </>
+    );
+  }
+  if (error) {
+    return (
+      <>
+        <Breadcrumb />
+        <Text mt={6}>No Data Available</Text>
+      </>
+    );
   }
   const { driver_id, driver_name, total_rides, total_earnings, ...details } =
     data;
@@ -47,7 +60,7 @@ export const Earnings = () => {
   return (
     <>
       <Breadcrumb />
-      <Flex direction={{base:"column",md:"row"}}>
+      <Flex direction={{ base: "column", md: "row" }}>
         <Flex
           bg="white"
           w="320px"
@@ -77,7 +90,7 @@ export const Earnings = () => {
             ))}
           </Flex>
         </Flex>
-        <Flex w={300} h={500} marginLeft={{base:"0",md:"30px"}}>
+        <Flex w={300} h={500} marginLeft={{ base: "0", md: "30px" }}>
           <Pie data={chartData} />
         </Flex>
       </Flex>
