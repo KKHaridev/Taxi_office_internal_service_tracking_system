@@ -1,6 +1,7 @@
+from datetime import date, timedelta
 from django.shortcuts import render
 from rest_framework import generics, status
-from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer
+from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer, AdminDashboardSerializer
 #from .models import Driver, Ride
 from .models import NewDriver, TaxiDetail,NewRideDetail,Earning
 from rest_framework.views import APIView
@@ -13,6 +14,10 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .ride_service import assign_driver_to_ride
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # def your_view(request):
@@ -88,9 +93,19 @@ def get_driver_id(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getAllViewDriver(request):
+    drivers = NewDriver.objects.all()
+    serializer = DriverSerializer(drivers, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getViewDriver(request):
-    drivers = NewDriver.objects.all()
+
+    driver_id_view_driver = get_driver_id(request)
+    drivers = NewDriver.objects.filter(driver_id=driver_id_view_driver).first()
     serializer = DriverSerializer(drivers, many=True)
     return Response(serializer.data)
 
@@ -101,6 +116,7 @@ def getViewDriver(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def CreateDriverView(request):
     driver_id = get_driver_id(request)  # Fetch the driver_id from the request
     
@@ -111,6 +127,7 @@ def CreateDriverView(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
 def updatedriverdetails(request, driver_id):
     try:
         driver = NewDriver.objects.get(driver_id=driver_id)
@@ -128,6 +145,18 @@ def updatedriverdetails(request, driver_id):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def delete_driver(request, driver_id):
+    try:
+        driver = NewDriver.objects.get(driver_id=driver_id)
+    except NewDriver.DoesNotExist:
+        raise Http404
+
+    driver.delete()
+
+    return Response({'message': 'Driver deleted successfully'})
 
 # class CreateTaxiView(generics.CreateAPIView):
 #     queryset = TaxiDetail.objects.all()
@@ -203,7 +232,7 @@ def getViewTaxiDetails(request):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getViewReceived(request):
     received = NewRideDetail.objects.all()
     serailizer = ReceivedSerializer(received, many=True)
@@ -226,66 +255,102 @@ def getViewReceived(request):
 
 
 
-class CompletedRideView(generics.ListAPIView):
-    queryset = NewRideDetail.objects.filter(status='completed')
-    serializer_class = CompletedRideSerializer
-
-
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def getViewCompleted(request):
+def getAllViewCompleted(request):
     completed = NewRideDetail.objects.filter(status='completed')
     serailizer = CompletedRideSerializer(completed, many=True)
     return Response(serailizer.data)
 
 
-class CompletedRideDetailsView(APIView):
-    serializer_class = CompletedRideSerializer
 
-    def get(self, request, rideId):
-        try:
-            ride = NewRideDetail.objects.get(rideId=rideId)
-            user_name = ride.user_name
-            start_from = ride.start_from
-            destination = ride.destination
-            reachedtime = ride.reachedtime
-            _status = ride.status
-            return Response(
-                {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
-                 'reachedtime': reachedtime, 'status': _status})
-        except NewRideDetail.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def getViewCompleted(request):
+    driver_id_view_completed = get_driver_id(request)
+    completed = NewRideDetail.objects.filter(driver_id = driver_id_view_completed, status='completed')
+    serailizer = CompletedRideSerializer(completed, many=True)
+    return Response(serailizer.data)
 
 
+# class ReceivedRideDetailsView(APIView):
+#     serializer_class = ReceivedSerializer
 
-class CancelledRideView(generics.ListAPIView):
-    queryset = NewRideDetail.objects.filter(status='cancelled')
-    serializer_class = CancelledRideSerializer
+#     def get(self, request, rideId):
+#         try:
+#             ride = NewRideDetail.objects.get(rideId=rideId)
+#             user_name = ride.user_name
+#             start_from = ride.start_from
+#             destination = ride.destination
+#             reachedtime = ride.reachedtime
+#             _status = ride.status
+#             return Response(
+#                 {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
+#                  'reachedtime': reachedtime, 'status': _status})
+#         except NewRideDetail.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+#@permission_classes([IsAuthenticated])
+def received_ride_details_view(request, rideId):
+    try:
+        ride = NewRideDetail.objects.get(rideId=rideId)
+        driver = NewDriver.objects.get(driver_id = ride.driver_id.driver_id)
+        driver_name = driver.driver_name
+        passenger_name = ride.passenger_name
+        start_from = ride.start_from
+        destination = ride.destination
+        reachedtime = ride.reachedtime
+        _status = ride.status
+        return Response({
+            #'rideId': rideId,
+            'passenger_name':passenger_name ,
+            'driver_name': driver_name,
+            'start_from': start_from,
+            'destination': destination,
+            'reachedtime': reachedtime,
+            'status': _status
+        })
+    except NewRideDetail.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# class CancelledRideView(generics.ListAPIView):
+#     queryset = NewRideDetail.objects.filter(status='cancelled')
+#     serializer_class = CancelledRideSerializer
 
 
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def getViewCancelled(request):
+def getAllViewCancelled(request):
     cancelled = NewRideDetail.objects.filter(status='cancelled')
     serailizer = CancelledRideSerializer(cancelled, many=True)
     return Response(serailizer.data)
 
 
-class CancelledRideDetailsView(APIView):
-    serializer_class = CancelledRideSerializer
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def getViewCancelled(request):
+    driver_id_view_cancelled = get_driver_id(request)
+    cancelled = NewRideDetail.objects.filter(driver_id = driver_id_view_cancelled,status='cancelled')
+    serailizer = CancelledRideSerializer(cancelled, many=True)
+    return Response(serailizer.data)
 
-    def get(self, request, rideId):
-        try:
-            ride = NewRideDetail.objects.get(rideId=rideId)
-            user_name = ride.user_name
-            start_from = ride.start_from
-            destination = ride.destination
-            _status = ride.status
-            return Response(
-                {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
-                 'status': _status})
-        except NewRideDetail.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+# class CancelledRideDetailsView(APIView):
+#     serializer_class = CancelledRideSerializer
+
+#     def get(self, request, rideId):
+#         try:
+#             ride = NewRideDetail.objects.get(rideId=rideId)
+#             user_name = ride.user_name
+#             start_from = ride.start_from
+#             destination = ride.destination
+#             _status = ride.status
+#             return Response(
+#                 {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
+#                  'status': _status})
+#         except NewRideDetail.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 # class CreateNewRideView(generics.CreateAPIView):
@@ -330,27 +395,94 @@ def CreateNewRideView(request):
     return Response(serializer.errors, status=400)
 
 
-class EarningsView(APIView):
-    serializer_class = EarningsSerializer
 
-    def get(self, request, driver_id):
-        try:
-            driver = Earning.objects.get(driver_id=driver_id)
-            earnings = driver.total_earnings
-            total_rides = driver.total_rides
-            total_pending = driver.total_pending
-            total_paid = driver.total_paid
-            return Response({'earnings': earnings, 'total_rides': total_rides, 'total_pending': total_pending,
-                             'total_paid': total_paid})
-        except NewDriver.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def Earnings_of_single_driver(request):
+    try:
+        driver_id_view_single_earnings = get_driver_id(request)
+        driver = NewDriver.objects.get(driver_id = driver_id_view_single_earnings)
+        driver_name = driver.driver_name
+
+        earnings = Earning.objects.get(driver_id=driver_id_view_single_earnings)
+        total_earnings = earnings.total_earnings
+        total_rides = earnings.total_rides
+        total_pending = earnings.total_pending
+        total_paid = earnings.total_paid
+        
+        return Response({
+                    'driver_id': driver_id_view_single_earnings,
+                    'driver_name': driver_name,
+                    'total_earnings': total_earnings,
+                    'total_rides': total_rides,
+                    'total_pending': total_pending,
+                    'total_paid': total_paid
+                })
+    except NewDriver.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-# class OngoingRideView(generics.ListAPIView):
-#     serializer_class = OngoingRideSerializer
+@api_view(['GET'])
+#@permission_classes([IsAdminUser])
+def Earnings_of_all_drivers(request):
+    try:
+        drivers = NewDriver.objects.all()
 
-    def get_queryset(self):
-        return NewRideDetail.objects.filter(status='ongoing')
+        earnings_data = []
+        for driver in drivers:
+            driver_id = driver.driver_id
+            driver_name = driver.driver_name
+
+            earnings = Earning.objects.get(driver_id=driver_id)
+            total_earnings = earnings.total_earnings
+            total_rides = earnings.total_rides
+            total_pending = earnings.total_pending
+            total_paid = earnings.total_paid
+
+            earnings_data.append({
+                'driver_id': driver_id,
+                'driver_name': driver_name,
+                'total_earnings': total_earnings,
+                'total_rides': total_rides,
+                'total_pending': total_pending,
+                'total_paid': total_paid
+            })
+
+        return Response(earnings_data)
+    except (NewDriver.DoesNotExist, Earning.DoesNotExist):
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+# class EarningsView(APIView):
+#     serializer_class = EarningsSerializer
+
+#     def get(self, request, driver_id):
+#         try:
+#             driver = NewDriver.objects.get(driver_id=driver_id)
+#             driver_name = driver.driver_name
+
+#             # Retrieve earnings data from Earnings model
+#             earnings = Earning.objects.get(driver_id=driver_id)
+#             total_earnings = earnings.total_earnings
+#             total_rides = earnings.total_rides
+#             total_pending = earnings.total_pending
+#             total_paid = earnings.total_paid
+
+#             return Response({
+#                 'driver_id': driver_id,
+#                 'driver_name': driver_name,
+#                 'total_earnings': total_earnings,
+#                 'total_rides': total_rides,
+#                 'total_pending': total_pending,
+#                 'total_paid': total_paid
+#             })
+#         except NewDriver.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
     
 
 @api_view(['GET'])
@@ -360,22 +492,224 @@ def getViewOngoing(request):
     serailizer = OngoingRideSerializer(ongoing, many=True)
     return Response(serailizer.data)
 
+@api_view(['GET'])
+# permission_classes([IsAuthenticated])
+def getAllViewOngoing(request):
+    driver_id_view_ongoing = get_driver_id(request)
+    ongoing = NewRideDetail.objects.filter(driver_id = driver_id_view_ongoing,status='ongoing')
+    serailizer = OngoingRideSerializer(ongoing,many = True)
+    return Response(serailizer.data)
 
 
 
-class DriverDashboardView(generics.ListAPIView):
-    serializer_class = DriverDashboardSerializer
-
-#     def get_queryset(self):
-#         return NewDriver.objects.all()
 
 
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def getViewDashboard(request):
-    dashboard = NewDriver.objects.all()
-    serailizer = DriverDashboardSerializer(dashboard, many=True)
-    return Response(serailizer.data)
+def getAdminViewDashboard(request):
+    # Calculate the date range for the previous three days
+    today = date.today()
+    three_days_ago = today - timedelta(days=3)
+
+    # Initialize dictionaries to store driver information and daily totals
+    driver_data = {}
+    daily_totals = {}
+
+    # Iterate over each driver
+    drivers = NewDriver.objects.all()
+    for driver in drivers:
+        driver_id = driver.driver_id
+
+        # Calculate the total rides and earnings for the driver
+        rides = NewRideDetail.objects.filter(driver_id=driver_id)
+        total_rides = rides.count()
+        total_earnings = sum(ride.earnings for ride in rides)
+
+        # Store the driver information in the dictionary
+        driver_data[driver_id] = {
+            'driver_id': driver_id,
+            'driver_name': driver.driver_name,
+            'total_rides': total_rides,
+            'total_earnings': total_earnings
+        }
+
+        # Calculate the total rides and earnings for each day in the date range
+        current_date = three_days_ago
+        while current_date <= today:
+            rides_per_day = rides.filter(created_at__date=current_date)
+
+            # Calculate total rides and earnings for the current day
+            total_rides_per_day = rides_per_day.count()
+            total_earnings_per_day = sum(ride.earnings for ride in rides_per_day)
+
+            # Store the daily totals in the dictionary
+            if current_date.strftime('%Y-%m-%d') not in daily_totals:
+                daily_totals[current_date.strftime('%Y-%m-%d')] = {
+                    'total_rides': 0,
+                    'total_earnings': 0
+                }
+            daily_totals[current_date.strftime('%Y-%m-%d')]['total_rides'] += total_rides_per_day
+            daily_totals[current_date.strftime('%Y-%m-%d')]['total_earnings'] += total_earnings_per_day
+
+            current_date += timedelta(days=1)
+
+    # Find the day with the highest number of rides
+    max_rides_day = max(daily_totals, key=lambda k: daily_totals[k]['total_rides'])
+
+    # Add the day with the highest number of rides to the dashboard data
+    dashboard_data = {
+        'drivers': driver_data,
+        'daily_totals': daily_totals,
+        'max_rides_day': max_rides_day
+    }
+
+    serializer = AdminDashboardSerializer(dashboard_data)
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getDriverViewDashboard(request):
+    driver_id_dashboard = get_driver_id(request)
+
+    # Calculate the date range for the previous three days
+    today = date.today()
+    three_days_ago = today - timedelta(days=3)
+
+    # Initialize a dictionary to store daily totals
+    daily_totals = {}
+
+    # Calculate the total rides and earnings for each day in the date range
+    current_date = three_days_ago
+    while current_date <= today:
+        rides = NewRideDetail.objects.filter(driver_id=driver_id_dashboard, created_at__date=current_date)
+
+        # Calculate total rides and earnings for the current day
+        total_rides = rides.count()
+        total_earnings = sum(ride.earnings for ride in rides)
+
+        # Store the daily totals in the dictionary
+        daily_totals[current_date.strftime('%Y-%m-%d')] = {
+            'total_rides': total_rides,
+            'total_earnings': total_earnings
+        }
+
+        current_date += timedelta(days=1)
+
+    # Retrieve the driver's information from NewDriver model
+    driver = NewDriver.objects.get(driver_id=driver_id_dashboard)
+
+    # Create the dashboard data dictionary
+    dashboard_data = {
+        'driver_id': driver.driver_id,
+        'driver_name': driver.driver_name,
+        'total_rides': sum(totals['total_rides'] for totals in daily_totals.values()),
+        'total_earnings': sum(totals['total_earnings'] for totals in daily_totals.values()),
+        'daily_totals': daily_totals
+    }
+
+    serializer = DriverDashboardSerializer(dashboard_data)
+    return Response(serializer.data)
+
+
+
+
+@api_view(['PUT'])
+def update_ride_status(request, ride_id):
+    ride = get_object_or_404(NewRideDetail, rideId=ride_id)
+
+    if request.method == 'POST':
+        status = request.POST.get('status')
+
+        # Update the status of the ride
+        ride.status = status
+        ride.save()
+
+        return JsonResponse({'message': 'Ride status updated successfully.'})
+
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
+@api_view(['PUT'])
+def update_driver_status(request, driver_id):
+    driver = get_object_or_404(NewDriver, driver_id=driver_id)
+
+    if request.method == 'POST':
+        status = request.POST.get('status')
+
+        # Update the status of the driver
+        driver.driver_status = status
+        driver.save()
+
+        return JsonResponse({'message': 'Driver status updated successfully.'})
+
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
+
+@api_view(['PUT'])
+def change_driver_availability(request, driver_id):
+    driver = get_object_or_404(NewDriver, driver_id=driver_id)
+
+    if request.method == 'POST':
+        is_available = request.POST.get('is_available')
+
+        # Update the availability status of the driver
+        driver.driver_status = 'available' if is_available == 'true' else 'unavailable'
+        driver.save()
+
+        return JsonResponse({'message': 'Driver availability status updated successfully.'})
+
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
+
+
+@api_view(['POST'])
+def delete_or_disable_driver(request, driver_id):
+    driver = get_object_or_404(NewDriver, driver_id=driver_id)
+
+    if request.method == 'POST':
+        # Check if the driver is involved in any ongoing rides
+        ongoing_rides = NewRideDetail.objects.filter(driver_id=driver, status__in=['requested', 'accepted'])
+        if ongoing_rides.exists():
+            return JsonResponse({'message': 'Driver cannot be deleted or disabled while involved in ongoing rides.'}, status=400)
+
+        # Delete or disable the driver based on the action specified
+        action = request.POST.get('action')
+        if action == 'delete':
+            driver.delete()
+            return JsonResponse({'message': 'Driver deleted successfully.'})
+        elif action == 'disable':
+            driver.driver_status = 'disabled'
+            driver.save()
+            return JsonResponse({'message': 'Driver disabled successfully.'})
+        else:
+            return JsonResponse({'message': 'Invalid action specified.'}, status=400)
+
+    
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def list_all_drivers(request):
+    drivers = NewDriver.objects.all()
+    drivers_data = []
+
+    for driver in drivers:
+        taxi = TaxiDetail.objects.get(driver_id=driver)
+        driver_data = {
+            'driver_id': driver.driver_id,
+            'driver_name': driver.driver_name,
+            'driver_email': driver.driver_email,
+            'taxi_num': taxi.taxi_num,
+            'taxi_test_date': taxi.taxi_test_date,
+            'taxi_pollution_validity': taxi.taxi_pollution_validity,
+            'taxi_insurance': taxi.taxi_insurance,
+            'taxi_type': taxi.taxi_type,
+            'taxi_manufacturer': taxi.taxi_manufacturer,
+            'taxi_model': taxi.taxi_model,
+        }
+        drivers_data.append(driver_data)
+
+    return JsonResponse({'drivers': drivers_data})
+
 
 # Dashboard
 

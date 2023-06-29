@@ -19,6 +19,7 @@ from rest_framework.authtoken.models import Token
 #from rest_framework_simplejwt.tokens import Token
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from django.contrib.auth.hashers import make_password
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -65,6 +66,12 @@ class RegisterUser(APIView):
         
             return Response({'status': 403,'errors' : serializer.errors, 'messge' : 'Something went wrong'})
         
+        password = make_password(serializer.validated_data['password'])
+
+        # Update the serializer data with the hashed password
+        serializer.validated_data['password'] = password
+
+
         serializer.save()
 
         user = User.objects.get(username = serializer.data['username'])
