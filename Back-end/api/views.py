@@ -273,28 +273,50 @@ def getViewCompleted(request):
     return Response(serailizer.data)
 
 
-class CompletedRideDetailsView(APIView):
-    serializer_class = CompletedRideSerializer
+# class ReceivedRideDetailsView(APIView):
+#     serializer_class = ReceivedSerializer
 
-    def get(self, request, rideId):
-        try:
-            ride = NewRideDetail.objects.get(rideId=rideId)
-            user_name = ride.user_name
-            start_from = ride.start_from
-            destination = ride.destination
-            reachedtime = ride.reachedtime
-            _status = ride.status
-            return Response(
-                {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
-                 'reachedtime': reachedtime, 'status': _status})
-        except NewRideDetail.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+#     def get(self, request, rideId):
+#         try:
+#             ride = NewRideDetail.objects.get(rideId=rideId)
+#             user_name = ride.user_name
+#             start_from = ride.start_from
+#             destination = ride.destination
+#             reachedtime = ride.reachedtime
+#             _status = ride.status
+#             return Response(
+#                 {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
+#                  'reachedtime': reachedtime, 'status': _status})
+#         except NewRideDetail.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+#@permission_classes([IsAuthenticated])
+def received_ride_details_view(request, rideId):
+    try:
+        ride = NewRideDetail.objects.get(rideId=rideId)
+        driver = NewDriver.objects.get(driver_id = ride.driver_id.driver_id)
+        driver_name = driver.driver_name
+        passenger_name = ride.passenger_name
+        start_from = ride.start_from
+        destination = ride.destination
+        reachedtime = ride.reachedtime
+        _status = ride.status
+        return Response({
+            #'rideId': rideId,
+            'passenger_name':passenger_name ,
+            'driver_name': driver_name,
+            'start_from': start_from,
+            'destination': destination,
+            'reachedtime': reachedtime,
+            'status': _status
+        })
+    except NewRideDetail.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-
-class CancelledRideView(generics.ListAPIView):
-    queryset = NewRideDetail.objects.filter(status='cancelled')
-    serializer_class = CancelledRideSerializer
+# class CancelledRideView(generics.ListAPIView):
+#     queryset = NewRideDetail.objects.filter(status='cancelled')
+#     serializer_class = CancelledRideSerializer
 
 
 @api_view(['GET'])
@@ -314,21 +336,21 @@ def getViewCancelled(request):
     return Response(serailizer.data)
 
 
-class CancelledRideDetailsView(APIView):
-    serializer_class = CancelledRideSerializer
+# class CancelledRideDetailsView(APIView):
+#     serializer_class = CancelledRideSerializer
 
-    def get(self, request, rideId):
-        try:
-            ride = NewRideDetail.objects.get(rideId=rideId)
-            user_name = ride.user_name
-            start_from = ride.start_from
-            destination = ride.destination
-            _status = ride.status
-            return Response(
-                {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
-                 'status': _status})
-        except NewRideDetail.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+#     def get(self, request, rideId):
+#         try:
+#             ride = NewRideDetail.objects.get(rideId=rideId)
+#             user_name = ride.user_name
+#             start_from = ride.start_from
+#             destination = ride.destination
+#             _status = ride.status
+#             return Response(
+#                 {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
+#                  'status': _status})
+#         except NewRideDetail.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 # class CreateNewRideView(generics.CreateAPIView):
@@ -373,22 +395,51 @@ def CreateNewRideView(request):
     return Response(serializer.errors, status=400)
 
 
-class EarningsView(APIView):
-    serializer_class = EarningsSerializer
 
-    def get(self, request, driver_id):
-        try:
-            driver = NewDriver.objects.get(driver_id=driver_id)
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def Earnings_of_single_driver(request):
+    try:
+        driver_id_view_single_earnings = get_driver_id(request)
+        driver = NewDriver.objects.get(driver_id = driver_id_view_single_earnings)
+        driver_name = driver.driver_name
+
+        earnings = Earning.objects.get(driver_id=driver_id_view_single_earnings)
+        total_earnings = earnings.total_earnings
+        total_rides = earnings.total_rides
+        total_pending = earnings.total_pending
+        total_paid = earnings.total_paid
+        
+        return Response({
+                    'driver_id': driver_id_view_single_earnings,
+                    'driver_name': driver_name,
+                    'total_earnings': total_earnings,
+                    'total_rides': total_rides,
+                    'total_pending': total_pending,
+                    'total_paid': total_paid
+                })
+    except NewDriver.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+#@permission_classes([IsAdminUser])
+def Earnings_of_all_drivers(request):
+    try:
+        drivers = NewDriver.objects.all()
+
+        earnings_data = []
+        for driver in drivers:
+            driver_id = driver.driver_id
             driver_name = driver.driver_name
 
-            # Retrieve earnings data from Earnings model
             earnings = Earning.objects.get(driver_id=driver_id)
             total_earnings = earnings.total_earnings
             total_rides = earnings.total_rides
             total_pending = earnings.total_pending
             total_paid = earnings.total_paid
 
-            return Response({
+            earnings_data.append({
                 'driver_id': driver_id,
                 'driver_name': driver_name,
                 'total_earnings': total_earnings,
@@ -396,8 +447,39 @@ class EarningsView(APIView):
                 'total_pending': total_pending,
                 'total_paid': total_paid
             })
-        except NewDriver.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return Response(earnings_data)
+    except (NewDriver.DoesNotExist, Earning.DoesNotExist):
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+# class EarningsView(APIView):
+#     serializer_class = EarningsSerializer
+
+#     def get(self, request, driver_id):
+#         try:
+#             driver = NewDriver.objects.get(driver_id=driver_id)
+#             driver_name = driver.driver_name
+
+#             # Retrieve earnings data from Earnings model
+#             earnings = Earning.objects.get(driver_id=driver_id)
+#             total_earnings = earnings.total_earnings
+#             total_rides = earnings.total_rides
+#             total_pending = earnings.total_pending
+#             total_paid = earnings.total_paid
+
+#             return Response({
+#                 'driver_id': driver_id,
+#                 'driver_name': driver_name,
+#                 'total_earnings': total_earnings,
+#                 'total_rides': total_rides,
+#                 'total_pending': total_pending,
+#                 'total_paid': total_paid
+#             })
+#         except NewDriver.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 
