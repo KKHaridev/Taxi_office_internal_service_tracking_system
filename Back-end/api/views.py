@@ -231,14 +231,57 @@ def getViewTaxiDetails(request):
 #     serializer_class = ReceivedSerializer
 
 
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def getViewReceived(request):
+#     driver_id_received = get_driver_id(request)
+#     driver= NewDriver.objects.get(driver_id = driver_id_received)
+    
+#     received = NewRideDetail.objects.all()
+#     serailizer = ReceivedSerializer(received, many=True)
+    
+    
+        
+#     return Response(serailizer.data)
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getViewReceived(request):
+def getViewSingleReceived(request):
+    driver_id_received = get_driver_id(request)
+    driver = NewDriver.objects.get(driver_id=driver_id_received)
+    
+    received = NewRideDetail.objects.filter(driver_id = driver_id_received)
+    serialized_data = []
+
+    for ride in received:
+        serialized_ride = ReceivedSerializer(ride).data
+        serialized_ride['driver_name'] = driver.driver_name
+        serialized_data.append(serialized_ride)
+
+    return Response(serialized_data)
+
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getViewAllReceived(request):
+    #driver_id_all_received = get_driver_id(request)
+    #driver = NewDriver.objects.get(driver_id=driver_id_all_received)
+    
     received = NewRideDetail.objects.all()
-    serailizer = ReceivedSerializer(received, many=True)
-    return Response(serailizer.data)
+    
+    serialized_data = []
 
+    for ride in received:
+        driver = NewDriver.objects.get(driver_id = ride.driver_id.driver_id)
+        serialized_ride = ReceivedSerializer(ride).data
+        serialized_ride['driver_name'] = driver.driver_name
+        serialized_data.append(serialized_ride)
 
+    return Response(serialized_data)
 '''class CreateNewReqView(APIView):
     serializer_class = CreateNewRideSerializer
 
@@ -583,7 +626,7 @@ def getDriverViewDashboard(request):
     # Calculate the total rides and earnings for each day in the date range
     current_date = three_days_ago
     while current_date <= today:
-        rides = NewRideDetail.objects.filter(driver_id=driver_id_dashboard, created_at__date=current_date)
+        rides = NewRideDetail.objects.filter(driver_id=driver_id_dashboard, requested_time=current_date)
 
         # Calculate total rides and earnings for the current day
         total_rides = rides.count()

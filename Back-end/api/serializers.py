@@ -83,7 +83,7 @@ class ReceivedSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewRideDetail
         fields = ('passenger_name', 'start_from', 'destination',
-                  'requested_time', 'status','driver_name')
+                  'requested_time', 'status')
 
 
 # class CompletedRideSerializer(serializers.ModelSerializer):
