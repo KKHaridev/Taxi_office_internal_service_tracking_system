@@ -19,17 +19,20 @@ export const AuthProvider = ({ children }) => {
   );
   let [loading, setLoading] = useState(true);
   let login = async (formValues, title) => {
-    let response = await fetch("http://127.0.0.1:8000/authapi/token/", {
-      method: "POST",
-      body: JSON.stringify({
-        username: formValues.name,
-        password: formValues.password,
-      }),
-      headers: {
-        Accept: "*/*",
-        "Content-Type": "application/json",
-      },
-    });
+    let response = await fetch(
+      `${import.meta.env.VITE_API_URL}/authapi/token/`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          username: formValues.name,
+          password: formValues.password,
+        }),
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     let data = await response.json();
     if (response.status == 200) {
@@ -44,16 +47,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   let updateToken = async () => {
-    let response = await fetch("http://127.0.0.1:8000/authapi/token/refresh/", {
-      method: "POST",
-      body: JSON.stringify({
-        refresh: authTokens?.refresh,
-      }),
-      headers: {
-        Accept: "*/*",
-        "Content-Type": "application/json",
-      },
-    });
+    let response = await fetch(
+      `${import.meta.env.VITE_API_URL}/authapi/token/refresh/`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          refresh: authTokens?.refresh,
+        }),
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     let data = await response.json();
     if (response.status == 200) {
