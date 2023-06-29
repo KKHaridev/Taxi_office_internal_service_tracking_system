@@ -18,7 +18,9 @@ urlpatterns = [
     path('createtaxi',views.CreateTaxiView),
 
     #path('received', views.ReceivedView.as_view()),
-    path('received',views.getViewReceived),
+    path('received',views.getViewSingleReceived),
+
+    path('allreceived',views.getViewAllReceived),
          
     path('rides/<str:rideId>',views.received_ride_details_view),
     #path('completedrides', views.CompletedRideView.as_view()),
