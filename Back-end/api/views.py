@@ -566,7 +566,7 @@ def getAdminViewDashboard(request):
         # Calculate the total rides and earnings for the driver
         rides = NewRideDetail.objects.filter(driver_id=driver_id)
         total_rides = rides.count()
-        total_earnings = sum(ride.earnings for ride in rides)
+        total_earnings = sum(ride.expectedDriverPay or 0 for ride in rides)
 
         # Store the driver information in the dictionary
         driver_data[driver_id] = {
@@ -579,11 +579,11 @@ def getAdminViewDashboard(request):
         # Calculate the total rides and earnings for each day in the date range
         current_date = three_days_ago
         while current_date <= today:
-            rides_per_day = rides.filter(created_at__date=current_date)
+            rides_per_day = rides.filter(requested_time__date=current_date)
 
             # Calculate total rides and earnings for the current day
             total_rides_per_day = rides_per_day.count()
-            total_earnings_per_day = sum(ride.earnings for ride in rides_per_day)
+            total_earnings_per_day = sum(ride.expectedDriverPay or 0 for ride in rides_per_day)
 
             # Store the daily totals in the dictionary
             if current_date.strftime('%Y-%m-%d') not in daily_totals:
@@ -621,22 +621,27 @@ def getDriverViewDashboard(request):
     three_days_ago = today - timedelta(days=3)
 
     # Initialize a dictionary to store daily totals
-    daily_totals = {}
+    daily_totals = []
 
     # Calculate the total rides and earnings for each day in the date range
     current_date = three_days_ago
     while current_date <= today:
-        rides = NewRideDetail.objects.filter(driver_id=driver_id_dashboard, requested_time=current_date)
-
+        
+        rides = NewRideDetail.objects.filter(driver_id=driver_id_dashboard, requested_time__date=current_date)
+        print(rides)
+        print(current_date)
         # Calculate total rides and earnings for the current day
         total_rides = rides.count()
-        total_earnings = sum(ride.earnings for ride in rides)
+        total_earnings = sum(ride.expectedDriverPay or 0 for ride in rides)
 
         # Store the daily totals in the dictionary
-        daily_totals[current_date.strftime('%Y-%m-%d')] = {
+        daily_total = {
+            'date': current_date.strftime('%Y-%m-%d'),
             'total_rides': total_rides,
             'total_earnings': total_earnings
         }
+
+        daily_totals.append(daily_total)
 
         current_date += timedelta(days=1)
 
@@ -647,8 +652,8 @@ def getDriverViewDashboard(request):
     dashboard_data = {
         'driver_id': driver.driver_id,
         'driver_name': driver.driver_name,
-        'total_rides': sum(totals['total_rides'] for totals in daily_totals.values()),
-        'total_earnings': sum(totals['total_earnings'] for totals in daily_totals.values()),
+        'total_rides': sum(totals['total_rides'] for totals in daily_totals),
+        'total_earnings': sum(totals['total_earnings'] for totals in daily_totals),
         'daily_totals': daily_totals
     }
 

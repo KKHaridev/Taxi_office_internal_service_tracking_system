@@ -48,6 +48,8 @@ urlpatterns = [
     #path('dashboard',views.DriverDashboardView.as_view()),
     path('dashboard',views.getDriverViewDashboard),
 
+    path('admindashboard',views.getAdminViewDashboard),
+
     path('rides/<int:ride_id>/update-status/', views.update_ride_status, name='update_ride_status'),
 
     path('drivers/<int:driver_id>/update-status/', views.update_driver_status, name='update_driver_status'),
