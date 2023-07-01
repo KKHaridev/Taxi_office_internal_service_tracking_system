@@ -61,9 +61,9 @@ const postReqWithAccess = async ({ endpoint, data, accessToken }) => {
     return response;
   }
 };
-const patchReq = ({ id, data }) => {
-  return fetch(`http://localhost:3000/req_rides/${id}`, {
-    method: "PATCH",
+const patchReq = ({ id, data,endpoint }) => {
+  return fetch(`${apiUrl}/${endpoint}`, {
+    method: "PUT",
     body: JSON.stringify(data),
 
     headers: {
