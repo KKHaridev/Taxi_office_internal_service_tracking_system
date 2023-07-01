@@ -1,13 +1,27 @@
 import { Box, Input, Heading, Flex, Select, Button } from "@chakra-ui/react";
 import { useState } from "react";
 
-export const InputField = ({ label, width, value, status, select }) => {
+export const InputField = ({
+  label,
+  width,
+  value,
+  status,
+  select,
+  onChange,
+}) => {
   return (
     <>
       <Box w={width ? width : "400px"}>
         {label && <label htmlFor="">{label}</label>}
         {select ? (
-          <Select id="" name="" mt="5px" size="md" textTransform={"capitalize"}>
+          <Select
+            id=""
+            name=""
+            mt="5px"
+            size="md"
+            textTransform={"capitalize"}
+            onChange={(e)=>{onChange(e.target.value)}}
+          >
             <option value="none" selected disabled hidden>
               {value}
             </option>
@@ -40,10 +54,9 @@ export const Doulbe = ({ children }) => {
 };
 
 export const DateComponent = ({ label, width, value, status, select }) => {
-  const [date,setDate]=useState(value);
+  const [date, setDate] = useState(value);
   return (
     <>
-
       <Box w={width ? width : "400px"}>
         {label && <label htmlFor="">{label}</label>}
         <Input
@@ -54,7 +67,7 @@ export const DateComponent = ({ label, width, value, status, select }) => {
           size="md"
           type="date"
           value={date}
-          onChange={(e)=>setDate(e.target.value)}
+          onChange={(e) => setDate(e.target.value)}
           isDisabled={status}
         />
       </Box>
