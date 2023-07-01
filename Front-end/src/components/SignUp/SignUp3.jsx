@@ -38,65 +38,76 @@ export const SignUp3 = ({ submit, errors, register, isSubmitting, watch }) => {
           <Label name="Taxi Number" />
           <Input
             id="taxi_number"
-            {...register("taxi_number", {
+            {...register("taxi_num", {
               required: "This is required",
               minLength: {
                 value: 1,
               },
             })}
-            borderColor={errors?.taxi_number ? "red" : "gray"}
+            borderColor={errors?.taxi_num ? "red" : "gray"}
             _hover={{
-              borderColor: errors?.taxi_number ? "red" : "gray",
+              borderColor: errors?.taxi_num ? "red" : "gray",
             }}
             _focus={{
-              borderColor: errors?.taxi_number ? "red" : "auto",
+              borderColor: errors?.taxi_num ? "red" : "auto",
             }}
           />
         </FormControl>
-        <FormControl isInvalid={errors.dob}>
-          <Label name="Date Of Birth" />
+        <FormControl isInvalid={errors.taxi_test_date}>
+          <Label name="Test Date" />
           <Input
             type="date"
-            id="dob"
-            {...register("dob", {
+            id="taxi_test_date"
+            {...register("taxi_test_date", {
               required: "This is required",
             })}
-            borderColor={errors?.dob ? "red" : "gray"}
+            borderColor={errors?.taxi_test_date ? "red" : "gray"}
             _hover={{
-              borderColor: errors?.dob ? "red" : "gray",
+              borderColor: errors?.taxi_test_date ? "red" : "gray",
             }}
             _focus={{
-              borderColor: errors?.dob ? "red" : "auto",
+              borderColor: errors?.taxi_test_date ? "red" : "auto",
             }}
           />
         </FormControl>
       </Doulbe>
 
       <Doulbe>
-        <FormControl isInvalid={errors.phone}>
-          <Label name="Phone" />
+        <FormControl isInvalid={errors.taxi_pollution_validity}>
+          <Label name="Pollution Validity" />
           <Input
-            id="phone"
-            {...register("phone", {
+            id="taxi_pollution_validity"
+            type="date"
+            {...register("taxi_pollution_validity", {
               required: "This is required",
               minLength: {
                 value: 1,
               },
             })}
-            borderColor="gray"
-            _hover={{ borderColor: "grey" }}
+            borderColor={errors?.taxi_pollution_validity ? "red" : "gray"}
+            _hover={{
+              borderColor: errors?.taxi_pollution_validity ? "red" : "gray",
+            }}
+            _focus={{
+              borderColor: errors?.taxi_pollution_validity ? "red" : "auto",
+            }}
           />
         </FormControl>
-        <FormControl isInvalid={errors.upi}>
-          <Label name="UPI" />
+        <FormControl isInvalid={errors.taxi_insurance}>
+          <Label name="Insurance Validity" />
           <Input
-            type="text"
-            id="upi"
-            {...register("upi", {
+            type="date"
+            id="taxi_insurance"
+            {...register("taxi_insurance", {
               required: "This is required",
             })}
-            borderColor="gray"
-            _hover={{ borderColor: "grey" }}
+            borderColor={errors?.taxi_insurance ? "red" : "gray"}
+            _hover={{
+              borderColor: errors?.taxi_insurance ? "red" : "gray",
+            }}
+            _focus={{
+              borderColor: errors?.taxi_insurance ? "red" : "auto",
+            }}
           />
         </FormControl>
       </Doulbe>
@@ -112,7 +123,7 @@ export const SignUp3 = ({ submit, errors, register, isSubmitting, watch }) => {
         w="150px"
         alignSelf="center"
       >
-        Next
+        Submit
       </Button>
     </form>
   );

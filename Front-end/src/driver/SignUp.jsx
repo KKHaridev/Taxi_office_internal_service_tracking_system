@@ -15,47 +15,99 @@ import { LoginHeader } from "../components/LoginHeader";
 
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useCreateDriver } from "../hooks/useData";
+import { useNewDriver, useNewDriverAccount } from "../hooks/useData";
 import { SignUp2 } from "../components/SignUp/SignUp2";
 import { SignUp1 } from "../components/SignUp/SignUp1";
 import { SignUp3 } from "../components/SignUp/SignUp3";
 
 export const SignUp = () => {
-  const [first, setFirst] = useState(false);
-  const [second, setSecond] = useState(false);
+  const [accessToken, setAccessToken] = useState();
+
+  const [firstStep, setFirstStep] = useState(false);
+  const [secondStep, setSecondStep] = useState(false);
 
   const toast = useToast();
   const { login } = useAuth();
   const navigate = useNavigate();
-  const { mutate: createDriver, isSuccess } = useCreateDriver();
+  const { mutateAsync: postReq } = useNewDriver();
+  const {
+    mutateAsync: postReqWithAccess,
+    isError,
+    error,
+  } = useNewDriverAccount();
+
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
     watch,
+    reset,
+    control,
   } = useForm();
-  const onSubmit = async (values) => {
-    try {
-      //createDriver(values);
-      values.password === values.confirm_password ? setFirst(true) : "";
-    } catch (err) {
-      console.log(err);
+
+  const onSubmit1 = async (data) => {
+    let endpoint = "authapi/signup/";
+    const response = await postReq({ endpoint, data });
+    if (response?.status == 200) {
+      toast({
+        position: "top-center",
+        title: `User Created`,
+        status: "success",
+        isClosable: true,
+      });
+      setAccessToken(response?.access);
+      setFirstStep(true);
+      reset();
+    }
+    else if (response?.status == 403) {
+      toast({
+        position: "top-center",
+        title: `${Object.values(response.errors)}`,
+        status: "error",
+        isClosable: true,
+      });
     }
   };
-  const onSubmit2 = async (values) => {
-    try {
-      //createDriver(values);
-      values.upi != values.phone ? setSecond(true) : "";
-    } catch (err) {
-      console.log(err);
+
+  const onSubmit2 = async (data) => {
+    let endpoint = "api/createdriver";
+    const response = await postReqWithAccess({ endpoint, data, accessToken });
+    if (response?.err == "Error Occured.") {
+      toast({
+        position: "top-center",
+        title: `${Object.values(response.issues)}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        position: "top-center",
+        title: `Updated User Details`,
+        status: "success",
+        isClosable: true,
+      });
+      setSecondStep(true);
     }
   };
-  const onSubmit3 = async (values) => {
-    try {
-      //createDriver(values);
-      values.upi != values.phone ? navigate('/login') : "";
-    } catch (err) {
-      console.log(err);
+
+  const onSubmit3 = async (data) => {
+    let endpoint = "api/createtaxi";
+    const response = await postReqWithAccess({ endpoint, data, accessToken });
+    if (response?.err == "Error Occured.") {
+      toast({
+        position: "top-center",
+        title: `${Object.values(response.issues)[0]}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        position: "top-center",
+        title: `Updated Taxi Details`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate("/login")
     }
   };
   return (
@@ -92,8 +144,8 @@ export const SignUp = () => {
             Driver Sign Up
           </Heading>
 
-          {first ? (
-            second ? (
+          {accessToken ? (
+            secondStep ? (
               <SignUp3
                 submit={handleSubmit(onSubmit3)}
                 register={register}
@@ -108,11 +160,13 @@ export const SignUp = () => {
                 errors={errors}
                 isSubmitting={isSubmitting}
                 watch={watch}
+                isDirty={isDirty}
+                control={control}
               />
             )
           ) : (
             <SignUp1
-              submit={handleSubmit(onSubmit)}
+              submit={handleSubmit(onSubmit1)}
               register={register}
               errors={errors}
               isSubmitting={isSubmitting}
