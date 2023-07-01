@@ -82,8 +82,12 @@ class CreateNewRideSerializer(serializers.ModelSerializer):
 class ReceivedSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewRideDetail
-        fields = ('passenger_name', 'start_from', 'destination',
+        fields = ('rideId','passenger_name', 'start_from', 'destination',
                   'requested_time', 'status')
+        extra_kwargs = {
+             'rideId': {'read_only': True},}
+        
+        
 
 
 # class CompletedRideSerializer(serializers.ModelSerializer):
