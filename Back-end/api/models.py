@@ -70,7 +70,7 @@ class NewDriver(models.Model):
     driver_name = models.CharField(max_length=30, unique=False)
     driver_email = models.EmailField()
     driver_upi = models.CharField(max_length=15, unique=True)
-    driver_phone = models.IntegerField(max_length=11)
+    driver_phone = models.BigIntegerField(max_length=10)
     driver_dob = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
     driver_status = models.CharField(max_length=20, default="available")
 

@@ -167,13 +167,13 @@ def delete_driver(request, driver_id):
 @api_view(['POST'])
 def CreateTaxiView(request):
     driver_id_create_taxi = get_driver_id(request)
-    #print(driver_id_create_taxi)
+    print(driver_id_create_taxi)
 
     try:
         driver = NewDriver.objects.get(pk=driver_id_create_taxi)
     except NewDriver.DoesNotExist:
         raise Http404('Driver not found.')
-
+    
     request.data['driver_id'] = driver.driver_id
     print(request.data)
     serializer = CreateTaxiDetailSerializer(data=request.data)
