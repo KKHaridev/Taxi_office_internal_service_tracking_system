@@ -13,14 +13,16 @@ import { BiToggleLeft, BiToggleRight } from "react-icons/bi";
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
-  const id = row.values.id;
+  const id = row.values.rideId;
   return (
-    <button onClick={() => navigate(`/admin/cars_and_drivers/${id}`)}>View</button>
+    <button onClick={() => navigate(`/admin/cars_and_drivers/${id}`)}>
+      View
+    </button>
   );
 };
 
 const Disable_Enable = ({ row }) => {
-  const id = row.values.id;
+  const id = row.values.rideId;
   const availability = row.values.availability;
   const status = row.values.status;
   const { mutate: updateStatus } = useUpdateStatus();
@@ -37,14 +39,18 @@ const Disable_Enable = ({ row }) => {
         }}
         disable={availability == "In Ride" ? true : false}
       >
-        {status == "disabled" ? <BiToggleLeft size={25} /> : <BiToggleRight color="brand.green" size={25} />}
+        {status == "disabled" ? (
+          <BiToggleLeft size={25} />
+        ) : (
+          <BiToggleRight color="brand.green" size={25} />
+        )}
       </Modal>
     </>
   );
 };
 
 const DeleteUser = ({ row }) => {
-  const id = row.values.id;
+  const id = row.values.rideId;
   const availability = row.values.availability;
   const { onClose } = useDisclosure();
   const { mutate: deleteUser } = useDelete();

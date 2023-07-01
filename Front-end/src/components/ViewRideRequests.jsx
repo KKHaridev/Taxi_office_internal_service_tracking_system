@@ -1,23 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Breadcrumb } from "./Breadcrumb";
 import { useParams } from "react-router-dom";
-import { useData } from "../hooks/useData";
+import { useAcceptRide, useData } from "../hooks/useData";
 import { Box, Input, Heading, Flex, Select, Button } from "@chakra-ui/react";
 import { InputField } from "./InputComponents";
 
 export const ViewRideRequests = () => {
+  const [status, setStatus] = useState("");
+  const { mutate } = useAcceptRide();
   let { id } = useParams();
-  const { isLoading, error, data } = useData(
-    "ride data",
-    `req_rides/${id}`,
-    null,
-    null,
-    { refetchInterval: 0 }
-  );
-  console.log(data);
+  const { isLoading, error, data } = useData("ride data", `api/rides/${id}`);
   if (isLoading) return "Loading...";
-
   if (error) return "An error has occurred: " + error.message;
+  
   return (
     <>
       <Breadcrumb />
@@ -38,12 +33,12 @@ export const ViewRideRequests = () => {
             gap="40px"
             flexDirection={{ base: "column", md: "row" }}
           >
-            <InputField label="ID" width="90%" status={true} value={data.id} />
+            <InputField label="ID" width="90%" status={true} value={id} />
             <InputField
               label="Passenger"
               width="90%"
               status={true}
-              value={data.pass_name}
+              value={data?.passenger_name}
             />
           </Flex>
           <Flex
@@ -55,28 +50,35 @@ export const ViewRideRequests = () => {
               label="From"
               width="90%"
               status={true}
-              value={data.from}
-            />
-            <InputField label="To" width="90%" status={true} value={data.to} />
-          </Flex>
-          <Flex
-            w="100%"
-            gap="40px"
-            flexDirection={{ base: "column", md: "row" }}
-          >
-            <InputField
-              label="Start Time"
-              width="90%"
-              status={true}
-              value={data.start_time}
+              value={data?.start_from}
             />
             <InputField
-              label="Expected Time"
+              label="To"
               width="90%"
               status={true}
-              value={data.expected_time}
+              value={data?.destination}
             />
           </Flex>
+          {/* {data?.start_from && (
+            <Flex
+              w="100%"
+              gap="40px"
+              flexDirection={{ base: "column", md: "row" }}
+            >
+              <InputField
+                label="Start Time"
+                width="90%"
+                status={true}
+                value={data?.requested_time}
+              />
+              <InputField
+                label="Expected Time"
+                width="90%"
+                status={true}
+                value={data.expected_time}
+              />
+            </Flex>
+          )} */}
           <Flex
             w="100%"
             gap="40px"
@@ -88,6 +90,7 @@ export const ViewRideRequests = () => {
               status={false}
               value={data.status}
               select={true}
+              onChange={(data) => setStatus(data)}
             />
             <InputField
               label="Interested in car pooled rides"
@@ -118,6 +121,11 @@ export const ViewRideRequests = () => {
         <Button
           colorScheme="teal"
           type="submit"
+          onClick={() => {
+            let data = { status };
+            let endpoint = `api/rides/${id}/update-status/`;
+            mutate({ id, data, endpoint });
+          }}
           bg="brand.purple"
           _hover={{ bg: "purple.700" }}
           color="white"

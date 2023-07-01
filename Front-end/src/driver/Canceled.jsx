@@ -11,19 +11,19 @@ import { TableHolder } from "@components/TableHolder/TableHolder";
 const COLUMNS = [
   {
     Header: "Ride ID",
-    accessor: "id",
+    accessor: "rideId",
   },
   {
     Header: "Passenger",
-    accessor: "pass_name",
+    accessor: "passenger_name",
   },
   {
     Header: "From",
-    accessor: "from",
+    accessor: "start_from",
   },
   {
     Header: "To",
-    accessor: "to",
+    accessor: "destination",
   },
 
   {
@@ -35,18 +35,19 @@ const COLUMNS = [
 export const Canceled = () => {
   const { isLoading, error, data } = useData(
     "canceled_req",
-    "req_rides?driverId=1&status=canceled"
+    "api/received"
   );
 
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
+  let canceled=data.filter((item)=>item.status=="canceled")
 
   return (
     <div>
       <Breadcrumb />
       <TableHolder>
-        <Table columns={COLUMNS} data={data} width="60vw"/>
+        <Table columns={COLUMNS} data={canceled} width="60vw"/>
       </TableHolder>
     </div>
   );

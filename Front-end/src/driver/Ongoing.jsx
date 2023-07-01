@@ -8,30 +8,38 @@ import { TableHolder } from "../components/TableHolder/TableHolder";
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
-  const id = row.values.id;
-  return <button onClick={() => navigate(`/ongoing_rides/${id}`)}>View</button>;
+  const id = row.values.rideId;
+  return <button onClick={() => navigate(`/rides/${id}`)}>View</button>;
 };
 
 const COLUMNS = [
   {
     Header: "Ride ID",
-    accessor: "id",
+    accessor: "rideId",
   },
   {
     Header: "Passenger",
-    accessor: "pass_name",
+    accessor: "passenger_name",
   },
   {
     Header: "From",
-    accessor: "from",
+    accessor: "start_from",
   },
   {
-    Header: "To",
-    accessor: "to",
+    Header: "Destination",
+    accessor: "destination",
   },
   {
     Header: "Start Time",
-    accessor: "start_time",
+    accessor: (data) => {
+      const date = new Date(data.requested_time);
+      let time = date.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+    },
   },
   {
     Header: "Expected Time",
@@ -39,11 +47,11 @@ const COLUMNS = [
   },
   {
     Header: "Chance Pooled Rides",
-    accessor: (data) => `${data.percentage} %`,
+    accessor: (data) => `50 %`,
   },
   {
     Header: "Expected Amount",
-    accessor: (data) => <>&#8377; {data.exp_amount}</>,
+    accessor: (data) => <>&#8377; 1000</>,
   },
   {
     Header: "Status",
@@ -57,20 +65,17 @@ const COLUMNS = [
 ];
 
 export const Ongoing = () => {
-  const { isLoading, error, data } = useData(
-    "ongoing_req",
-    "req_rides?driverId=1&status_ne=pending&status_ne=canceled&status_ne=reached"
-  );
+  const { isLoading, error, data } = useData("ongoing_req", "api/received");
 
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-
+  let ongoing = data.filter((item) => item.status == "In-Progress");
   return (
     <div>
       <Breadcrumb />
       <TableHolder>
-        <Table columns={COLUMNS} data={data} />
+        <Table columns={COLUMNS} data={ongoing} />
       </TableHolder>
     </div>
   );
