@@ -667,8 +667,8 @@ def getDriverViewDashboard(request):
 def update_ride_status(request, ride_id):
     ride = get_object_or_404(NewRideDetail, rideId=ride_id)
 
-    if request.method == 'POST':
-        status = request.POST.get('status')
+    if request.method == 'PUT':
+        status = request.data.get('status')
 
         # Update the status of the ride
         ride.status = status
