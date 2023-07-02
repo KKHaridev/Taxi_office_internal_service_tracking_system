@@ -79,8 +79,7 @@ class NewDriver(models.Model):
 
             super().save(*args, **kwargs)
 
-            if created:
-                Earning.objects.create(driver_id=self, total_earnings=0, total_rides=0, total_paid=0, total_pending=0)
+            
 
 
 class TaxiDetail(models.Model):
@@ -108,7 +107,7 @@ class NewRideDetail(models.Model):
     # expectedReachingtime = models.TimeField(auto_now_add=False,null=True)
     status = models.CharField(max_length=20,default="requested")
     carpool = models.BooleanField(default=False)
-    expectedDriverPay = models.IntegerField(max_length=7,null=True)
+    expectedDriverPay = models.IntegerField(default=0,max_length=7,null=True)
     carpoolPercent = models.IntegerField(default=0)
 
     
