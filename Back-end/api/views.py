@@ -782,25 +782,29 @@ def change_driver_availability(request, driver_id):
 
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def delete_or_disable_driver(request, driver_id):
     driver = get_object_or_404(NewDriver, driver_id=driver_id)
 
-    if request.method == 'POST':
+    if request.method == 'PUT':
         # Check if the driver is involved in any ongoing rides
         ongoing_rides = NewRideDetail.objects.filter(driver_id=driver, status__in=['requested', 'accepted'])
         if ongoing_rides.exists():
             return JsonResponse({'message': 'Driver cannot be deleted or disabled while involved in ongoing rides.'}, status=400)
 
         # Delete or disable the driver based on the action specified
-        action = request.POST.get('action')
+        action = request.data.get('action')
         if action == 'delete':
             driver.delete()
             return JsonResponse({'message': 'Driver deleted successfully.'})
         elif action == 'disable':
-            driver.driver_status = 'disabled'
+            driver.driver_status = 'unavailable'
             driver.save()
             return JsonResponse({'message': 'Driver disabled successfully.'})
+        elif action == 'enable':
+            driver.driver_status = 'available'
+            driver.save()
+            return JsonResponse({'message': 'Driver enabled successfully.'})
         else:
             return JsonResponse({'message': 'Invalid action specified.'}, status=400)
 
