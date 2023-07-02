@@ -315,7 +315,7 @@ def getAllViewCompleted(request):
 # @permission_classes([IsAuthenticated])
 def getViewCompleted(request):
     driver_id_view_completed = get_driver_id(request)
-    completed = NewRideDetail.objects.filter(driver_id = driver_id_view_completed, status='completed')
+    completed = NewRideDetail.objects.filter(driver_id = driver_id_view_completed, status='arrived')
     serailizer = CompletedRideSerializer(completed, many=True)
     return Response(serailizer.data)
 
@@ -347,6 +347,7 @@ def received_ride_details_view(request, rideId):
         passenger_name = ride.passenger_name
         start_from = ride.start_from
         destination = ride.destination
+        starting_time = ride.starting_time
         reachedtime = ride.reachedtime
         _status = ride.status
         _carpool = ride.carpool
@@ -359,6 +360,7 @@ def received_ride_details_view(request, rideId):
             'driver_name': driver_name,
             'start_from': start_from,
             'destination': destination,
+            'starting_time': starting_time,
             'reachedtime': reachedtime,
             'status': _status,
             'carpool': _carpool,
@@ -700,7 +702,7 @@ def update_ride_status(request, ride_id):
             
             driver.driver_status = 'available'
             driver.save()
-
+            ride.reachedtime = timezone.now()
             ride.status = status
             ride.save()
 
