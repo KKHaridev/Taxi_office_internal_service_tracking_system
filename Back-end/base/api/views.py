@@ -29,6 +29,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['username'] = user.username
+        token['admin'] = user.is_staff
         
         if not user.is_staff:
             driver = NewDriver.objects.get(driver_name=user.username)
