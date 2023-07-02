@@ -36,6 +36,22 @@ export const ViewRideRequests = () => {
       });
     }
   };
+  const getDate = (rec_date) => {
+    const date = new Date(rec_date);
+    let time = date.toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+    if (rec_date != null) {
+      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+    } else {
+      return "-";
+    }
+  };
+  const start_time=getDate(data?.starting_time)
+  const reach_time=getDate(data?.reachedtime)
+
   return (
     <>
       <Breadcrumb />
@@ -82,7 +98,7 @@ export const ViewRideRequests = () => {
               value={data?.destination}
             />
           </Flex>
-          {/* {data?.start_from && (
+          {data?.start_from && (
             <Flex
               w="100%"
               gap="40px"
@@ -92,16 +108,16 @@ export const ViewRideRequests = () => {
                 label="Start Time"
                 width="90%"
                 status={true}
-                value={data?.requested_time}
+                value={start_time}
               />
               <InputField
                 label="Expected Time"
                 width="90%"
                 status={true}
-                value={data.expected_time}
+                value={reach_time}
               />
             </Flex>
-          )} */}
+          )}
           <Flex
             w="100%"
             gap="40px"
@@ -110,8 +126,8 @@ export const ViewRideRequests = () => {
             <InputField
               label="Status"
               width="90%"
-              status={data.status == "arrived" ? true : false}
-              value={data.status}
+              status={data?.status == "arrived" ? true : false}
+              value={data?.status}
               select={true}
               onChange={(data) => setStatus(data)}
             />
@@ -119,7 +135,7 @@ export const ViewRideRequests = () => {
               label="Interested in car pooled rides"
               width="90%"
               status={true}
-              value={data.interested_in_car_pooled}
+              value={data?.carpool==false?"No":"Yes"}
             />
           </Flex>
           <Flex
@@ -131,13 +147,13 @@ export const ViewRideRequests = () => {
               label="Expected Driver Pay"
               width="90%"
               status={true}
-              value={data.exp_amount}
+              value={data?.expectedDriverPay}
             />
             <InputField
               label="Percentage of car pooled ride"
               width="90%"
               status={true}
-              value={data.percentage}
+              value={`${data?.carpoolPercent} %`}
             />
           </Flex>
         </Flex>
