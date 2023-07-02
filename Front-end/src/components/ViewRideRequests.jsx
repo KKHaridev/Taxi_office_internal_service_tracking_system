@@ -1,18 +1,41 @@
 import React, { useState } from "react";
 import { Breadcrumb } from "./Breadcrumb";
 import { useParams } from "react-router-dom";
-import { useAcceptRide, useData } from "../hooks/useData";
+import { useData, useUpdateStatus } from "../hooks/useData";
 import { Box, Input, Heading, Flex, Select, Button } from "@chakra-ui/react";
 import { InputField } from "./InputComponents";
+import { useToast } from "@chakra-ui/react";
 
 export const ViewRideRequests = () => {
   const [status, setStatus] = useState("");
-  const { mutate } = useAcceptRide();
+  const { mutateAsync } = useUpdateStatus();
   let { id } = useParams();
+  const toast = useToast();
+
   const { isLoading, error, data } = useData("ride data", `api/rides/${id}`);
   if (isLoading) return "Loading...";
   if (error) return "An error has occurred: " + error.message;
-  
+
+  const handleChange = async () => {
+    let data = { status: status };
+    let endpoint = `api/rides/${id}/update-status/`;
+    const response = await mutateAsync({ id, data, endpoint });
+    if (response?.err) {
+      toast({
+        position: "top-right",
+        title: `${response.err}`,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        position: "top-right",
+        title: `${response.message}`,
+        status: "success",
+        isClosable: true,
+      });
+    }
+  };
   return (
     <>
       <Breadcrumb />
@@ -87,7 +110,7 @@ export const ViewRideRequests = () => {
             <InputField
               label="Status"
               width="90%"
-              status={false}
+              status={data.status == "arrived" ? true : false}
               value={data.status}
               select={true}
               onChange={(data) => setStatus(data)}
@@ -118,24 +141,24 @@ export const ViewRideRequests = () => {
             />
           </Flex>
         </Flex>
-        <Button
-          colorScheme="teal"
-          type="submit"
-          onClick={() => {
-            let data = { status };
-            let endpoint = `api/rides/${id}/update-status/`;
-            mutate({ id, data, endpoint });
-          }}
-          bg="brand.purple"
-          _hover={{ bg: "purple.700" }}
-          color="white"
-          paddingX="25px"
-          w="150px"
-          alignSelf="center"
-          mt={[9, 12]}
-        >
-          Submit
-        </Button>
+        {data.status == "arrived" ? (
+          <></>
+        ) : (
+          <Button
+            colorScheme="teal"
+            type="submit"
+            onClick={handleChange}
+            bg="brand.purple"
+            _hover={{ bg: "purple.700" }}
+            color="white"
+            paddingX="25px"
+            w="150px"
+            alignSelf="center"
+            mt={[9, 12]}
+          >
+            Submit
+          </Button>
+        )}
       </Box>
     </>
   );

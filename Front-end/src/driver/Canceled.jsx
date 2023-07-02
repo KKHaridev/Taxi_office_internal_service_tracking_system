@@ -35,19 +35,18 @@ const COLUMNS = [
 export const Canceled = () => {
   const { isLoading, error, data } = useData(
     "canceled_req",
-    "api/received"
+    "api/cancelledrides"
   );
 
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-  let canceled=data.filter((item)=>item.status=="canceled")
 
   return (
     <div>
       <Breadcrumb />
       <TableHolder>
-        <Table columns={COLUMNS} data={canceled} width="60vw"/>
+        <Table columns={COLUMNS} data={data} width="60vw"/>
       </TableHolder>
     </div>
   );

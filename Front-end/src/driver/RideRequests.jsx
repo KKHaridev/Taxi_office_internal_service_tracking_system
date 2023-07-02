@@ -22,7 +22,7 @@ const Accept_Reject = ({ row }) => {
   const status = row.values.status;
   const { mutate } = useAcceptRide();
 
-  return status == "requested" ? (
+  return status != "requested" ? (
     "-"
   ) : (
     <>
@@ -74,26 +74,26 @@ const COLUMNS = [
   {
     Header: "Start Time",
     accessor: (data) => {
-      const date = new Date(data.requested_time);
+      const date = new Date(data.starting_time);
       let time = date.toLocaleString("en-US", {
         hour: "numeric",
         minute: "numeric",
         hour12: true,
       });
-      return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+      if (data.starting_time != null) {
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+      } else {
+        return "-";
+      }
     },
   },
   {
-    Header: "Expected Time",
-    accessor: "expected_time",
-  },
-  {
     Header: "Chance Pooled Rides",
-    accessor: (data) => `50 %`,
+    accessor: (data) => `${data.carpoolPercent} %`,
   },
   {
     Header: "Expected Amount",
-    accessor: (data) => <>&#8377; 1000</>,
+    accessor: (data) => <>&#8377; {data.expectedDriverPay}</>,
   },
   {
     Header: "Status",
@@ -115,7 +115,6 @@ export const RideRequests = () => {
   const { isLoading, error, data } = useData("req_rides", "api/received", {
     refetchInterval: 1000,
   });
-
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;

@@ -33,19 +33,43 @@ const COLUMNS = [
   },
   {
     Header: "Start Time",
-    accessor: "start_time",
+    accessor: (data) => {
+      const date = new Date(data.starting_time);
+      let time = date.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+      if (data.starting_time != null) {
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+      } else {
+        return "-";
+      }
+    },
   },
   {
-    Header: "Expected Time",
-    accessor: "expected_time",
+    Header: "Reached Time",
+    accessor: (data) => {
+      const date = new Date(data.reachedtime);
+      let time = date.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+      if (data.reachedtime != null) {
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+      } else {
+        return "-";
+      }
+    },
   },
   {
     Header: "Chance Pooled Rides",
-    accessor: (data) => `80 %`,
+    accessor: (data) => `${data.carpoolPercent} %`,
   },
   {
     Header: "Expected Amount",
-    accessor: (data) => <>&#8377; 1000</>,
+    accessor: (data) => <>&#8377; {data.expectedDriverPay}</>,
   },
   {
     Header: "Status",
@@ -59,12 +83,11 @@ const COLUMNS = [
 ];
 
 export const Completed = () => {
-  const { isLoading, error, data } = useData("completed_req", "api/received");
+  const { isLoading, error, data } = useData("completed_req", "api/completedrides");
 
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-
   return (
     <div>
       <Breadcrumb />
