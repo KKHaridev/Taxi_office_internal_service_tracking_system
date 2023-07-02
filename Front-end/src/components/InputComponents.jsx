@@ -25,12 +25,12 @@ export const InputField = ({
             <option value="none" selected disabled hidden>
               {value}
             </option>
-            <option value="Waiting">Waiting</option>
-            <option value="In-Progress">In-Progress</option>
-            <option value="Arrived">Arrived</option>
-            <option value="Delayed By User">Delayed By User</option>
-            <option value="Taxi Malfunction">Taxi Malfunction</option>
-            <option value="Delayed By User">Delayed By User</option>
+            <option value="waiting">Waiting</option>
+            <option value="in-progress">In-Progress</option>
+            <option value="arrived">Arrived</option>
+            <option value="delayed by user">Delayed By User</option>
+            <option value="taxi malfunction">Taxi Malfunction</option>
+            <option value="delayed by user">Delayed By User</option>
           </Select>
         ) : (
           <Input id="" name="" mt="5px" isDisabled={status} value={value} />
