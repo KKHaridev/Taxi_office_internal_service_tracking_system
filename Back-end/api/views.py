@@ -123,8 +123,10 @@ def CreateDriverView(request):
     
     serializer = CreateDriverSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save(driver_id=driver_id)  # Pass the driver_id to the serializer's save method
-        
+        new_driver = serializer.save(driver_id=driver_id)  # Save the new driver instance
+
+        # Add values to earnings table
+        Earning.objects.create(driver_id=new_driver, total_earnings=0, total_rides=0, total_paid=0, total_pending=0)
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
 
