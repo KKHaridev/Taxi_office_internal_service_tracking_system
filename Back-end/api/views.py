@@ -124,11 +124,7 @@ def CreateDriverView(request):
     serializer = CreateDriverSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(driver_id=driver_id)  # Pass the driver_id to the serializer's save method
-        Earnings = Earning.objects.get(driver_id = driver_id)
-        Earnings.total_earnings = 0
-        Earnings.total_paid = 0
-        Earnings.total_pending = 0
-        Earnings.total_rides = 0
+        
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
 
@@ -685,6 +681,8 @@ def update_ride_status(request, ride_id):
         status = request.data.get('status')
 
         if status == 'accepted':
+            change_driver_availability(ride.driver_id.driver_id, 'unavailable')
+            
             ride.status = status
             ride.starting_time = timezone.now()  # Set starting_time to the current date and time
             ride.save()
@@ -693,6 +691,8 @@ def update_ride_status(request, ride_id):
         
 
         if status == 'arrived':
+            change_driver_availability(ride.driver_id.driver_id, 'available')
+
             ride.status = status
             ride.save()
 
@@ -743,8 +743,8 @@ def update_driver_status(request, driver_id):
 def change_driver_availability(request, driver_id):
     driver = get_object_or_404(NewDriver, driver_id=driver_id)
 
-    if request.method == 'POST':
-        is_available = request.POST.get('is_available')
+    if request.method == 'PUT':
+        is_available = request.data.get('is_available')
 
         # Update the availability status of the driver
         driver.driver_status = 'available' if is_available == 'true' else 'unavailable'

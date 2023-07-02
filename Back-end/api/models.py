@@ -74,6 +74,13 @@ class NewDriver(models.Model):
     driver_dob = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
     driver_status = models.CharField(max_length=20, default="available")
 
+    def save(self, *args, **kwargs):
+            created = not self.pk  # Check if the instance is being created or updated
+
+            super().save(*args, **kwargs)
+
+            if created:
+                Earning.objects.create(driver_id=self, total_earnings=0, total_rides=0, total_paid=0, total_pending=0)
 
 
 class TaxiDetail(models.Model):
@@ -111,7 +118,7 @@ class NewRideDetail(models.Model):
 
 class Earning(models.Model):
     driver_id = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
-    total_earnings = models.IntegerField(default=0)
-    total_rides = models.IntegerField(default=0)
-    total_paid = models.IntegerField(default=0)
-    total_pending = models.IntegerField(default=0)
+    total_earnings = models.IntegerField(default=int(0))
+    total_rides = models.IntegerField(default=int(0))
+    total_paid = models.IntegerField(default=int(0))
+    total_pending = models.IntegerField(default=int(0))
