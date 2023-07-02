@@ -821,6 +821,7 @@ def list_all_drivers(request):
             'driver_status': driver.driver_status,
             'driver_phone':driver.driver_phone,
             'driver_upi': driver.driver_upi,
+            'total_rides':earn.total_rides,
             'total_earning':earn.total_earnings,
             'taxi_num': taxi.taxi_num,
             'taxi_test_date': taxi.taxi_test_date,
