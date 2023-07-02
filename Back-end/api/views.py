@@ -813,10 +813,15 @@ def list_all_drivers(request):
 
     for driver in drivers:
         taxi = TaxiDetail.objects.get(driver_id=driver)
+        earn = Earning.objects.get(driver_id = driver)
         driver_data = {
             'driver_id': driver.driver_id,
             'driver_name': driver.driver_name,
             'driver_email': driver.driver_email,
+            'driver_status': driver.driver_status,
+            'driver_phone':driver.driver_phone,
+            'driver_upi': driver.driver_upi,
+            'total_earning':earn.total_earnings,
             'taxi_num': taxi.taxi_num,
             'taxi_test_date': taxi.taxi_test_date,
             'taxi_pollution_validity': taxi.taxi_pollution_validity,
