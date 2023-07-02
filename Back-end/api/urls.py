@@ -26,10 +26,14 @@ urlpatterns = [
     #path('completedrides', views.CompletedRideView.as_view()),
     path('completedrides',views.getViewCompleted),
 
+    path('allcompletedrides',views.getAllViewCompleted),
+
     #path('<str:rideId>/completedrides', views.CompletedRideDetailsView.as_view()),
     
     #path('cancelledrides', views.CancelledRideView.as_view()),
     path('cancelledrides',views.getViewCancelled),
+
+    path('allcancelledrides',views.getAllViewCancelled),
 
     #path('/<str:rideId>/cancelledrides',views.CancelledRideDetailsView.as_view()),
 
@@ -39,6 +43,8 @@ urlpatterns = [
 
     #path('ongoingrides', views.OngoingRideView.as_view()),
     path('ongoingrides',views.getViewOngoing),
+    
+    path('allongoingrides',views.getAllViewOngoing),
 
     #path('<str:driver_id>/updatedriverdetails',views.updatedriverdetails),
 
