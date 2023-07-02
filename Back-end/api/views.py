@@ -719,6 +719,7 @@ def update_ride_status(request, ride_id):
             return JsonResponse({'message': 'Ride status updated successfully.'})
 
         else:
+            ride.status = status
             ride.save()
             return JsonResponse({'message': 'Ride status updated successfully.'})
     return JsonResponse({'message': 'Invalid request method.'}, status=400)
