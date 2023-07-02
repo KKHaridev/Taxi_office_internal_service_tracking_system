@@ -676,13 +676,17 @@ def getDriverViewDashboard(request):
 @api_view(['PUT'])
 def update_ride_status(request, ride_id):
     ride = get_object_or_404(NewRideDetail, rideId=ride_id)
+    driver = get_object_or_404(NewDriver, driver_id=ride.driver_id.driver_id)
 
     if request.method == 'PUT':
         status = request.data.get('status')
 
         if status == 'accepted':
-            change_driver_availability(ride.driver_id.driver_id, 'unavailable')
             
+            
+            driver.driver_status = 'unavailable'
+            driver.save()
+
             ride.status = status
             ride.starting_time = timezone.now()  # Set starting_time to the current date and time
             ride.save()
@@ -691,7 +695,9 @@ def update_ride_status(request, ride_id):
         
 
         if status == 'arrived':
-            change_driver_availability(ride.driver_id.driver_id, 'available')
+            
+            driver.driver_status = 'available'
+            driver.save()
 
             ride.status = status
             ride.save()
