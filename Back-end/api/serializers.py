@@ -180,5 +180,5 @@ class DriverDashboardSerializer(serializers.Serializer):
     driver_id = serializers.CharField()
     driver_name = serializers.CharField()
     total_rides = serializers.IntegerField()
-    total_earnings = serializers.FloatField()
+    total_earnings = serializers.IntegerField()
     daily_totals = DailyTotalsSerializer(many=True)
