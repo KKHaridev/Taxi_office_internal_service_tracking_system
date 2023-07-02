@@ -646,7 +646,7 @@ def getDriverViewDashboard(request):
         print(current_date)
         # Calculate total rides and earnings for the current day
         total_rides = rides.count()
-        total_earnings = sum(ride.expectedDriverPay or 0 for ride in rides)
+        total_earnings = sum(int(ride.expectedDriverPay) or 0 for ride in rides)
 
         # Store the daily totals in the dictionary
         daily_total = {
