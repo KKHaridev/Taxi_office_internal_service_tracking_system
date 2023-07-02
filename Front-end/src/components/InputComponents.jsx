@@ -21,6 +21,7 @@ export const InputField = ({
             size="md"
             textTransform={"capitalize"}
             onChange={(e)=>{onChange(e.target.value)}}
+            isDisabled={status}
           >
             <option value="none" selected disabled hidden>
               {value}
@@ -28,7 +29,7 @@ export const InputField = ({
             <option value="waiting">Waiting</option>
             <option value="in-progress">In-Progress</option>
             <option value="arrived">Arrived</option>
-            <option value="delayed by user">Delayed By User</option>
+            <option value="delayed by driver">Delayed By Driver</option>
             <option value="taxi malfunction">Taxi Malfunction</option>
             <option value="delayed by user">Delayed By User</option>
           </Select>
