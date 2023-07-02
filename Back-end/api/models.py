@@ -98,7 +98,7 @@ class NewRideDetail(models.Model):
     requested_time = models.DateTimeField(auto_now_add=True)
     starting_time = models.DateTimeField(auto_now_add=False,null=True)
     reachedtime = models.DateTimeField(auto_now_add=False,null=True)
-    expectedReachingtime = models.TimeField(auto_now_add=False,null=True)
+    # expectedReachingtime = models.TimeField(auto_now_add=False,null=True)
     status = models.CharField(max_length=20,default="requested")
     carpool = models.BooleanField(default=False)
     expectedDriverPay = models.CharField(max_length=7,null=True)

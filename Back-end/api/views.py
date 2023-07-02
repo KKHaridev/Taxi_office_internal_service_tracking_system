@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from django.utils import timezone
 from django.shortcuts import render
 from rest_framework import generics, status
 from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer, AdminDashboardSerializer
@@ -123,6 +124,11 @@ def CreateDriverView(request):
     serializer = CreateDriverSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(driver_id=driver_id)  # Pass the driver_id to the serializer's save method
+        Earnings = Earning.objects.get(driver_id = driver_id)
+        Earnings.total_earnings = 0
+        Earnings.total_paid = 0
+        Earnings.total_pending = 0
+        Earnings.total_rides = 0
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
 
@@ -345,6 +351,10 @@ def received_ride_details_view(request, rideId):
         destination = ride.destination
         reachedtime = ride.reachedtime
         _status = ride.status
+        _carpool = ride.carpool
+        _expectedDriverPay = ride.expectedDriverPay
+        _carpoolPercent = ride.carpoolPercent
+
         return Response({
             #'rideId': rideId,
             'passenger_name':passenger_name ,
@@ -352,7 +362,11 @@ def received_ride_details_view(request, rideId):
             'start_from': start_from,
             'destination': destination,
             'reachedtime': reachedtime,
-            'status': _status
+            'status': _status,
+            'carpool': _carpool,
+            'expectedDriverPay' : _expectedDriverPay,
+            'carpoolPercent' : _carpoolPercent
+
         })
     except NewRideDetail.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -670,11 +684,42 @@ def update_ride_status(request, ride_id):
     if request.method == 'PUT':
         status = request.data.get('status')
 
-        # Update the status of the ride
-        ride.status = status
-        ride.save()
+        if status == 'accepted':
+            ride.status = status
+            ride.starting_time = timezone.now()  # Set starting_time to the current date and time
+            ride.save()
 
-        return JsonResponse({'message': 'Ride status updated successfully.'})
+            return JsonResponse({'message': 'Ride status updated successfully.'})
+        
+
+        if status == 'arrived':
+            ride.status = status
+            ride.save()
+
+            # Update total earnings in Earning model
+            driver_id = ride.driver_id.driver_id
+            expected_pay = ride.expectedDriverPay
+
+            try:
+                earning = Earning.objects.get(driver_id=driver_id)
+                earning.total_earnings += int(expected_pay)
+                earning.total_pending  += int(expected_pay)
+                earning.total_rides += 1
+                earning.save()
+            except Earning.DoesNotExist:
+                # Handle the case when Earning object does not exist for the driver
+                # Create a new Earning object with the driver_id and expected_pay
+                Earning.objects.create(
+                    driver_id=driver_id, 
+                    total_earnings=int(expected_pay),
+                    total_pending = int(expected_pay),
+                    total_rides = 1
+                    )
+
+            return JsonResponse({'message': 'Ride status updated successfully.'})
+
+
+
 
     return JsonResponse({'message': 'Invalid request method.'}, status=400)
 
