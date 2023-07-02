@@ -42,10 +42,6 @@ const COLUMNS = [
     },
   },
   {
-    Header: "Expected Time",
-    accessor: "expected_time",
-  },
-  {
     Header: "Chance Pooled Rides",
     accessor: (data) => `50 %`,
   },
@@ -65,17 +61,18 @@ const COLUMNS = [
 ];
 
 export const Ongoing = () => {
-  const { isLoading, error, data } = useData("ongoing_req", "api/received");
+  const { isLoading, error, data } = useData("ongoing_req", "api/ongoingrides");
 
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-  let ongoing = data.filter((item) => item.status == "In-Progress");
+  console.log(data);
+
   return (
     <div>
       <Breadcrumb />
       <TableHolder>
-        <Table columns={COLUMNS} data={ongoing} />
+        <Table columns={COLUMNS} data={data} />
       </TableHolder>
     </div>
   );

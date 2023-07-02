@@ -5,7 +5,7 @@ import { useAuth } from "@context/AuthContext";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { RiUserReceived2Fill } from "react-icons/ri";
 import { useData } from "../hooks/useData";
-import { Text, Flex } from "@chakra-ui/react";
+import { Text, Flex, Grid } from "@chakra-ui/react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -71,7 +71,10 @@ export const optionsride = {
 };
 
 export const Dashboard = () => {
-  const { isLoading, error, data } = useData("dashboard", `api/dashboard`);
+  const { isLoading, error, data, isSuccess } = useData(
+    "dashboard",
+    `api/dashboard`
+  );
 
   if (isLoading) {
     return (
@@ -81,7 +84,9 @@ export const Dashboard = () => {
       </>
     );
   }
+  console.log(data);
   if (error) {
+
     return (
       <>
         <Breadcrumb />
@@ -89,65 +94,84 @@ export const Dashboard = () => {
       </>
     );
   }
-  const cardData = [
-    {
-      icon: BsCurrencyDollar,
-      title: "Earnings",
-      number: `&#8377; ${data?.total_earnings}`,
-    },
 
-    {
-      icon: RiUserReceived2Fill,
-      title: "Rides",
-      number: `${data?.total_rides}`,
-    },
-  ];
-  const earnings = {
-    labels: Object.values(data.daily_totals).map((item, index) => item.date),
-    datasets: [
+  if (isSuccess) {
+    const cardData = [
       {
-        label: "Earings",
-        data: Object.values(data.daily_totals).map(
-          (item, index) => item.total_earnings
-        ),
-        backgroundColor: ["#D2FF28", "#C84C09", "#5C80BC", "#FF8811"],
+        icon: BsCurrencyDollar,
+        title: "Earnings",
+        number: `&#8377; ${data?.total_earnings}`,
       },
-    ],
-  };
-  const rides = {
-    labels: Object.values(data.daily_totals).map((item, index) => item.date),
-    datasets: [
+
       {
-        label: "Rides",
-        data: Object.values(data.daily_totals).map(
-          (item, index) => item.total_rides
-        ),
-        backgroundColor: ["#5C80BC", "#D2FF28", "#C84C09", "#FF8811"],
+        icon: RiUserReceived2Fill,
+        title: "Received_Rides",
+        number: `${data?.total_rides}`,
       },
-    ],
-  };
-  return (
-    <>
-      <Breadcrumb />
-      <Flex overflowY={"scroll"} flexDirection={{ lg: "column", "2xl": "row" }}>
-        <CardHolder cardData={cardData} />
-        <Flex
-          w={700}
-          marginLeft={{ base: "0", md: "30px" }}
-          alignItems="center"
-          justifyContent="center"
-          flexDir="column"
-          gap="15px"
-          bg="white"
-          borderRadius="7px"
-          boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
-          mt={"15px"}
-          padding={4}
+    ];
+    const earnings = {
+      labels: Object.values(data?.daily_totals).map(
+        (item, index) => item?.date
+      ),
+      datasets: [
+        {
+          label: "Earings",
+          data: Object.values(data?.daily_totals).map(
+            (item, index) => item?.total_earnings
+          ),
+          backgroundColor: ["#D2FF28", "#C84C09", "#5C80BC", "#FF8811"],
+        },
+      ],
+    };
+    const rides = {
+      labels: Object.values(data?.daily_totals).map((item, index) => item.date),
+      datasets: [
+        {
+          label: "Rides",
+          data: Object.values(data?.daily_totals).map(
+            (item, index) => item.total_rides
+          ),
+          backgroundColor: ["#5C80BC", "#D2FF28", "#C84C09", "#FF8811"],
+        },
+      ],
+    };
+    return (
+      <>
+        <Breadcrumb />
+        <Grid
+          overflowY={"scroll"}
+          w="90vw"
+          height={"calc(100vh - 180px)"}
+          gridTemplateColumns="repeat(4,1fr)"
+          gridTemplateRows={"repeat(4,1fr)"}
+          paddingBottom={2}
         >
-          <Line options={optionsearning} data={earnings} />
-          <Line options={optionsride} data={rides} />
-        </Flex>
-      </Flex>
-    </>
-  );
+          <CardHolder cardData={cardData} />
+          <Flex
+            w={700}
+            marginLeft={{ base: "0", md: "30px" }}
+            alignItems="center"
+            justifyContent="center"
+            flexDir="column"
+            gap="15px"
+            bg="white"
+            borderRadius="7px"
+            boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
+            padding={4}
+            gridColumn={"3/5"}
+            gridRow={"1/5"}
+          >
+            <Line options={optionsearning} data={earnings} />
+            <Line options={optionsride} data={rides} />
+          </Flex>
+          <Flex gridColumn="1/3" gridRow="3/5">
+            <img
+              src="https://www.smcrealty.com/images/microsites/location-map/mantri-serenity-251.jpg"
+              alt="img"
+            />
+          </Flex>
+        </Grid>
+      </>
+    );
+  }
 };
