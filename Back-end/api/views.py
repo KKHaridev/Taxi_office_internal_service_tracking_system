@@ -388,7 +388,7 @@ def getAllViewCancelled(request):
 # @permission_classes([IsAuthenticated])
 def getViewCancelled(request):
     driver_id_view_cancelled = get_driver_id(request)
-    cancelled = NewRideDetail.objects.filter(driver_id = driver_id_view_cancelled,status='cancelled')
+    cancelled = NewRideDetail.objects.filter(driver_id = driver_id_view_cancelled,status='canceled')
     serailizer = CancelledRideSerializer(cancelled, many=True)
     return Response(serailizer.data)
 
@@ -697,6 +697,21 @@ def update_ride_status(request, ride_id):
 
             return JsonResponse({'message': 'Ride status updated successfully.'})
         
+        if status == 'taxi malfunction':
+            
+            driver.driver_status = 'unavailable'
+            driver.save()
+            ride.status = 'canceled'
+            ride.save()
+
+            return JsonResponse({'message': 'Ride status updated successfully.'})
+
+        if status == 'delayed by user' or 'delayed by driver' or 'inprogress':
+            
+            ride.status = 'ongoing'
+            ride.save()
+
+            return JsonResponse({'message': 'Ride status updated successfully.'})
 
         if status == 'arrived':
             
