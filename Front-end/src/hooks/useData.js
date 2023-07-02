@@ -11,11 +11,13 @@ export const useData = (key, path, options = {}) => {
   });
 }; */
 const accessKey = JSON.parse(localStorage.getItem("authTokens"));
+console.log(accessKey);
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const fetchData = (path) => {
+  const accessKey = JSON.parse(localStorage.getItem("authTokens"));
   let headersList = {
-    Authorization: `Bearer ${accessKey.access}`,
+    Authorization: `Bearer ${accessKey?.access}`,
   };
   return fetch(`${apiUrl}/${path}`, {
     method: "GET",
@@ -61,30 +63,23 @@ const postReqWithAccess = async ({ endpoint, data, accessToken }) => {
     return response;
   }
 };
-const patchReq = ({ id, data,endpoint }) => {
-  return fetch(`${apiUrl}/${endpoint}`, {
+const patchReq = async ({ id, data, endpoint }) => {
+  const res = await fetch(`${apiUrl}/${endpoint}`, {
     method: "PUT",
     body: JSON.stringify(data),
 
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
-  })
-    .then((response) => response.json())
-    .then((json) => console.log(json));
-};
-
-const updateStatus = ({ id, data }) => {
-  return fetch(`http://localhost:3000/drivers/${id}`, {
-    method: "PATCH",
-    body: JSON.stringify(data),
-
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  })
-    .then((response) => response.json())
-    .then((json) => console.log(json));
+  });
+  const result = await res.json();
+  if (res.statusText == "Bad Request") {
+    let err = "Error Occured.";
+    const error = { err, issues: result };
+    return error;
+  } else {
+    return result;
+  }
 };
 
 const deleteUser = ({ id }) => {
@@ -108,7 +103,7 @@ export const useDelete = () => {
 };
 
 export const useUpdateStatus = () => {
-  return useMutation(updateStatus);
+  return useMutation(patchReq);
 };
 
 export const useNewDriver = () => {
