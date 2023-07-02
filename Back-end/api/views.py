@@ -706,7 +706,7 @@ def update_ride_status(request, ride_id):
 
             return JsonResponse({'message': 'Ride status updated successfully.'})
 
-        if status == 'delayed by user' or 'delayed by driver' or 'inprogress':
+        if status == 'delayed by user' or status == 'delayed by driver' or status == 'in-progress':
             
             ride.status = 'ongoing'
             ride.save()
