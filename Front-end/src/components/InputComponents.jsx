@@ -23,7 +23,7 @@ export const InputField = ({
             onChange={(e)=>{onChange(e.target.value)}}
             isDisabled={status}
           >
-            <option value="none" selected disabled hidden>
+            <option defaultValue="none" selected disabled hidden>
               {value}
             </option>
             <option value="waiting">Waiting</option>
@@ -67,7 +67,7 @@ export const DateComponent = ({ label, width, value, status, select }) => {
           placeholder="Select Date and Time"
           size="md"
           type="date"
-          value={date}
+          defaultValue={date}
           onChange={(e) => setDate(e.target.value)}
           isDisabled={status}
         />
