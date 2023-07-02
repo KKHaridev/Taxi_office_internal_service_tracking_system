@@ -83,7 +83,7 @@ class ReceivedSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewRideDetail
         fields = ('rideId','passenger_name', 'start_from', 'destination',
-                  'requested_time', 'status')
+                  'requested_time', 'status','carpool','carpoolPercent','expectedDriverPay','starting_time','reachedtime')
         extra_kwargs = {
              'rideId': {'read_only': True},}
         
@@ -112,8 +112,8 @@ class CompletedRideSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NewRideDetail
-        fields = ('rideId', 'passenger_name', 'start_from',
-                  'destination', 'reachedtime', 'status', 'driver_name')
+        fields = ('rideId', 'passenger_name', 'start_from','starting_time',
+                  'destination', 'reachedtime', 'status', 'driver_name','expectedDriverPay','carpoolPercent')
         # Exclude the 'driver' field from the serialized output
         extra_kwargs = {
             'driver': {'write_only': True},
