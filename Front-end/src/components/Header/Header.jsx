@@ -16,9 +16,12 @@ import {
 import { VscBellDot } from "react-icons/vsc";
 import { Link as _Link } from "react-router-dom";
 import { useAuth } from "@context/AuthContext";
+import { useLocation } from "react-router-dom";
 
 export const Header = () => {
   const auth = useAuth();
+  const location = useLocation();
+  const admin = location.pathname.includes("admin");
   return (
     <Container
       as="header"
@@ -67,16 +70,20 @@ export const Header = () => {
               alignItems="center"
               justifyContent="center"
             >
-              <Link
-                as={_Link}
-                w="90%"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                to="/profile"
-              >
-                Profile
-              </Link>
+              {admin ? (
+                ""
+              ) : (
+                <Link
+                  as={_Link}
+                  w="90%"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  to="/profile"
+                >
+                  Profile
+                </Link>
+              )}
               <Button
                 bg="brand.purple"
                 _hover={{ bg: "purple.700" }}

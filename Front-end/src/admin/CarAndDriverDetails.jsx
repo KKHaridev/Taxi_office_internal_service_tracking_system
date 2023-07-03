@@ -11,10 +11,15 @@ import {
 
 export const CarsAndDriversDetails = () => {
   let { id } = useParams();
-  const { isLoading, error, data } = useData("details", `drivers/${id}`);
+  const { isLoading, error, data, isSuccess } = useData(
+    "details_one",
+    `api/admin/drivers/list/${id}`
+  );
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
+
+  const details = data?.drivers;
   return (
     <>
       <Breadcrumb />
@@ -35,47 +40,61 @@ export const CarsAndDriversDetails = () => {
               label="Driver ID"
               width="90%"
               status={true}
-              value={data.id}
+              value={details?.driver_id}
             />
-            <InputField label="Driver Name" width="90%" value={data.username} />
+            <InputField
+              label="Driver Name"
+              width="90%"
+              value={details?.driver_name}
+            />
           </Doulbe>
           <Doulbe>
             <InputField
               label="Current Status"
               width="90%"
-              value={data.availability}
+              value={details?.driver_status}
             />
-            <InputField label="Contact Number" width="90%" value={data.phone} />
+            <InputField
+              label="Contact Number"
+              width="90%"
+              value={details?.driver_phone}
+            />
           </Doulbe>
           <Doulbe>
             <InputField
               label="Total Earnings"
               width="90%"
-              value={data.earnings.total_earnings}
+              value={details?.total_earning}
             />
-            <InputField label="UPI ID" width="90%" value={data.upi} />
+            <InputField
+              label="UPI ID"
+              width="90%"
+              value={details?.driver_upi}
+            />
           </Doulbe>
           <Heading as="h4" size="sm">
             Taxi Details
           </Heading>
-          <Doulbe>
-            <InputField
-              label="Model"
-              width="90%"
-              value={data.taxi_details.car_model}
-            />
-            <InputField label="Type" width="90%" value={data.taxi_details.type} />
-          </Doulbe>
+          {data?.taxi_model && (
+            <Doulbe>
+              <InputField
+                label="Model"
+                width="90%"
+                value={details?.taxi_model}
+              />
+              <InputField label="Type" width="90%" value={details?.taxi_type} />
+            </Doulbe>
+          )}
           <Doulbe>
             <InputField
               label="Taxi Number"
               width="90%"
-              value={data.taxi_details.taxi_no}
+              value={details?.taxi_num}
             />
             <DateComponent
               label="Test Date"
               width="90%"
-              value={data.taxi_details.test_date}
+              value={details?.taxi_test_date}
               status={true}
             />
           </Doulbe>
@@ -84,13 +103,13 @@ export const CarsAndDriversDetails = () => {
               label="Pollution Validity"
               width="90%"
               status={true}
-              value={data.taxi_details.insurance_val}
+              value={details?.taxi_pollution_validity}
             />
             <DateComponent
               label="Insurance"
               status={true}
               width="90%"
-              value={data.taxi_details.insurance_val}
+              value={details?.taxi_insurance}
             />
           </Doulbe>
         </Flex>

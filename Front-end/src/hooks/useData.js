@@ -64,13 +64,16 @@ const postReqWithAccess = async ({ endpoint, data, accessToken }) => {
   }
 };
 const patchReq = async ({ id, data, endpoint }) => {
+  const accessKey = JSON.parse(localStorage.getItem("authTokens"));
+
+  let headersList = {
+    Authorization: `Bearer ${accessKey?.access}`,
+    "Content-type": "application/json; charset=UTF-8",
+  };
   const res = await fetch(`${apiUrl}/${endpoint}`, {
     method: "PUT",
     body: JSON.stringify(data),
-
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
+    headers: headersList,
   });
   const result = await res.json();
   if (res.statusText == "Bad Request") {
@@ -83,7 +86,7 @@ const patchReq = async ({ id, data, endpoint }) => {
 };
 
 const deleteUser = ({ id }) => {
-  return fetch(`http://localhost:3000/drivers/${id}`, {
+  return fetch(`${apiUrl}/api/admin/drivers/${id}/delete-or-disable/`, {
     method: "DELETE",
 
     headers: {
