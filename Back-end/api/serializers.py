@@ -104,20 +104,23 @@ class ReceivedSerializer(serializers.ModelSerializer):
 
 
 class CompletedRideSerializer(serializers.ModelSerializer):
-    driver_name = serializers.SerializerMethodField()
+    # driver_name = serializers.SerializerMethodField()
 
-    def get_driver_name(self, obj):
-        # Retrieve the driver name from the related NewDriver model
-        return obj.driver_id.driver_name
+    # def get_driver_name(self, obj):
+    #     # Retrieve the driver name from the related NewDriver model
+    #     return obj.driver_id.driver_name
+
+    driver_name = serializers.CharField(source='driver_id.driver_name')
+
 
     class Meta:
         model = NewRideDetail
         fields = ('rideId', 'passenger_name', 'start_from','starting_time',
                   'destination', 'reachedtime', 'status', 'driver_name','expectedDriverPay','carpoolPercent')
         # Exclude the 'driver' field from the serialized output
-        extra_kwargs = {
-            'driver': {'write_only': True},
-        }
+        # extra_kwargs = {
+        #     'driver': {'write_only': True},
+        # }
 
 
 
@@ -130,18 +133,19 @@ class EarningsSerializer(serializers.ModelSerializer):
 
 
 class OngoingRideSerializer(serializers.ModelSerializer):
-    def get_driver_name(self, obj):
-        return obj.driver_id.driver_name
+    
+    driver_name = serializers.CharField(source='driver_id.driver_name')
     class Meta:
         model = NewRideDetail
         fields = ('rideId','passenger_name', 'start_from', 'destination', 'starting_time',
                   'expectedDriverPay', 'status', 'carpoolPercent','driver_name')
 
 class CancelledRideSerializer(serializers.ModelSerializer):
+    driver_name = serializers.CharField(source='driver_id.driver_name')
     class Meta:
         model = NewRideDetail
         fields = ('rideId', 'passenger_name', 'start_from',
-                  'destination', 'status')
+                  'destination', 'status','driver_name')
     
 # class DriverDashboardSerializer(serializers.ModelSerializer):
 #     class Meta:
