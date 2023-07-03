@@ -840,6 +840,39 @@ def list_all_drivers(request):
     return JsonResponse({'drivers': drivers_data})
 
 
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def list_single_driver(request, driver_id):
+    driver = NewDriver.objects.get(driver_id = driver_id)
+    
+
+
+    taxi = TaxiDetail.objects.get(driver_id=driver_id)
+    earn = Earning.objects.get(driver_id = driver_id)
+    driver_data = {
+        'driver_id': driver.driver_id,
+        'driver_name': driver.driver_name,
+        'driver_email': driver.driver_email,
+        'driver_status': driver.driver_status,
+        'driver_phone':driver.driver_phone,
+        'driver_upi': driver.driver_upi,
+        'total_rides':earn.total_rides,
+        'total_earning':earn.total_earnings,
+        'taxi_num': taxi.taxi_num,
+        'taxi_test_date': taxi.taxi_test_date,
+        'taxi_pollution_validity': taxi.taxi_pollution_validity,
+        'taxi_insurance': taxi.taxi_insurance,
+        'taxi_type': taxi.taxi_type,
+        'taxi_manufacturer': taxi.taxi_manufacturer,
+        'taxi_model': taxi.taxi_model,
+    }
+
+    return JsonResponse({'drivers': driver_data})
+
+
+
+
 # Dashboard
 
 # New ride

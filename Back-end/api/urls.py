@@ -43,7 +43,7 @@ urlpatterns = [
 
     #path('ongoingrides', views.OngoingRideView.as_view()),
     path('ongoingrides',views.getViewOngoing),
-    
+
     path('allongoingrides',views.getAllViewOngoing),
 
     #path('<str:driver_id>/updatedriverdetails',views.updatedriverdetails),
@@ -65,6 +65,8 @@ urlpatterns = [
     path('admin/drivers/<int:driver_id>/delete-or-disable/', views.delete_or_disable_driver, name='delete_or_disable_driver'),
 
     path('admin/drivers/list/', views.list_all_drivers, name='list_all_drivers'),
+
+    path('admin/drivers/list/<int:driver_id>', views.list_single_driver, name='list_single_driver'),
 
 ]
 
