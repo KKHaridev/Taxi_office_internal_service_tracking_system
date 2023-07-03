@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.shortcuts import render
 from rest_framework import generics, status
 from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer, AdminDashboardSerializer
-#from .models import Driver, Ride
+
 from .models import NewDriver, TaxiDetail,NewRideDetail,Earning
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -19,61 +19,24 @@ from .ride_service import assign_driver_to_ride
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 
-# from rest_framework_simplejwt.authentication import JWTAuthentication
-
-# def your_view(request):
-#     # Get the Authorization header from the request
-#     auth_header = request.headers.get('Authorization')
-
-#     if auth_header:
-#         # Split the header value into the authentication scheme and the token
-#         auth_scheme, token = auth_header.split(' ')
-
-#         if auth_scheme.lower() == 'bearer':
-#             # Token is the JWT access token
-#             jwt_access_token = token
-
-#             # You can then use the JWT access token as needed
-#             # For example, you can decode and verify the token using the JWTAuthentication class
-#             authentication = JWTAuthentication()
-
-#             try:
-#                 validated_token = authentication.get_validated_token(jwt_access_token)
-#                 http_driver_id= validated_token['driver_id']
-#                 print(http_driver_id)
-#                 return http_driver_id
-
-#                 # Access token is valid
-#                 # You can access the token claims or user details if needed
-#                 # validated_token['username'], validated_token['driver_id'], etc.
-#             except:
-#                 # Access token is invalid or expired
-#                 # Handle the error accordingly
-#                 pass
-
-
 import jwt
 from django.conf import settings
 from django.http import JsonResponse, Http404
 
 
 def get_driver_id(request):
-    # Get the token from the Authorization header
+    
     auth_header = request.headers.get('Authorization')
     if auth_header:
-        # Extract the token from the header (e.g., "Bearer <token>")
+        
         token = auth_header.split(' ')[1]
 
         try:
-            # Verify and decode the token using your secret key
+            
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            # Access the claims or data from the payload
+           
             driver_id = payload['driver_id']
             return driver_id
-            # ... Your code here ...
-
-            # Return a JSON response or perform other actions
-            # return JsonResponse({'message': 'Token verified and processed successfully.'})
         except jwt.ExpiredSignatureError:
             return JsonResponse({'error': 'Token expired.'}, status=401)
         except jwt.InvalidTokenError:
@@ -83,14 +46,6 @@ def get_driver_id(request):
 
 
 # Create your views here.
-
-
-#Create your views here.
-
-
-# class DriverView(generics.ListAPIView):
-#     queryset = NewDriver.objects.all()
-#     serializer_class = DriverSerializer
 
 
 @api_view(['GET'])
@@ -111,21 +66,17 @@ def getViewDriver(request):
     return Response(serializer.data)
 
 
-# class CreateDriverView(generics.CreateAPIView):
-#     queryset = NewDriver.objects.all()
-#     serializer_class = CreateDriverSerializer
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def CreateDriverView(request):
-    driver_id = get_driver_id(request)  # Fetch the driver_id from the request
+    driver_id = get_driver_id(request)  
     
     serializer = CreateDriverSerializer(data=request.data)
     if serializer.is_valid():
-        new_driver = serializer.save(driver_id=driver_id)  # Save the new driver instance
+        new_driver = serializer.save(driver_id=driver_id) 
 
-        # Add values to earnings table
+       
         Earning.objects.create(driver_id=new_driver, total_earnings=0, total_rides=0, total_paid=0, total_pending=0)
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
@@ -162,11 +113,6 @@ def delete_driver(request, driver_id):
 
     return Response({'message': 'Driver deleted successfully'})
 
-# class CreateTaxiView(generics.CreateAPIView):
-#     queryset = TaxiDetail.objects.all()
-#     serializer_class = CreateTaxiDetailSerializer
-
-
 
 @api_view(['POST'])
 def CreateTaxiView(request):
@@ -188,13 +134,6 @@ def CreateTaxiView(request):
 
 
 
-# class TaxiView(generics.ListAPIView):
-#     queryset = TaxiDetail.objects.all()
-#     serializer_class = CreateTaxiDetailSerializer
-
-
-# BOTH VIEW TAXI IS WORKING CORRECTLY 
-
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def getViewAllTaxiDetails(request):
@@ -211,42 +150,6 @@ def getViewTaxiDetails(request):
     taxi = TaxiDetail.objects.filter(driver_id = driver_id_view_taxi).first()
     serailizer = CreateTaxiDetailSerializer(taxi)
     return Response(serailizer.data)
-
-
-
-# class CreateDriverView(APIView):
-#     serializer_class = CreateDriverSerializer
-
-#     def post(self, request, format=None):
-#         if not self.request.session.exists(self.request.session.session_key):
-#             self.request.session.create()
-
-#         serializer = self.serializer_class(data=request.data)
-#         if serializer.is_valid():
-#             driver_name = serializer.data.driver_name
-#             driver_email = serializer.data.driver_email
-#             taxi_num = serializer.data.taxi_num
-#             #queryset = Driver.objects.filter(driver_id=driver_id)
-#             queryset = Driver.objects.all()
-
-
-# class ReceivedView(generics.ListAPIView):
-#     queryset = NewRideDetail.objects.all()
-#     serializer_class = ReceivedSerializer
-
-
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def getViewReceived(request):
-#     driver_id_received = get_driver_id(request)
-#     driver= NewDriver.objects.get(driver_id = driver_id_received)
-    
-#     received = NewRideDetail.objects.all()
-#     serailizer = ReceivedSerializer(received, many=True)
-    
-    
-        
-#     return Response(serailizer.data)
 
 
 
@@ -272,9 +175,6 @@ def getViewSingleReceived(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getViewAllReceived(request):
-    #driver_id_all_received = get_driver_id(request)
-    #driver = NewDriver.objects.get(driver_id=driver_id_all_received)
-    
     received = NewRideDetail.objects.all()
     
     serialized_data = []
@@ -286,24 +186,9 @@ def getViewAllReceived(request):
         serialized_data.append(serialized_ride)
 
     return Response(serialized_data)
-'''class CreateNewReqView(APIView):
-    serializer_class = CreateNewRideSerializer
-
-    def post(self, request, format=None):
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
-
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            user_name = serializer.data.user_name
-            start_from = serializer.data.start_from
-            destination = serializer.data.destination
-            status = serializer.data.status'''
-
-
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def getAllViewCompleted(request):
     completed = NewRideDetail.objects.filter(status='arrived')
     serailizer = CompletedRideSerializer(completed, many=True)
@@ -312,7 +197,7 @@ def getAllViewCompleted(request):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getViewCompleted(request):
     driver_id_view_completed = get_driver_id(request)
     completed = NewRideDetail.objects.filter(driver_id = driver_id_view_completed, status='arrived')
@@ -320,25 +205,8 @@ def getViewCompleted(request):
     return Response(serailizer.data)
 
 
-# class ReceivedRideDetailsView(APIView):
-#     serializer_class = ReceivedSerializer
-
-#     def get(self, request, rideId):
-#         try:
-#             ride = NewRideDetail.objects.get(rideId=rideId)
-#             user_name = ride.user_name
-#             start_from = ride.start_from
-#             destination = ride.destination
-#             reachedtime = ride.reachedtime
-#             _status = ride.status
-#             return Response(
-#                 {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
-#                  'reachedtime': reachedtime, 'status': _status})
-#         except NewRideDetail.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
 @api_view(['GET'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def received_ride_details_view(request, rideId):
     try:
         ride = NewRideDetail.objects.get(rideId=rideId)
@@ -371,13 +239,9 @@ def received_ride_details_view(request, rideId):
     except NewRideDetail.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-# class CancelledRideView(generics.ListAPIView):
-#     queryset = NewRideDetail.objects.filter(status='cancelled')
-#     serializer_class = CancelledRideSerializer
-
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def getAllViewCancelled(request):
     cancelled = NewRideDetail.objects.filter(status='canceled')
     serailizer = CancelledRideSerializer(cancelled, many=True)
@@ -385,50 +249,12 @@ def getAllViewCancelled(request):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getViewCancelled(request):
     driver_id_view_cancelled = get_driver_id(request)
     cancelled = NewRideDetail.objects.filter(driver_id = driver_id_view_cancelled,status='canceled')
     serailizer = CancelledRideSerializer(cancelled, many=True)
     return Response(serailizer.data)
-
-
-# class CancelledRideDetailsView(APIView):
-#     serializer_class = CancelledRideSerializer
-
-#     def get(self, request, rideId):
-#         try:
-#             ride = NewRideDetail.objects.get(rideId=rideId)
-#             user_name = ride.user_name
-#             start_from = ride.start_from
-#             destination = ride.destination
-#             _status = ride.status
-#             return Response(
-#                 {'rideId': rideId, 'user_name': user_name, 'start_from': start_from, 'destination': destination,
-#                  'status': _status})
-#         except NewRideDetail.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-# class CreateNewRideView(generics.CreateAPIView):
-#     queryset = NewDriver.objects.all()
-#     serializer_class = CreateNewRideSerializer
-
-# @api_view(['POST'])
-# def CreateNewRideView(request):
-#     serializer = CreateNewRideSerializer(data=request.data)
-#     if serializer.is_valid():
-#         new_ride = serializer.save()
-
-       
-#         # Retrieve the rideId from the created instance
-#         ride_id = new_ride.rideId
-        
-#         # Call assign_driver_to_ride(ride_id) method here
-#         assign_driver_to_ride(ride_id)
-
-#         return Response(serializer.data, status=201)
-#     return Response(serializer.errors, status=400)
 
 
 
@@ -454,7 +280,7 @@ def CreateNewRideView(request):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def Earnings_of_single_driver(request):
     try:
         driver_id_view_single_earnings = get_driver_id(request)
@@ -480,7 +306,7 @@ def Earnings_of_single_driver(request):
 
 
 @api_view(['GET'])
-#@permission_classes([IsAdminUser])
+@permission_classes([IsAdminUser])
 def Earnings_of_all_drivers(request):
     try:
         drivers = NewDriver.objects.all()
@@ -512,38 +338,9 @@ def Earnings_of_all_drivers(request):
 
 
 
-# class EarningsView(APIView):
-#     serializer_class = EarningsSerializer
-
-#     def get(self, request, driver_id):
-#         try:
-#             driver = NewDriver.objects.get(driver_id=driver_id)
-#             driver_name = driver.driver_name
-
-#             # Retrieve earnings data from Earnings model
-#             earnings = Earning.objects.get(driver_id=driver_id)
-#             total_earnings = earnings.total_earnings
-#             total_rides = earnings.total_rides
-#             total_pending = earnings.total_pending
-#             total_paid = earnings.total_paid
-
-#             return Response({
-#                 'driver_id': driver_id,
-#                 'driver_name': driver_name,
-#                 'total_earnings': total_earnings,
-#                 'total_rides': total_rides,
-#                 'total_pending': total_pending,
-#                 'total_paid': total_paid
-#             })
-#         except NewDriver.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-
-    
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getViewOngoing(request):
     driver_id_view_ongoing = get_driver_id(request)
     ongoing = NewRideDetail.objects.filter(driver_id = driver_id_view_ongoing,status='ongoing')
@@ -551,7 +348,7 @@ def getViewOngoing(request):
     return Response(serailizer.data)
 
 @api_view(['GET'])
-# permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def getAllViewOngoing(request):
     ongoing = NewRideDetail.objects.filter(status='ongoing')
     serailizer = OngoingRideSerializer(ongoing,many = True)
@@ -562,7 +359,7 @@ def getAllViewOngoing(request):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def getAdminViewDashboard(request):
     # Calculate the date range for the previous three days
     today = date.today()
@@ -682,6 +479,7 @@ def getDriverViewDashboard(request):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_ride_status(request, ride_id):
     ride = get_object_or_404(NewRideDetail, rideId=ride_id)
     driver = get_object_or_404(NewDriver, driver_id=ride.driver_id.driver_id)
@@ -753,7 +551,9 @@ def update_ride_status(request, ride_id):
             return JsonResponse({'message': 'Ride status updated successfully.'})
     return JsonResponse({'message': 'Invalid request method.'}, status=400)
 
+
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_driver_status(request, driver_id):
     driver = get_object_or_404(NewDriver, driver_id=driver_id)
 
@@ -770,6 +570,7 @@ def update_driver_status(request, driver_id):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def change_driver_availability(request, driver_id):
     driver = get_object_or_404(NewDriver, driver_id=driver_id)
 
@@ -787,6 +588,7 @@ def change_driver_availability(request, driver_id):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAdminUser])
 def delete_or_disable_driver(request, driver_id):
     driver = get_object_or_404(NewDriver, driver_id=driver_id)
 
