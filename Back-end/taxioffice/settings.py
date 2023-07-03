@@ -131,8 +131,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'taxioffice',
-        'USER': 'django',
-        'PASSWORD': 'password',
+        'USER': 'root',
+        'PASSWORD': 'admin123',
         'PORT': 3306,
         'HOST': '127.0.0.1',
     }

@@ -130,10 +130,12 @@ class EarningsSerializer(serializers.ModelSerializer):
 
 
 class OngoingRideSerializer(serializers.ModelSerializer):
+    def get_driver_name(self, obj):
+        return obj.driver_id.driver_name
     class Meta:
         model = NewRideDetail
         fields = ('rideId','passenger_name', 'start_from', 'destination', 'starting_time',
-                  'expectedDriverPay', 'status', 'carpoolPercent')
+                  'expectedDriverPay', 'status', 'carpoolPercent','driver_name')
 
 class CancelledRideSerializer(serializers.ModelSerializer):
     class Meta:
