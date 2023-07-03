@@ -612,12 +612,16 @@ def getAdminViewDashboard(request):
 
     # Find the day with the highest number of rides
     max_rides_day = max(daily_totals, key=lambda k: daily_totals[k]['total_rides'])
+    
+    max_rides_driver_id = max(driver_data, key=lambda k: driver_data[k]['total_rides'])
+    max_rides_driver = driver_data[max_rides_driver_id]
 
     # Add the day with the highest number of rides to the dashboard data
     dashboard_data = {
         'drivers': driver_data,
         'daily_totals': daily_totals,
-        'max_rides_day': max_rides_day
+        'max_rides_day': max_rides_day,
+        'max_rides_driver': max_rides_driver
     }
 
     serializer = AdminDashboardSerializer(dashboard_data)

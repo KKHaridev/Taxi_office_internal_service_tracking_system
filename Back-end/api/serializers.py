@@ -170,7 +170,7 @@ class AdminDashboardSerializer(serializers.Serializer):
     drivers = serializers.DictField()
     daily_totals = serializers.DictField()
     max_rides_day = serializers.CharField()  # Add this field
-
+    max_rides_driver = serializers.DictField()
     def to_representation(self, instance):
         # Override the to_representation method to include the max_rides_day field
 
