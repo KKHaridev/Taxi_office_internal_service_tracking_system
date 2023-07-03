@@ -38,7 +38,6 @@ export const AuthProvider = ({ children }) => {
     if (response.status == 200) {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
-      console.log(data);
       localStorage.setItem("authTokens", JSON.stringify(data));
       navigate(title == "Admin" ? "/admin" : "/", { replace: true });
     } else {
