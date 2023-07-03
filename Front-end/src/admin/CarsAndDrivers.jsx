@@ -13,7 +13,7 @@ import { BiToggleLeft, BiToggleRight } from "react-icons/bi";
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
-  const id = row.values.rideId;
+  const id = row.values.driver_id;
   return (
     <button onClick={() => navigate(`/admin/cars_and_drivers/${id}`)}>
       View
@@ -22,9 +22,9 @@ const ViewButton = ({ row }) => {
 };
 
 const Disable_Enable = ({ row }) => {
-  const id = row.values.rideId;
+  const id = row.values.driver_id;
   const availability = row.values.availability;
-  const status = row.values.status;
+  const status = row.values.driver_status;
   const { mutate: updateStatus } = useUpdateStatus();
 
   return (
@@ -34,12 +34,12 @@ const Disable_Enable = ({ row }) => {
         color="#EA0000"
         hColor="#FB4C4C"
         handler={() => {
-          const data = { status: status == "active" ? "disabled" : "active" };
-          updateStatus({ id, data });
+          const data = { action: status == "available" ? "disable" : "enable" };
+          let endpoint = `api/admin/drivers/${id}/delete-or-disable/`;
+          updateStatus({ id, data, endpoint });
         }}
-        disable={availability == "In Ride" ? true : false}
       >
-        {status == "disabled" ? (
+        {status == "unavailable" ? (
           <BiToggleLeft size={25} />
         ) : (
           <BiToggleRight color="brand.green" size={25} />
@@ -50,10 +50,11 @@ const Disable_Enable = ({ row }) => {
 };
 
 const DeleteUser = ({ row }) => {
-  const id = row.values.rideId;
-  const availability = row.values.availability;
+  const id = row.values.driver_id;
+  const availability = row.values.driver_status;
   const { onClose } = useDisclosure();
-  const { mutate: deleteUser } = useDelete();
+  const { mutate: updateStatus } = useUpdateStatus();
+
 
   return (
     <>
@@ -61,11 +62,14 @@ const DeleteUser = ({ row }) => {
         title="Confirm Rejection"
         color="#6E2594"
         hColor="#8344a5"
+        let
+        endpoint=""
         handler={() => {
-          deleteUser({ id });
-          onClose();
+          const data = { action: "delete" };
+          let endpoint = `api/admin/drivers/${id}/delete-or-disable/`;
+          updateStatus({ id, data, endpoint });
         }}
-        disable={availability == "In Ride" ? true : false}
+        disable={availability == "available" ? true : false}
       >
         <DeleteIcon color="brand.red" />
       </Modal>
@@ -75,15 +79,15 @@ const DeleteUser = ({ row }) => {
 const COLUMNS = [
   {
     Header: "Driver ID",
-    accessor: "id",
+    accessor: "driver_id",
   },
   {
     Header: "Driver Name",
-    accessor: "username",
+    accessor: "driver_name",
   },
   {
     Header: "Taxi Number",
-    accessor: "taxi_details.taxi_no",
+    accessor: "taxi_num",
   },
   {
     Header: "Total Rides",
@@ -91,7 +95,7 @@ const COLUMNS = [
   },
   {
     Header: "Current Status",
-    accessor: "availability",
+    accessor: "driver_status",
   },
   {
     Header: "Disable/Enable",
@@ -105,7 +109,7 @@ const COLUMNS = [
   },
   {
     Header: "Earnings",
-    accessor: (data) => <>&#8377; {data.earnings.total_earnings}</>,
+    accessor: (data) => <>&#8377; {data?.total_earning}</>,
   },
   {
     Header: "View",
@@ -115,19 +119,20 @@ const COLUMNS = [
 ];
 
 export const CarsAndDrivers = () => {
-  const { isLoading, error, data } = useData("driverDetails", "drivers", {
-    refetchInterval: 1000,
-  });
-
+  const { isLoading, error, data, isSuccess } = useData(
+    "driver_Details",
+    "api/admin/drivers/list/",
+    { refetchInterval: 1000 }
+  );
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-
+  if (isSuccess) console.log(data);
   return (
     <div>
       <Breadcrumb />
       <TableHolder>
-        <Table columns={COLUMNS} data={data} />
+        <Table columns={COLUMNS} data={data?.drivers} />
       </TableHolder>
     </div>
   );
