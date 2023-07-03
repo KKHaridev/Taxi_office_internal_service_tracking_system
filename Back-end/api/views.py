@@ -305,7 +305,7 @@ def getViewAllReceived(request):
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def getAllViewCompleted(request):
-    completed = NewRideDetail.objects.filter(status='completed')
+    completed = NewRideDetail.objects.filter(status='arrived')
     serailizer = CompletedRideSerializer(completed, many=True)
     return Response(serailizer.data)
 
@@ -379,7 +379,7 @@ def received_ride_details_view(request, rideId):
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def getAllViewCancelled(request):
-    cancelled = NewRideDetail.objects.filter(status='cancelled')
+    cancelled = NewRideDetail.objects.filter(status='canceled')
     serailizer = CancelledRideSerializer(cancelled, many=True)
     return Response(serailizer.data)
 
@@ -545,15 +545,15 @@ def Earnings_of_all_drivers(request):
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def getViewOngoing(request):
-    ongoing = NewRideDetail.objects.filter(status='ongoing')
+    driver_id_view_ongoing = get_driver_id(request)
+    ongoing = NewRideDetail.objects.filter(driver_id = driver_id_view_ongoing,status='ongoing')
     serailizer = OngoingRideSerializer(ongoing, many=True)
     return Response(serailizer.data)
 
 @api_view(['GET'])
 # permission_classes([IsAuthenticated])
 def getAllViewOngoing(request):
-    driver_id_view_ongoing = get_driver_id(request)
-    ongoing = NewRideDetail.objects.filter(driver_id = driver_id_view_ongoing,status='ongoing')
+    ongoing = NewRideDetail.objects.filter(status='ongoing')
     serailizer = OngoingRideSerializer(ongoing,many = True)
     return Response(serailizer.data)
 
@@ -580,7 +580,7 @@ def getAdminViewDashboard(request):
         # Calculate the total rides and earnings for the driver
         rides = NewRideDetail.objects.filter(driver_id=driver_id)
         total_rides = rides.count()
-        total_earnings = sum(ride.expectedDriverPay or 0 for ride in rides)
+        total_earnings = sum(int(ride.expectedDriverPay) or 0 for ride in rides)
 
         # Store the driver information in the dictionary
         driver_data[driver_id] = {
@@ -597,7 +597,7 @@ def getAdminViewDashboard(request):
 
             # Calculate total rides and earnings for the current day
             total_rides_per_day = rides_per_day.count()
-            total_earnings_per_day = sum(ride.expectedDriverPay or 0 for ride in rides_per_day)
+            total_earnings_per_day = sum(int(ride.expectedDriverPay) or 0 for ride in rides_per_day)
 
             # Store the daily totals in the dictionary
             if current_date.strftime('%Y-%m-%d') not in daily_totals:
