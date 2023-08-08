@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import socket
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-by%wl=7h^d$&8fy!ul1pa%5o-lxl_4%bd^obclg51zl348+kl7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -130,10 +130,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'taxioffice',
-        'USER': 'root',
+        'USER': 'django',
         'PASSWORD': 'password',
-        'PORT': 3306,
-        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'HOST': '172.18.0.8',
     }
 }
 
