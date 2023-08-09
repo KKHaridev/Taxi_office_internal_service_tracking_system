@@ -5,7 +5,7 @@ import { useAuth } from "@context/AuthContext";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { RiUserReceived2Fill } from "react-icons/ri";
 import { useData } from "../hooks/useData";
-import { Text, Flex, Grid } from "@chakra-ui/react";
+import { Text, Flex, Grid, Image } from "@chakra-ui/react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -84,9 +84,7 @@ export const Dashboard = () => {
       </>
     );
   }
-  console.log(data);
   if (error) {
-
     return (
       <>
         <Breadcrumb />
@@ -139,17 +137,26 @@ export const Dashboard = () => {
       <>
         <Breadcrumb />
         <Grid
+          w={{ md: "auto", lg: "90vw" }}
           overflowY={"scroll"}
-          w="90vw"
           height={"calc(100vh - 180px)"}
-          gridTemplateColumns="repeat(4,1fr)"
-          gridTemplateRows={"repeat(4,1fr)"}
+          gridTemplateAreas={{
+            base: `"card card"
+          "map map"
+          "history history"`,
+            lg: `"card card"
+          "map map"
+          "history history"`,
+            xl: `"card history"
+          "map history"`,
+          }}
+          justifyItems={"center"}
           paddingBottom={2}
         >
           <CardHolder cardData={cardData} />
           <Flex
-            w={700}
-            marginLeft={{ base: "0", md: "30px" }}
+            w={{ base: "90%", md: "80%", lg: "85%", xl: "95%", "2xl": "79%" }}
+            marginLeft={{ base: 0, "2xl": "30px" }}
             alignItems="center"
             justifyContent="center"
             flexDir="column"
@@ -158,14 +165,21 @@ export const Dashboard = () => {
             borderRadius="7px"
             boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
             padding={4}
-            gridColumn={"3/5"}
-            gridRow={"1/5"}
+            gridArea={"history"}
           >
             <Line options={optionsearning} data={earnings} />
             <Line options={optionsride} data={rides} />
           </Flex>
-          <Flex gridColumn="1/3" gridRow="3/5">
-            <img
+          <Flex
+            gridArea={"map"}
+            w={{ base: "90%", md: "80%", lg: "85%", xl: 600 }}
+            h={{ base: "300px", lg: "auto" }}
+            my={{ base: "30px", xl: "auto" }}
+          >
+            <Image
+              objectFit={"cover"}
+              w={"100%"}
+              h={"100%"}
               src="https://www.smcrealty.com/images/microsites/location-map/mantri-serenity-251.jpg"
               alt="img"
             />

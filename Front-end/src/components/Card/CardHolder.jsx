@@ -4,11 +4,9 @@ import { SimpleGrid } from "@chakra-ui/react";
 
 export const CardHolder = ({ cardData }) => {
   return (
-    <SimpleGrid
+    <SimpleGrid gridArea={"card"}
       gridTemplateColumns={{ base: "repeat(1,300px)", md: "repeat(2,300px)" }}
-      gridColumn="1/3"
-      gridRow="1/3"
-      justifyContent="center"
+      justifyItems="center"
       alignContent="center"
       gap={6}
       py="15px"
