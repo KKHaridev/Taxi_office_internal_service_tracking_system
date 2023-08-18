@@ -30,7 +30,12 @@ ChartJS.register(
 
 const Row = ({ heading, count, price }) => {
   return (
-    <Flex justifyContent="space-between" alignItems="center" w="95%" textTransform={"capitalize"}>
+    <Flex
+      justifyContent="space-between"
+      alignItems="center"
+      w="95%"
+      textTransform={"capitalize"}
+    >
       <Heading as="h5" size="sm" textTransform="capitalize">
         {heading.replace("_", " ")}
       </Heading>
@@ -147,17 +152,27 @@ export const AdminDashboard = () => {
       <>
         <Breadcrumb />
         <Grid
+          w={{ md: "auto", lg: "90vw" }}
           overflowY={"scroll"}
-          w="90vw"
           height={"calc(100vh - 180px)"}
-          gridTemplateColumns="repeat(4,1fr)"
-          gridTemplateRows={"repeat(4,1fr)"}
+          gridTemplateAreas={{
+            base: `"card card"
+          "details details"
+          "history history"`,
+            lg: `"card card"
+          "details details"
+          "history history"`,
+            xl: `"card history"
+          "details history"`,
+          }}
+          justifyItems={"center"}
+          alignItems={"center"}
           paddingBottom={2}
         >
           <CardHolder cardData={cardData} />
           <Flex
-            w={700}
-            marginLeft={{ base: "0", md: "30px" }}
+            w={{ base: "90%", md: "80%", lg: "85%", xl: "95%", "2xl": "79%" }}
+            marginLeft={{ base: 0, "2xl": "30px" }}
             alignItems="center"
             justifyContent="center"
             flexDir="column"
@@ -166,30 +181,28 @@ export const AdminDashboard = () => {
             borderRadius="7px"
             boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
             padding={4}
-            gridColumn={"3/5"}
-            gridRow={"1/5"}
+            gridArea={"history"}
           >
             <Line options={optionsearning} data={earnings} />
             <Line options={optionsride} data={rides} />
           </Flex>
           <Flex
-            gridColumn="1/3"
-            gridRow="3/5"
-            alignSelf={"center"}
-            justifyContent={"center"}
+            gridArea={"details"}
+            w={{ base: "75vw", md: "600px" }}
+            h={{ base: "300px", lg: "auto" }}
+            my={{ base: "30px", xl: "auto" }}
           >
-            <Flex direction={{ base: "column", md: "row" }}>
+            <Flex w="100%" direction={{ base: "column", md: "row" }}>
               <Flex
                 bg="white"
-                w="600px"
-                h="300px"
                 mt="5px"
                 justifyContent="center"
                 alignItems="center"
                 borderRadius="md"
                 flexDir="column"
                 gap="20px"
-                p="15px"
+                py={{ base: "30px", xl: "auto" }}
+                w="100%"
               >
                 <Heading
                   as="h3"
