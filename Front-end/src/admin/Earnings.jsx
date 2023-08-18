@@ -92,11 +92,11 @@ export const AdminEarnings = () => {
   });
 
   const chartData = {
-    labels: [ "total_pending","total paid"],
+    labels: ["total_pending", "total paid"],
     datasets: [
       {
         label: "Rs",
-        data: [ total_pending,total_paid],
+        data: [total_pending, total_paid],
         backgroundColor: ["#FFCB14", "#19E32D"],
         borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
         borderWidth: 1,
@@ -106,39 +106,47 @@ export const AdminEarnings = () => {
   return (
     <>
       <Breadcrumb />
-      <Flex direction={{ base: "column", md: "row" }}>
+      <Flex direction={{ base: "column", "2xl": "row" }} overflow="auto">
         <TableHolder>
           <Table columns={COLUMNS} data={data} />
         </TableHolder>
-        <Flex
-          bg="white"
-          w="320px"
-          h="300px"
-          mt="5px"
-          justifyContent="center"
-          alignItems="center"
-          borderRadius="md"
-          flexDir="column"
-          gap="20px"
-          p="15px"
-        >
-          <Heading
-            as="h3"
-            fontSize={["25px"]}
-            fontWeight="light"
-            color="brand.purple"
+        <Flex flexDir={{base:"column",md:"row"}} justifyContent="space-evenly" alignItems="center" h={{base:"700",md:"500px","2xl":"fit-content"}}>
+          <Flex
+            bg="white"
+            w="320px"
+            h="300px"
+            mt="5px"
+            justifyContent="center"
+            alignItems="center"
+            borderRadius="md"
+            flexDir="column"
+            gap="20px"
+            p="15px"
+            order={{ base: 0 }}
+            marginLeft={{ base: "0", md: "30px" }}
           >
-            Earnings
-          </Heading>
-          <Flex direction="column" gap="24px" w="90%" alignItems="center">
-            <Row heading="Total Rides" count={total_rides} />
-            <Row heading="Total Earnings" count={total_earnings} price={true} />
-            <Row heading="Total Paid" count={total_paid} price={true} />
-            <Row heading="Total Pending" count={total_pending} price={true} />
+            <Heading
+              as="h3"
+              fontSize={["25px"]}
+              fontWeight="light"
+              color="brand.purple"
+            >
+              Earnings
+            </Heading>
+            <Flex direction="column" gap="24px" w="90%" alignItems="center">
+              <Row heading="Total Rides" count={total_rides} />
+              <Row
+                heading="Total Earnings"
+                count={total_earnings}
+                price={true}
+              />
+              <Row heading="Total Paid" count={total_paid} price={true} />
+              <Row heading="Total Pending" count={total_pending} price={true} />
+            </Flex>
           </Flex>
-        </Flex>
-        <Flex w={300} h={500} marginLeft={{ base: "0", md: "30px" }}>
-          <Pie data={chartData} />
+          <Flex w={300} marginLeft={{ base: "0", md: "30px" }}>
+            <Pie data={chartData} />
+          </Flex>
         </Flex>
       </Flex>
     </>
