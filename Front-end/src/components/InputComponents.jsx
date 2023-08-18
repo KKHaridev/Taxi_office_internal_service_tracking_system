@@ -20,7 +20,9 @@ export const InputField = ({
             mt="5px"
             size="md"
             textTransform={"capitalize"}
-            onChange={(e)=>{onChange(e.target.value)}}
+            onChange={(e) => {
+              onChange(e.target.value);
+            }}
             isDisabled={status}
           >
             <option defaultValue="none" selected disabled hidden>
@@ -71,6 +73,59 @@ export const DateComponent = ({ label, width, value, status, select }) => {
           onChange={(e) => setDate(e.target.value)}
           isDisabled={status}
         />
+      </Box>
+    </>
+  );
+};
+
+export const SelectField = ({
+  label,
+  width,
+  value,
+  status,
+  manufacturer,
+  onChange,
+}) => {
+  return (
+    <>
+      <Box w={width ? width : "400px"}>
+        {label && <label htmlFor="">{label}</label>}
+        <Select
+          id=""
+          name=""
+          mt="5px"
+          size="md"
+          textTransform={"capitalize"}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
+          isDisabled={status}
+        >
+          <option defaultValue="none" selected disabled hidden>
+            {value}
+          </option>
+          {manufacturer ? (
+            <>
+              <option value="Suzuki">Suzuki</option>
+              <option value="Hyundai">Hyundai</option>
+              <option value="Tata">Tata</option>
+              <option value="Mahindra">Mahindra</option>
+              <option value="Kia">Kia</option>
+              <option value="Toyota">Toyota</option>
+              <option value="Honda">Honda</option>
+              <option value="Renault">Renault</option>
+              <option value="Volkswagen">Volkswagen</option>
+              <option value="MG Motors">MG Motors</option>
+            </>
+          ) : (
+            <>
+              <option value="Sedan">Sedan</option>
+              <option value="SUV">SUV</option>
+              <option value="MUV">MUV</option>
+              <option value="Hatchback">Hatchback</option>
+            </>
+          )}
+        </Select>
       </Box>
     </>
   );
