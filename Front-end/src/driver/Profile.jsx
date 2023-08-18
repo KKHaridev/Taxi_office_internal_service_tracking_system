@@ -4,7 +4,7 @@ import { Table } from "@components/Table";
 import { useNavigate } from "react-router-dom";
 import { useData } from "@hooks/useData";
 import { Box, Flex, Button, Text, Input } from "@chakra-ui/react";
-import { InputField } from "@components/InputComponents";
+import { InputField, SelectField } from "@components/InputComponents";
 import { Avatar } from "@chakra-ui/react";
 import { Doulbe } from "@components/InputComponents";
 import { DateComponent } from "../components/InputComponents";
@@ -12,14 +12,12 @@ import { useAuth } from "../context/AuthContext";
 
 export const Profile = () => {
   const { user } = useAuth();
-  const { isLoading:profileLoading, error:profileErr, data:profile } = useData(
-    "personal_data",
-    `api/driver/${user?.driver_id}/me `
-  );
-  const { isLoading, error, data } = useData(
-    "taxi",
-    `api/viewtaxi `
-  );
+  const {
+    isLoading: profileLoading,
+    error: profileErr,
+    data: profile,
+  } = useData("personal_data", `api/driver/${user?.driver_id}/me `);
+  const { isLoading, error, data } = useData("taxi", `api/viewtaxi `);
 
   if (isLoading) return "Loading...";
 
@@ -60,7 +58,11 @@ export const Profile = () => {
             <InputField label="Name" width="90%" value={profile?.driver_name} />
           </Doulbe>
           <Doulbe>
-            <InputField label="Email" width="90%" value={profile?.driver_email} />
+            <InputField
+              label="Email"
+              width="90%"
+              value={profile?.driver_email}
+            />
             <DateComponent
               label="Date Of Birth"
               width="90%"
@@ -69,8 +71,16 @@ export const Profile = () => {
             />
           </Doulbe>
           <Doulbe>
-            <InputField label="UPI ID" width="90%" value={profile?.driver_upi} />
-            <InputField label="Phone" width="90%" value={profile?.driver_phone} />
+            <InputField
+              label="UPI ID"
+              width="90%"
+              value={profile?.driver_upi}
+            />
+            <InputField
+              label="Phone"
+              width="90%"
+              value={profile?.driver_phone}
+            />
           </Doulbe>
           <Button
             colorScheme="teal"
@@ -111,6 +121,26 @@ export const Profile = () => {
               label="Insurance"
               width="90%"
               value={data?.taxi_insurance}
+            />
+          </Doulbe>
+          <Doulbe>
+            <SelectField
+              label="Taxi Manufacturer"
+              width="90%"
+              manufacturer={true}
+              value={data?.taxi_manufacturer}
+            />
+            <SelectField
+              label="Taxi Type"
+              width="90%"
+              value={data?.taxi_type}
+            />
+          </Doulbe>
+          <Doulbe>
+            <InputField
+              label="Taxi model"
+              width="100%"
+              value={data?.taxi_model}
             />
           </Doulbe>
           <Button
