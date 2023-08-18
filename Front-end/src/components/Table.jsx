@@ -16,8 +16,9 @@ export const Table = ({ columns, data, width }) => {
       {...getTableProps()}
       sx={{ borderCollapse: "separate", borderSpacing: "0 10px" }}
       w={width}
+      pr="10px" pb="10px" 
     >
-      <Thead>
+      <Thead pos="sticky" top="0px">
         {headerGroups.map((headerGroup) => {
           const { key, ...restHeaderGroupProps } =
             headerGroup.getHeaderGroupProps();
