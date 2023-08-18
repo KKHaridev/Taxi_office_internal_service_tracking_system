@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/react";
 
 export const TableHolder = ({ children }) => {
   return (
-    <Box overflow="auto" minHeight="85vh">
+    <Box h="87vh" overflowY="scroll" boxSizing="border-box" order={{base:1,"2xl":0}}>
       {children}
     </Box>
   );
