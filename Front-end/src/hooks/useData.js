@@ -40,8 +40,14 @@ const postReq = async ({ endpoint, data }) => {
       "Content-type": "application/json; charset=UTF-8",
     },
   });
-  let result = await res.json();
-  return result;
+  const response = await res.json();
+  if (res.statusText == "Bad Request") {
+    let err = "Error Occured.";
+    const error = { err, issues: response };
+    return error;
+  } else {
+    return response;
+  }
 };
 
 const postReqWithAccess = async ({ endpoint, data, accessToken }) => {
@@ -77,8 +83,7 @@ const patchReq = async ({ id, data, endpoint }) => {
   });
   const result = await res.json();
   if (res.statusText == "Bad Request") {
-    let err = "Error Occured.";
-    const error = { err, issues: result };
+    const error = { err: result };
     return error;
   } else {
     return result;
