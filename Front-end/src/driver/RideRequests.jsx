@@ -7,13 +7,20 @@ import { useAcceptRide, useData } from "../hooks/useData";
 import { Modal } from "../components/Modals/Modal";
 import { CloseIcon, CheckIcon } from "@chakra-ui/icons";
 import { TableHolder } from "../components/TableHolder/TableHolder";
+import { Text } from "@chakra-ui/react";
 
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
   const id = row.values.rideId;
   return (
-    <button onClick={() => navigate(`/received_rides/${id}`)}>View</button>
+    <Text
+      color="brand.purple"
+      cursor="pointer"
+      onClick={() => navigate(`/received_rides/${id}`)}
+    >
+      View
+    </Text>
   );
 };
 

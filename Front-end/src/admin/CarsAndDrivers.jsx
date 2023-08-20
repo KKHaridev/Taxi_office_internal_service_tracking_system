@@ -9,16 +9,20 @@ import { Modal } from "../components/Modals/Modal";
 import { CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
 import { BiToggleLeft, BiToggleRight } from "react-icons/bi";
-import { useToast } from "@chakra-ui/react";
+import { useToast, Text } from "@chakra-ui/react";
 
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
   const id = row.values.driver_id;
   return (
-    <button onClick={() => navigate(`/admin/cars_and_drivers/${id}`)}>
+    <Text
+      color="brand.purple"
+      cursor="pointer"
+      onClick={() => navigate(`/admin/cars_and_drivers/${id}`)}
+    >
       View
-    </button>
+    </Text>
   );
 };
 

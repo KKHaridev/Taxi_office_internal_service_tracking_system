@@ -7,17 +7,22 @@ import { useAcceptRide, useData } from "../hooks/useData";
 import { Modal } from "../components/Modals/Modal";
 import { CloseIcon, CheckIcon } from "@chakra-ui/icons";
 import { TableHolder } from "../components/TableHolder/TableHolder";
+import { Text } from "@chakra-ui/react";
 
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
   const id = row.values.rideId;
   return (
-    <button onClick={() => navigate(`/admin/received_rides/${id}`)}>View</button>
+    <Text
+      color="brand.purple"
+      cursor="pointer"
+      onClick={() => navigate(`/admin/received_rides/${id}`)}
+    >
+      View
+    </Text>
   );
 };
-
-
 
 const COLUMNS = [
   {
@@ -76,9 +81,13 @@ const COLUMNS = [
 ];
 
 export const AdminRideRequests = () => {
-  const { isLoading, error, data } = useData("all_req_rides", "api/allreceived", {
-    refetchInterval: 1000,
-  });
+  const { isLoading, error, data } = useData(
+    "all_req_rides",
+    "api/allreceived",
+    {
+      refetchInterval: 1000,
+    }
+  );
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
