@@ -10,24 +10,28 @@ import { GrCompliance } from "react-icons/gr";
 import { MdModeOfTravel } from "react-icons/md";
 import { ImBlocked } from "react-icons/im";
 import { useLocation } from "react-router-dom";
+import { useNavContext } from "@context/NavbarContext";
 
 export const SideBar = () => {
+  const { toggle } = useNavContext();
   //true ==> big
-  const [size, setSize] = useBoolean(false);
+  const [size, setSize] = useBoolean(window.innerWidth > "768" ? false : true);
   const path = useLocation();
   const admin = path.pathname.includes("admin");
+  console.log(size + " sidebar");
   return (
     <Flex
       as="aside"
       zIndex={10}
       pos="absolute"
       direction="column"
-      w={size ? 200 : "70px"}
+      w={{ base: 200, md: size ? 200 : "70px" }}
       h="calc(100vh - 60px)"
       transition="0.2s ease"
       borderRight="1px solid var(--display-400)"
-      top="60px"
+      top={{ md: "60px" }}
       backgroundColor="#F5F5F5"
+      left={{ base: toggle ? "0%" : "-200px", md: "0%" }}
     >
       <Box pos="relative" top="20px">
         <NavItem
@@ -88,7 +92,13 @@ export const SideBar = () => {
         />
       </Box>
       <Spacer />
-      <Box p="10px" pos="relative" bottom="0" transition={"0.2s ease"}>
+      <Box
+        p="10px"
+        pos="relative"
+        bottom="0"
+        transition={"0.2s ease"}
+        display={{ base: "none", md: "flex" }}
+      >
         <Button
           onClick={setSize.toggle}
           w="100%"
