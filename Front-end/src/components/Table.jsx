@@ -79,8 +79,7 @@ export const Table = ({ columns, data, width }) => {
         flexDir="column"
         {...getTableProps()}
         sx={{ borderCollapse: "separate", borderSpacing: "0 10px" }}
-        w={width}
-        pr="10px"
+        w="100%"
         pb="10px"
       >
         <Flex display="flex" flexDir="column" {...getTableBodyProps()}>
