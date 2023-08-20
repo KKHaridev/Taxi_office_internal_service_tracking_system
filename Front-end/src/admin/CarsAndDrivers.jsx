@@ -9,6 +9,7 @@ import { Modal } from "../components/Modals/Modal";
 import { CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
 import { BiToggleLeft, BiToggleRight } from "react-icons/bi";
+import { useToast } from "@chakra-ui/react";
 
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
@@ -22,10 +23,11 @@ const ViewButton = ({ row }) => {
 };
 
 const Disable_Enable = ({ row }) => {
+  const toast = useToast();
   const id = row.values.driver_id;
   const availability = row.values.availability;
   const status = row.values.driver_status;
-  const { mutate: updateStatus } = useUpdateStatus();
+  const { mutateAsync } = useUpdateStatus();
 
   return (
     <>
@@ -33,10 +35,25 @@ const Disable_Enable = ({ row }) => {
         title="Accept"
         color="#EA0000"
         hColor="#FB4C4C"
-        handler={() => {
+        handler={async () => {
           const data = { action: status == "available" ? "disable" : "enable" };
           let endpoint = `api/admin/drivers/${id}/delete-or-disable/`;
-          updateStatus({ id, data, endpoint });
+          const response = await mutateAsync({ id, data, endpoint });
+          if (response?.err) {
+            toast({
+              position: "top-right",
+              title: `${response.err.message}`,
+              status: "error",
+              isClosable: true,
+            });
+          } else {
+            toast({
+              position: "top-right",
+              title: `${response.message}`,
+              status: "success",
+              isClosable: true,
+            });
+          }
         }}
       >
         {status == "unavailable" ? (
@@ -50,11 +67,11 @@ const Disable_Enable = ({ row }) => {
 };
 
 const DeleteUser = ({ row }) => {
+  const toast = useToast();
   const id = row.values.driver_id;
   const availability = row.values.driver_status;
   const { onClose } = useDisclosure();
-  const { mutate: updateStatus } = useUpdateStatus();
-
+  const { mutateAsync } = useUpdateStatus();
 
   return (
     <>
@@ -64,10 +81,25 @@ const DeleteUser = ({ row }) => {
         hColor="#8344a5"
         let
         endpoint=""
-        handler={() => {
+        handler={async () => {
           const data = { action: "delete" };
           let endpoint = `api/admin/drivers/${id}/delete-or-disable/`;
-          updateStatus({ id, data, endpoint });
+          try {
+            const response = await mutateAsync({ id, data, endpoint });
+            toast({
+              position: "top-right",
+              title: `${response}`,
+              status: "success",
+              isClosable: true,
+            });
+          } catch (e) {
+            toast({
+              position: "top-right",
+              title: `Error Occured`,
+              status: "error",
+              isClosable: true,
+            });
+          }
         }}
         disable={availability == "available" ? true : false}
       >
@@ -127,7 +159,6 @@ export const CarsAndDrivers = () => {
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-  if (isSuccess) console.log(data);
   return (
     <div>
       <Breadcrumb />
