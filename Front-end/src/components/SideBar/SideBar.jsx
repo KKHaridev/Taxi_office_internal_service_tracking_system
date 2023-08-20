@@ -18,7 +18,6 @@ export const SideBar = () => {
   const [size, setSize] = useBoolean(window.innerWidth > "768" ? false : true);
   const path = useLocation();
   const admin = path.pathname.includes("admin");
-  console.log(size + " sidebar");
   return (
     <Flex
       as="aside"

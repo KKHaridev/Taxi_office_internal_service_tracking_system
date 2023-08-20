@@ -5,7 +5,6 @@ import { useNavContext } from "../../context/NavbarContext";
 
 export const NavItem = ({ icon, title, size, link, handler }) => {
   const { toggle, toggleFn } = useNavContext();
-  console.log(toggle);
   return (
     <Flex direction="column" p="0 10px">
       <Link
