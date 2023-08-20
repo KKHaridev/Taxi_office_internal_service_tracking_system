@@ -12,16 +12,22 @@ import {
   Text,
   Button,
   Link,
+  Box,
+  Flex,
 } from "@chakra-ui/react";
 import { VscBellDot } from "react-icons/vsc";
 import { Link as _Link } from "react-router-dom";
 import { useAuth } from "@context/AuthContext";
 import { useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { useNavContext } from "@context/NavbarContext";
+import { BsBox2Heart, BsFillTaxiFrontFill } from "react-icons/bs";
 
 export const Header = () => {
   const auth = useAuth();
   const location = useLocation();
   const admin = location.pathname.includes("admin");
+  const { toggle, toggleFn } = useNavContext();
   return (
     <Container
       as="header"
@@ -34,13 +40,68 @@ export const Header = () => {
       justifyContent="center"
       borderBottom="1px solid #808080"
     >
+      <Flex
+        bg="transparent"
+        height="35px"
+        onClick={toggleFn}
+        display={{ base: "flex", md: "none" }}
+        flexDir="column"
+        alignItems="center"
+        justifyContent="space-evenly"
+        _hover={{ bg: "none", opacity: "0.5" }}
+        ml="10px"
+        overflow="hidden"
+      >
+        <Box
+          width="30px"
+          height="3px"
+          bg="brand.purple"
+          borderRadius="md"
+          transition="0.2s ease-in-out"
+          transform={
+            toggle ? "rotate(45deg) translateY(7px) translateX(6px)" : ""
+          }
+        ></Box>
+        <Box
+          width="30px"
+          height="3px"
+          bg="brand.purple"
+          borderRadius="md"
+          transition="0.2s .05s ease-in-out"
+          transform={toggle ? "translateX(-35px)" : ""}
+        ></Box>
+        <Box
+          width="30px"
+          height="3px"
+          bg="brand.purple"
+          borderRadius="md"
+          transition="0.2s ease-in-out"
+          transform={
+            toggle ? "rotate(-45deg) translateY(-8px) translateX(6px)" : ""
+          }
+        ></Box>
+      </Flex>
       <Heading
         as="h4"
         fontSize={["22px"]}
         color="brand.yellow"
+        fontFamily="Orbitron"
         fontWeight="500"
+        letterSpacing="7px"
+        display={{ base: "none", md: "flex" }}
       >
-        LOGO/BRAND
+        TAXICABON
+      </Heading>
+      <Heading
+        as="h4"
+        fontSize={["30px"]}
+        color="brand.yellow"
+        fontWeight="700"
+        letterSpacing="7px"
+        display={{ base: "flex", md: "none" }}
+        pl="5"
+      >
+        <BsFillTaxiFrontFill fill="#ECD444" />
       </Heading>
       <Spacer />
       <Stack direction="row" alignItems="center">
