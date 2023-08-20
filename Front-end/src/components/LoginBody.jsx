@@ -25,14 +25,24 @@ export const LoginBody = ({ title }) => {
   } = useForm();
   let errormsg = "";
   const onSubmit = async (values) => {
-    errormsg = await login(values,title);
-    errormsg &&
-      toast({
-        position: "top-center",
-        title: `${errormsg}`,
-        status: "error",
-        isClosable: true,
-      });
+    try {
+      errormsg = await login(values, title);
+      errormsg &&
+        toast({
+          position: "top-center",
+          title: `${errormsg}`,
+          status: "error",
+          isClosable: true,
+        });
+    } catch (error) {
+      error &&
+        toast({
+          position: "top-center",
+          title: `Error occured`,
+          status: "error",
+          isClosable: true,
+        });
+    }
   };
   return (
     <Container
