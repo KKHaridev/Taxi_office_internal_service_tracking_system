@@ -678,6 +678,25 @@ def list_single_driver(request, driver_id):
 
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_driver_profile(request):
+    driver_id = get_driver_id(request)
+
+    try:
+        driver = NewDriver.objects.get(driver_id=driver_id)
+    except NewDriver.DoesNotExist:
+        return JsonResponse({'error': 'Driver not found.'}, status=404)
+
+    if request.method == 'PUT':
+        serializer = CreateDriverSerializer(driver, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'message': 'Driver profile updated successfully.'})
+        return JsonResponse(serializer.errors, status=400)
+
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
 
 # Dashboard
 

@@ -67,6 +67,9 @@ urlpatterns = [
     path('admin/drivers/list/', views.list_all_drivers, name='list_all_drivers'),
 
     path('admin/drivers/list/<int:driver_id>', views.list_single_driver, name='list_single_driver'),
+    
+    path('api/update-driver-profile/', views.update_driver_profile, name='update-driver-profile'),
+
 
 ]
 
