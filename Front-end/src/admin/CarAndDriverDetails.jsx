@@ -20,6 +20,7 @@ export const CarsAndDriversDetails = () => {
   if (error) return "An error has occurred: " + error.message;
 
   const details = data?.drivers;
+  console.log(details);
   return (
     <>
       <Breadcrumb />
@@ -75,16 +76,7 @@ export const CarsAndDriversDetails = () => {
           <Heading as="h4" size="sm">
             Taxi Details
           </Heading>
-          {data?.taxi_model && (
-            <Doulbe>
-              <InputField
-                label="Model"
-                width="90%"
-                value={details?.taxi_model}
-              />
-              <InputField label="Type" width="90%" value={details?.taxi_type} />
-            </Doulbe>
-          )}
+
           <Doulbe>
             <InputField
               label="Taxi Number"
@@ -110,6 +102,21 @@ export const CarsAndDriversDetails = () => {
               status={true}
               width="90%"
               value={details?.taxi_insurance}
+            />
+          </Doulbe>
+          <Doulbe>
+            <InputField
+              label="Manufacturer"
+              width="90%"
+              value={details?.taxi_manufacturer}
+            />
+            <InputField label="Type" width="90%" value={details?.taxi_type} />
+          </Doulbe>
+          <Doulbe>
+            <InputField
+              label="Model"
+              width={{base:"90%",md:"100%"}}
+              value={details?.taxi_model}
             />
           </Doulbe>
         </Flex>
