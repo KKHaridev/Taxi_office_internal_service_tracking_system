@@ -9,6 +9,8 @@ import { Avatar } from "@chakra-ui/react";
 import { Doulbe } from "@components/InputComponents";
 import { DateComponent } from "../components/InputComponents";
 import { useAuth } from "../context/AuthContext";
+import EditProfileDetails from "./EditProfileDetails";
+import UpdatePassword from "./UpdatePassword";
 
 export const Profile = () => {
   const { user } = useAuth();
@@ -17,12 +19,12 @@ export const Profile = () => {
     error: profileErr,
     data: profile,
   } = useData("personal_data", `api/driver/${user?.driver_id}/me `);
+
   const { isLoading, error, data } = useData("taxi", `api/viewtaxi `);
 
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-  console.log(data);
 
   return (
     <Box w="100%">
@@ -55,12 +57,18 @@ export const Profile = () => {
               status={true}
               value={user?.driver_id}
             />
-            <InputField label="Name" width="90%" value={profile?.driver_name} />
+            <InputField
+              label="Name"
+              width="90%"
+              status={true}
+              value={profile?.driver_name}
+            />
           </Doulbe>
           <Doulbe>
             <InputField
               label="Email"
               width="90%"
+              status={true}
               value={profile?.driver_email}
             />
             <DateComponent
@@ -75,28 +83,16 @@ export const Profile = () => {
               label="UPI ID"
               width="90%"
               value={profile?.driver_upi}
+              status={true}
             />
             <InputField
               label="Phone"
               width="90%"
               value={profile?.driver_phone}
+              status={true}
             />
           </Doulbe>
-          <Button
-            colorScheme="teal"
-            type="submit"
-            bg="brand.purple"
-            _hover={{ bg: "purple.700" }}
-            color="white"
-            paddingX="25px"
-            w="150px"
-            py="20px"
-            alignSelf="end"
-            marginRight={{ base: "22px", md: "0" }}
-          >
-            Update
-          </Button>
-
+          <EditProfileDetails defaultDetails={profile} />
           {/* Taxi Details */}
           <Text fontWeight="900">Taxi Details</Text>
           <Doulbe>
@@ -143,6 +139,7 @@ export const Profile = () => {
               value={data?.taxi_model}
             />
           </Doulbe>
+          {/*
           <Button
             colorScheme="teal"
             type="submit"
@@ -157,27 +154,12 @@ export const Profile = () => {
           >
             Update
           </Button>
-
-          {/* Password Details */}
-          <Text fontWeight="900">Update Password</Text>
-          <Doulbe>
-            <Input type="password" label="New Password" width="90%" />
-            <Input type="password" label="Confirm Password" width="90%" />
-          </Doulbe>
-          <Button
-            colorScheme="teal"
-            type="submit"
-            bg="brand.purple"
-            _hover={{ bg: "purple.700" }}
-            color="white"
-            paddingX="25px"
-            w="150px"
-            py="20px"
-            alignSelf="end"
-            marginRight={{ base: "22px", md: "0" }}
-          >
-            Update
-          </Button>
+           */}
+          {/* Password Details */}'<Text fontWeight="900">Password</Text>
+          <Flex alignItems="center">
+            <Text fontWeight="900">Update your password if required</Text>
+            <UpdatePassword />
+          </Flex>
         </Flex>
       </Box>
     </Box>
