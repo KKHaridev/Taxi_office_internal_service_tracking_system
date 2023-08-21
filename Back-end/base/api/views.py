@@ -21,6 +21,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.contrib.auth.hashers import make_password
 
+from django.contrib.auth import get_user_model
+
+from rest_framework import status
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -87,6 +91,24 @@ class RegisterUser(APIView):
     
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_user_password(request):
+    try:
+        user = request.user
+        new_password = request.data.get('new_password')
+        
+        if not new_password:
+            return Response({'error': 'New password is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Update the user's password securely
+        user.set_password(new_password)
+        user.save()
+
+        return Response({'message': 'User password updated successfully.'}, status=status.HTTP_200_OK)
+
+    except get_user_model().DoesNotExist:
+        return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 
     # def your_view(request):
