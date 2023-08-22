@@ -4,6 +4,8 @@ from django.shortcuts import render
 from rest_framework import generics, status
 from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer, AdminDashboardSerializer
 
+from .mlmodel import predict
+
 from .models import NewDriver, TaxiDetail,NewRideDetail,Earning
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -267,7 +269,7 @@ def CreateNewRideView(request):
         # print(serializer.validated_data)
         # print(
         # ride_id = serializer.validated_data['rideId']
-        
+        ac.expectedDriverPay = predict_fare_amount(ride);
         ride_id = ac.rideId
         #print(ride_id)
         ass_dri = assign_driver_to_ride(ride_id)
@@ -696,6 +698,7 @@ def update_driver_profile(request):
         return JsonResponse(serializer.errors, status=400)
 
     return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
 
 
 # Dashboard

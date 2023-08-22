@@ -1,13 +1,22 @@
 import pickle
 from api.models import NewRideDetail
+from api.models import yellow_tripdata_2016_03
+import pandas as pd
+
+# Query the data
+trip_data = yellow_tripdata_2016_03.objects.all()
+
+# Convert the query result to a DataFrame
+data = pd.DataFrame(list(trip_data.values('pickup_longitude', 'pickup_latitude')))
+
 # Load the pickle file
-with open('sharing', 'rb') as shar:
+with open('sharing_of_cab', 'rb') as shar:
     model1 = pickle.load(shar)
 
 with open('rentention', 'rb') as ren:
     model2 = pickle.load(ren)
 
-with open('fare_amount', 'rb') as fare:
+with open('fare_amount_final', 'rb') as fare:
     model3 = pickle.load(fare)
 
 
