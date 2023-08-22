@@ -17,6 +17,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import Map from "../components/Map";
 
 ChartJS.register(
   CategoryScale,
@@ -173,16 +174,11 @@ export const Dashboard = () => {
           <Flex
             gridArea={"map"}
             w={{ base: "90%", md: "80%", lg: "85%", xl: 600 }}
-            h={{ base: "300px", lg: "auto" }}
+            h={{ base: "40vh", lg: "auto" }}
             my={{ base: "30px", xl: "auto" }}
+            pos="relative"
           >
-            <Image
-              objectFit={"cover"}
-              w={"100%"}
-              h={"100%"}
-              src="https://www.smcrealty.com/images/microsites/location-map/mantri-serenity-251.jpg"
-              alt="img"
-            />
+            <Map height="40vh" />
           </Flex>
         </Grid>
       </>
