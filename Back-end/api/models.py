@@ -60,6 +60,7 @@ class NewRideDetail(models.Model):
     starting_time = models.DateTimeField(auto_now_add=False,null=True)
     reachedtime = models.DateTimeField(auto_now_add=False,null=True)
     status = models.CharField(max_length=20,default="requested")
+    passenger_count = models.IntegerField(default=1)
     carpool = models.BooleanField(default=False)
     expectedDriverPay = models.IntegerField(default=0,max_length=7,null=True)
     carpoolPercent = models.IntegerField(default=0)
