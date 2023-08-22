@@ -49,8 +49,8 @@ export const ViewRideRequests = () => {
       return "-";
     }
   };
-  const start_time=getDate(data?.starting_time)
-  const reach_time=getDate(data?.reachedtime)
+  const start_time = getDate(data?.starting_time);
+  const reach_time = getDate(data?.reachedtime);
 
   return (
     <>
@@ -126,7 +126,11 @@ export const ViewRideRequests = () => {
             <InputField
               label="Status"
               width="90%"
-              status={data?.status == "arrived" ? true : false}
+              status={
+                data?.status == "arrived" || data?.status == "canceled"
+                  ? true
+                  : false
+              }
               value={data?.status}
               select={true}
               onChange={(data) => setStatus(data)}
@@ -135,7 +139,7 @@ export const ViewRideRequests = () => {
               label="Interested in car pooled rides"
               width="90%"
               status={true}
-              value={data?.carpool==false?"No":"Yes"}
+              value={data?.carpool == false ? "No" : "Yes"}
             />
           </Flex>
           <Flex
@@ -157,7 +161,7 @@ export const ViewRideRequests = () => {
             />
           </Flex>
         </Flex>
-        {data.status == "arrived" ? (
+        {data.status == "arrived" || data.status == "canceled" ? (
           <></>
         ) : (
           <Button
