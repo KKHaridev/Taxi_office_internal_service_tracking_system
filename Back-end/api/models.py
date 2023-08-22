@@ -40,7 +40,7 @@ class NewDriver(models.Model):
 
             
 class TaxiDetail(models.Model):
-    driver_id = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
+    driver_id = models.OneToOneField(NewDriver,on_delete=models.CASCADE)
     taxi_num = models.CharField(max_length=10, primary_key=True)
     taxi_test_date = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
     taxi_pollution_validity = models.DateField(auto_now=False, auto_now_add=False, max_length=12)
@@ -53,7 +53,7 @@ class TaxiDetail(models.Model):
 class NewRideDetail(models.Model):
     rideId = models.IntegerField(max_length=10,default=unique_generator.generate_unique_code_for_rideid, primary_key=True)
     passenger_name = models.CharField(max_length=250)
-    driver_id = models.ForeignKey(NewDriver, on_delete=models.DO_NOTHING, default="", null=True)
+    driver_id = models.ForeignKey(NewDriver, on_delete=models.CASCADE, default="", null=True)
     start_from = models.CharField(max_length=250)
     destination = models.CharField(max_length=250)
     requested_time = models.DateTimeField(auto_now_add=True)
@@ -71,7 +71,7 @@ class NewRideDetail(models.Model):
 
 
 class Earning(models.Model):
-    driver_id = models.OneToOneField(NewDriver,on_delete=models.DO_NOTHING)
+    driver_id = models.OneToOneField(NewDriver,on_delete=models.CASCADE)
     total_earnings = models.IntegerField(default=int(0))
     total_rides = models.IntegerField(default=int(0))
     total_paid = models.IntegerField(default=int(0))
