@@ -269,12 +269,15 @@ def CreateNewRideView(request):
         # print(serializer.validated_data)
         # print(
         # ride_id = serializer.validated_data['rideId']
-        ac.expectedDriverPay = predict_fare_amount(ride);
+        
         
         ride_id = ac.rideId
         #print(ride_id)
+        
         ass_dri = assign_driver_to_ride(ride_id)
         ac.driver_id = ass_dri
+
+        ac.expectedDriverPay = predict_fare_amount(ride_id);
         serializer.save()
 
         return Response(serializer.data, status=201)
