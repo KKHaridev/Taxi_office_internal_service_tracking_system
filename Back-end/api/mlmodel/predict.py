@@ -142,7 +142,7 @@ def predict_carpool_percentage(ride):
     # Make the prediction using the loaded model
     carpool_percentage = model1.predict_proba(features1)[0]
 
-    return carpool_percentage
+    return carpool_percentage *1000
 
 # Assuming you have a ride instance
 #ride = NewRideDetail.objects.get(ride_id=1234)
