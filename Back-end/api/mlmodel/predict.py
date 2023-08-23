@@ -5,12 +5,15 @@ import pandas as pd
 import random
 import numpy as np
 from sklearn.preprocessing import StandardScaler
+from datetime import datetime
 
 # # Query the data
-# trip_data = yellow_tripdata_2016_03.objects.all()
+trip_data = yellow_tripdata_2016_03.objects.all()
 
 # # Convert the query result to a DataFrame
-# data = pd.DataFrame(list(trip_data.values('pickup_longitude', 'pickup_latitude')))
+data = pd.DataFrame(list(trip_data.values('pickup_longitude', 'pickup_latitude')))
+
+
 # import os
 # print(os.getcwd())
 
@@ -34,28 +37,29 @@ with open('fare_amount_final.pickle', 'rb') as fare:
 
 
 def predict_carpool_percentage(ride):
-
+    
+    
     if(ride.start_from=="central park"):
-        PULocationID = 43;
+        PULocationID = 43
     if(ride.start_from=="jfk airport"):
-        PULocationID = 132;
+        PULocationID = 132
     if(ride.start_from=="LGA"):
-        PULocationID = 230;
+        PULocationID = 230
     if(ride.start_from=="lowermanhattan"):
-        PULocationID = 138;
+        PULocationID = 138
     if(ride.start_from=="timesq"):
-        PULocationID = 211;
+        PULocationID = 211
     
     if(ride.destination=="central park"):
-        DOLocationID = 43;
+        DOLocationID = 43
     if(ride.destination=="jfk airport"):
-        DOLocationID = 132;
+        DOLocationID = 132
     if(ride.destination=="LGA"):
-        DOLocationID = 230;
+        DOLocationID = 230
     if(ride.destination=="lowermanhattan"):
-        DOLocationID = 138;
+        DOLocationID = 138
     if(ride.destination=="timesq"):
-        DOLocationID = 211;
+        DOLocationID = 211
 
 
     if(ride.start_from=="central park" and ride.destination=="jfk airport"):
@@ -109,7 +113,7 @@ def predict_carpool_percentage(ride):
     shared_match_flag =  random.randint(0, 1)
     wav_request_flag = random.randint(0, 1)
 
-    requestdateime = np.int64(ride.request_datetime) // (10 ** 9)
+    requestdateime = np.int64(int(ride.requested_time.timestamp())) // (10 ** 9)
 
     trip_time = 954
 
@@ -142,7 +146,8 @@ def predict_carpool_percentage(ride):
     # Make the prediction using the loaded model
     carpool_percentage = model1.predict_proba(features1)[0]
 
-    return carpool_percentage *1000
+    print(carpool_percentage[1]*1000)
+    return carpool_percentage[1]*1000
 
 # Assuming you have a ride instance
 #ride = NewRideDetail.objects.get(ride_id=1234)
@@ -160,12 +165,17 @@ def predict_carpool_percentage(ride):
 
 
 def predict_fare_amount(ride):
+
+    print(ride.start_from)
+
     central_park = 40.7800783589499,-73.9606739744674
     jfk_airport = 40.6462557859199,-73.7848832063897    
     LGA = 40.7701691816197,-73.8722559067017   
     lowermanhattan = 40.7257674140677,-73.996344250052   
     timesq = 40.7555076813623,-73.9824387182809 
 
+    
+    
 
     if(ride.start_from=="central park"):
         pickup_latitude=40.7800783589499
@@ -264,5 +274,6 @@ def predict_fare_amount(ride):
 
     fare_amount = model3.predict(features2)[0]
 
+    print(fare_amount)
 
     return fare_amount

@@ -274,11 +274,23 @@ def CreateNewRideView(request):
         ride_id = ac.rideId
         #print(ride_id)
         
+       
+
+
+
         ass_dri = assign_driver_to_ride(ride_id)
         ac.driver_id = ass_dri
-
-        ac.expectedDriverPay = predict_fare_amount(ride_id);
-        ac.carpoolPercent = predict_carpool_percentage(ride_id);
+        
+       
+        
+        serializer.save()
+       
+        ride = NewRideDetail.objects.get(rideId = ride_id)
+        print(ride.destination)
+    
+       
+        ac.expectedDriverPay = predict_fare_amount(ride)
+        ac.carpoolPercent = predict_carpool_percentage(ride)
         serializer.save()
 
         return Response(serializer.data, status=201)
@@ -363,7 +375,17 @@ def getAllViewOngoing(request):
 
 
 
+@api_view(['GET'])
+def get_retention(request):
+    co = [
+        [40.780078358949893, -73.960673974467397],
+        [40.646255785919898, -73.784883206389665],
+        [40.770169181619735, -73.872255906701724],
+        [40.725767414067676, -73.996344250052076],
+        [40.755507681362332, -73.982438718280932],
+    ]
 
+    return Response(co)
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
