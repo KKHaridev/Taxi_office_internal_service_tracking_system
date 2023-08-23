@@ -188,3 +188,10 @@ class DriverDashboardSerializer(serializers.Serializer):
     total_rides = serializers.IntegerField()
     total_earnings = serializers.FloatField()
     daily_totals = DailyTotalsSerializer(many=True)
+
+class NewRideDetailSerializer(serializers.ModelSerializer):
+    driver = DriverSerializer()  # Assuming you have a NewDriverSerializer
+
+    class Meta:
+        model = NewRideDetail
+        fields = ('rideId', 'passenger_name', 'start_from', 'destination', 'requested_time', 'status', 'driver')

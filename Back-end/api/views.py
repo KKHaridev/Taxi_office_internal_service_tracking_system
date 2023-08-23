@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from django.utils import timezone
 from django.shortcuts import render
 from rest_framework import generics, status
-from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer, AdminDashboardSerializer
+from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer, AdminDashboardSerializer,NewRideDetailSerializer
 
 from api.mlmodel.predict import predict_fare_amount,predict_carpool_percentage
 
@@ -188,6 +188,23 @@ def getViewAllReceived(request):
         serialized_data.append(serialized_ride)
 
     return Response(serialized_data)
+
+
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def getViewAllReceived(request):
+#     received = NewRideDetail.objects.all()
+    
+#     serialized_data = NewRideDetailSerializer(received, many=True).data
+
+#     return Response(serialized_data)
+
+
+
+
+
+
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
