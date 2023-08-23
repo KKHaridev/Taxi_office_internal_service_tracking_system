@@ -105,11 +105,13 @@ def predict_carpool_percentage(ride):
         tripdistance = 2.9
             
    
-    shared_request_flag  = random.randint(0, 1),
-    shared_match_flag =  random.randint(0, 1),
-    wav_request_flag = random.randint(0, 1),
+    shared_request_flag  = random.randint(0, 1)
+    shared_match_flag =  random.randint(0, 1)
+    wav_request_flag = random.randint(0, 1)
 
     requestdateime = np.int64(ride.request_datetime) // (10 ** 9)
+
+    trip_time = 954
 
     
     # Prepare the input features for prediction
@@ -117,7 +119,7 @@ def predict_carpool_percentage(ride):
         PULocationID,
         DOLocationID, 
         tripdistance, 
-        ride.trip_time,
+        trip_time,
         wav_request_flag, 
         requestdateime,
         shared_request_flag,

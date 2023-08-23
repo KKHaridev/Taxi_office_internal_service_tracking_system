@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics, status
 from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer, AdminDashboardSerializer
 
-from .mlmodel import predict
+from api.mlmodel import predict_fare_amount
 
 from .models import NewDriver, TaxiDetail,NewRideDetail,Earning
 from rest_framework.views import APIView
@@ -270,6 +270,7 @@ def CreateNewRideView(request):
         # print(
         # ride_id = serializer.validated_data['rideId']
         ac.expectedDriverPay = predict_fare_amount(ride);
+        
         ride_id = ac.rideId
         #print(ride_id)
         ass_dri = assign_driver_to_ride(ride_id)
