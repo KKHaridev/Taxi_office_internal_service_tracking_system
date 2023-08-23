@@ -140,7 +140,7 @@ def predict_carpool_percentage(ride):
     # Perform any necessary preprocessing or feature engineering on the features
 
     # Make the prediction using the loaded model
-    carpool_percentage = model1.predict(features1)[0]
+    carpool_percentage = model1.predict_proba(features1)[0]
 
     return carpool_percentage
 
