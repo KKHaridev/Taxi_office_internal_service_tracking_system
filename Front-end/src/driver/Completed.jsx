@@ -2,50 +2,81 @@ import React from "react";
 import { Breadcrumb } from "@components/Breadcrumb";
 import { Table } from "@components/Table";
 import { useNavigate } from "react-router-dom";
-import {  useData } from "@hooks/useData";
+import { useData } from "@hooks/useData";
 import { TableHolder } from "@components/TableHolder/TableHolder";
+import { Text } from "@chakra-ui/react";
 
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
-  const id = row.values.id;
+  const id = row.values.rideId;
   return (
-    <button onClick={() => navigate(`/completed_rides/${id}`)}>View</button>
+    <Text
+      color="brand.purple"
+      cursor="pointer"
+      onClick={() => navigate(`/completed_rides/${id}`)}
+    >
+      View
+    </Text>
   );
 };
 
 const COLUMNS = [
   {
     Header: "Ride ID",
-    accessor: "id",
+    accessor: "rideId",
   },
   {
     Header: "Passenger",
-    accessor: "pass_name",
+    accessor: "passenger_name",
   },
   {
     Header: "From",
-    accessor: "from",
+    accessor: "start_from",
   },
   {
     Header: "To",
-    accessor: "to",
+    accessor: "destination",
   },
   {
     Header: "Start Time",
-    accessor: "start_time",
+    accessor: (data) => {
+      const date = new Date(data.starting_time);
+      let time = date.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+      if (data.starting_time != null) {
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+      } else {
+        return "-";
+      }
+    },
   },
   {
-    Header: "Expected Time",
-    accessor: "expected_time",
+    Header: "Reached Time",
+    accessor: (data) => {
+      const date = new Date(data.reachedtime);
+      let time = date.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+      if (data.reachedtime != null) {
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+      } else {
+        return "-";
+      }
+    },
   },
   {
     Header: "Chance Pooled Rides",
-    accessor: (data) => `${data.percentage} %`,
+    accessor: (data) => `${data.carpoolPercent} %`,
   },
   {
     Header: "Expected Amount",
-    accessor: (data) => <>&#8377; {data.exp_amount}</>,
+    accessor: (data) => <>&#8377; {data.expectedDriverPay}</>,
   },
   {
     Header: "Status",
@@ -61,13 +92,12 @@ const COLUMNS = [
 export const Completed = () => {
   const { isLoading, error, data } = useData(
     "completed_req",
-    "req_rides?driverId=1&status=reached"
+    "api/completedrides"
   );
 
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-
   return (
     <div>
       <Breadcrumb />

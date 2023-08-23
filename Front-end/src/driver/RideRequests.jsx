@@ -7,22 +7,29 @@ import { useAcceptRide, useData } from "../hooks/useData";
 import { Modal } from "../components/Modals/Modal";
 import { CloseIcon, CheckIcon } from "@chakra-ui/icons";
 import { TableHolder } from "../components/TableHolder/TableHolder";
+import { Text } from "@chakra-ui/react";
 
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
-  const id = row.values.id;
+  const id = row.values.rideId;
   return (
-    <button onClick={() => navigate(`/received_rides/${id}`)}>View</button>
+    <Text
+      color="brand.purple"
+      cursor="pointer"
+      onClick={() => navigate(`/received_rides/${id}`)}
+    >
+      View
+    </Text>
   );
 };
 
 const Accept_Reject = ({ row }) => {
-  const id = row.values.id;
+  const id = row.values.rideId;
   const status = row.values.status;
   const { mutate } = useAcceptRide();
 
-  return status == "accepted" ? (
+  return status != "requested" ? (
     "-"
   ) : (
     <>
@@ -31,8 +38,9 @@ const Accept_Reject = ({ row }) => {
         color="#EA0000"
         hColor="#FB4C4C"
         handler={() => {
-          const data = { status: "cancelled" };
-          mutate({ id, data });
+          const data = { status: "canceled" };
+          let endpoint = `api/rides/${id}/update-status/`;
+          mutate({ id, data, endpoint });
         }}
       >
         <CloseIcon color="brand.red" />
@@ -43,7 +51,8 @@ const Accept_Reject = ({ row }) => {
         hColor="#8344a5"
         handler={() => {
           const data = { status: "accepted" };
-          mutate({ id, data });
+          let endpoint = `api/rides/${id}/update-status/`;
+          mutate({ id, data, endpoint });
         }}
       >
         <CheckIcon color="brand.green" />
@@ -55,35 +64,43 @@ const Accept_Reject = ({ row }) => {
 const COLUMNS = [
   {
     Header: "Ride ID",
-    accessor: "id",
+    accessor: "rideId",
   },
   {
     Header: "Passenger",
-    accessor: "pass_name",
+    accessor: "passenger_name",
   },
   {
     Header: "From",
-    accessor: "from",
+    accessor: "start_from",
   },
   {
-    Header: "To",
-    accessor: "to",
+    Header: "Destination",
+    accessor: "destination",
   },
   {
     Header: "Start Time",
-    accessor: "start_time",
-  },
-  {
-    Header: "Expected Time",
-    accessor: "expected_time",
+    accessor: (data) => {
+      const date = new Date(data.starting_time);
+      let time = date.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+      if (data.starting_time != null) {
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+      } else {
+        return "-";
+      }
+    },
   },
   {
     Header: "Chance Pooled Rides",
-    accessor: (data) => `${data.percentage} %`,
+    accessor: (data) => `${data.carpoolPercent} %`,
   },
   {
     Header: "Expected Amount",
-    accessor: (data) => <>&#8377; {data.exp_amount}</>,
+    accessor: (data) => <>&#8377; {data.expectedDriverPay}</>,
   },
   {
     Header: "Status",
@@ -102,11 +119,9 @@ const COLUMNS = [
 ];
 
 export const RideRequests = () => {
-  const { isLoading, error, data } = useData(
-    "req_rides",
-    "req_rides?driverId=1&status=pending&status=accepted"
-  );
-
+  const { isLoading, error, data } = useData("req_rides", "api/received", {
+    refetchInterval: 1000,
+  });
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;

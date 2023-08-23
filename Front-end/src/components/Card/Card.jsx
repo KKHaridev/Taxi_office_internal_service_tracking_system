@@ -1,7 +1,11 @@
 import React from "react";
 import { Flex, Heading, Text, Icon, Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 export const Card = ({ icon, title, number }) => {
+  const path=useLocation();
+  const admin=path.pathname.includes("admin")
   return (
     <Flex
       alignItems="center"
@@ -29,8 +33,8 @@ export const Card = ({ icon, title, number }) => {
         {title}
       </Heading>
 
-      <Text dangerouslySetInnerHTML={{ __html: number }} fontSize="35px" fontWeight="bolder"></Text>
-      <Link to={title.toLowerCase()}>
+      <Text dangerouslySetInnerHTML={{ __html: number }} fontSize="30px" fontWeight="bolder"  textTransform={"capitalize"}></Text>
+      {admin?"":<Link to={title.toLowerCase()}>
         <Button
           h="35px"
           w="140px"
@@ -40,7 +44,7 @@ export const Card = ({ icon, title, number }) => {
         >
           View
         </Button>
-      </Link>
+      </Link>}
     </Flex>
   );
 };

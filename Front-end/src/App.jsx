@@ -16,7 +16,15 @@ import { Profile } from "@driver/Profile";
 import { AdminLogin } from "@admin/AdminLogin";
 import { CarsAndDrivers } from "./admin/CarsAndDrivers";
 import { CarsAndDriversDetails } from "./admin/CarAndDriverDetails";
-import {SignUp} from "./driver/SignUp";
+import { AdminDashboard } from "@admin/Dashboard";
+
+import { AdminRideRequests } from "@admin/RideRequests";
+import { AdminOngoing } from "@admin/Ongoing";
+import { AdminCompleted } from "@admin/Completed";
+import { AdminCanceled } from "@admin/Canceled";
+import { AdminEarnings } from "@admin/Earnings";
+import { SignUp } from "./driver/SignUp";
+import { AdminViewRideRequests } from "@admin/ViewRideRequests";
 
 function App() {
   return (
@@ -30,7 +38,7 @@ function App() {
               <Route
                 index
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <Dashboard />
                   </RequireLogin>
                 }
@@ -39,7 +47,7 @@ function App() {
               <Route
                 path="received_rides"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <RideRequests />
                   </RequireLogin>
                 }
@@ -47,7 +55,7 @@ function App() {
               <Route
                 path="received_rides/:id"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <ViewRideRequests />
                   </RequireLogin>
                 }
@@ -55,7 +63,7 @@ function App() {
               <Route
                 path="Ongoing_rides"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <Ongoing />
                   </RequireLogin>
                 }
@@ -63,7 +71,7 @@ function App() {
               <Route
                 path="ongoing_rides/:id"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <ViewRideRequests />
                   </RequireLogin>
                 }
@@ -71,7 +79,7 @@ function App() {
               <Route
                 path="completed_rides"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <Completed />
                   </RequireLogin>
                 }
@@ -79,7 +87,7 @@ function App() {
               <Route
                 path="completed_rides/:id"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <ViewRideRequests />
                   </RequireLogin>
                 }
@@ -87,7 +95,7 @@ function App() {
               <Route
                 path="canceled_rides"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <Canceled />
                   </RequireLogin>
                 }
@@ -95,7 +103,7 @@ function App() {
               <Route
                 path="earnings"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <Earnings />
                   </RequireLogin>
                 }
@@ -103,7 +111,7 @@ function App() {
               <Route
                 path="profile"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="driver">
                     <Profile />
                   </RequireLogin>
                 }
@@ -114,12 +122,12 @@ function App() {
           {/* Admin */}
           <Routes>
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="admin/" element={<Layout />}>
+            <Route path="admin" element={<Layout />}>
               <Route
                 index
                 element={
-                  <RequireLogin>
-                    <Dashboard />
+                  <RequireLogin role="admin">
+                    <AdminDashboard />
                   </RequireLogin>
                 }
               />
@@ -127,23 +135,23 @@ function App() {
               <Route
                 path="received_rides"
                 element={
-                  <RequireLogin>
-                    <RideRequests />
+                  <RequireLogin role="admin">
+                    <AdminRideRequests />
                   </RequireLogin>
                 }
               />
               <Route
                 path="received_rides/:id"
                 element={
-                  <RequireLogin>
-                    <ViewRideRequests />
+                  <RequireLogin role="admin">
+                    <AdminViewRideRequests />
                   </RequireLogin>
                 }
               />
               <Route
                 path="cars_and_drivers"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="admin">
                     <CarsAndDrivers />
                   </RequireLogin>
                 }
@@ -151,7 +159,7 @@ function App() {
               <Route
                 path="cars_and_drivers/:id"
                 element={
-                  <RequireLogin>
+                  <RequireLogin role="admin">
                     <CarsAndDriversDetails />
                   </RequireLogin>
                 }
@@ -159,56 +167,48 @@ function App() {
               <Route
                 path="Ongoing_rides"
                 element={
-                  <RequireLogin>
-                    <Ongoing />
+                  <RequireLogin role="admin">
+                    <AdminOngoing />
                   </RequireLogin>
                 }
               />
               <Route
                 path="ongoing_rides/:id"
                 element={
-                  <RequireLogin>
-                    <ViewRideRequests />
+                  <RequireLogin role="admin">
+                    <AdminViewRideRequests />
                   </RequireLogin>
                 }
               />
               <Route
                 path="completed_rides"
                 element={
-                  <RequireLogin>
-                    <Completed />
+                  <RequireLogin role="admin">
+                    <AdminCompleted />
                   </RequireLogin>
                 }
               />
               <Route
                 path="completed_rides/:id"
                 element={
-                  <RequireLogin>
-                    <ViewRideRequests />
+                  <RequireLogin role="admin">
+                    <AdminViewRideRequests />
                   </RequireLogin>
                 }
               />
               <Route
                 path="canceled_rides"
                 element={
-                  <RequireLogin>
-                    <Canceled />
+                  <RequireLogin role="admin">
+                    <AdminCanceled />
                   </RequireLogin>
                 }
               />
               <Route
                 path="earnings"
                 element={
-                  <RequireLogin>
-                    <Earnings />
-                  </RequireLogin>
-                }
-              />
-              <Route
-                path="profile"
-                element={
-                  <RequireLogin>
-                    <Profile />
+                  <RequireLogin role="admin">
+                    <AdminEarnings />
                   </RequireLogin>
                 }
               />

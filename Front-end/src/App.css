@@ -14,6 +14,7 @@ header svg:hover {
 table {
     border-collapse: separate;
     border-spacing: 01em 1em;
+    text-transform: capitalize;
 }
 table thead tr th{
     text-align: center !important;

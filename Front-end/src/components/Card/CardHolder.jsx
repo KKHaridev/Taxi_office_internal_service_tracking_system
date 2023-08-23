@@ -1,13 +1,25 @@
 import React from "react";
 import { Card } from "./Card";
-import { Flex } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 
 export const CardHolder = ({ cardData }) => {
   return (
-    <Flex  gap={6} py="15px">
+    <SimpleGrid gridArea={"card"}
+      gridTemplateColumns={{ base: "repeat(1,300px)", md: "repeat(2,300px)" }}
+      justifyItems="center"
+      alignContent="center"
+      gap={6}
+      py="15px"
+    >
       {cardData.map((item, index) => (
-        <Card icon={item.icon} title={item.title} number={item.number} key={index} />
+        <Card
+          icon={item.icon}
+          title={item.title}
+          number={item.number}
+          key={index}
+        />
       ))}
-    </Flex>
+    </SimpleGrid>
   );
 };
+2

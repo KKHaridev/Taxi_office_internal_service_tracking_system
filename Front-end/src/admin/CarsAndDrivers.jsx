@@ -9,21 +9,29 @@ import { Modal } from "../components/Modals/Modal";
 import { CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useDisclosure } from "@chakra-ui/react";
 import { BiToggleLeft, BiToggleRight } from "react-icons/bi";
+import { useToast, Text } from "@chakra-ui/react";
 
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
-  const id = row.values.id;
+  const id = row.values.driver_id;
   return (
-    <button onClick={() => navigate(`/admin/cars_and_drivers/${id}`)}>View</button>
+    <Text
+      color="brand.purple"
+      cursor="pointer"
+      onClick={() => navigate(`/admin/cars_and_drivers/${id}`)}
+    >
+      View
+    </Text>
   );
 };
 
 const Disable_Enable = ({ row }) => {
-  const id = row.values.id;
+  const toast = useToast();
+  const id = row.values.driver_id;
   const availability = row.values.availability;
-  const status = row.values.status;
-  const { mutate: updateStatus } = useUpdateStatus();
+  const status = row.values.driver_status;
+  const { mutateAsync } = useUpdateStatus();
 
   return (
     <>
@@ -31,23 +39,43 @@ const Disable_Enable = ({ row }) => {
         title="Accept"
         color="#EA0000"
         hColor="#FB4C4C"
-        handler={() => {
-          const data = { status: status == "active" ? "disabled" : "active" };
-          updateStatus({ id, data });
+        handler={async () => {
+          const data = { action: status == "available" ? "disable" : "enable" };
+          let endpoint = `api/admin/drivers/${id}/delete-or-disable/`;
+          const response = await mutateAsync({ id, data, endpoint });
+          if (response?.err) {
+            toast({
+              position: "top-right",
+              title: `${response.err.message}`,
+              status: "error",
+              isClosable: true,
+            });
+          } else {
+            toast({
+              position: "top-right",
+              title: `${response.message}`,
+              status: "success",
+              isClosable: true,
+            });
+          }
         }}
-        disable={availability == "In Ride" ? true : false}
       >
-        {status == "disabled" ? <BiToggleLeft size={25} /> : <BiToggleRight color="brand.green" size={25} />}
+        {status == "unavailable" ? (
+          <BiToggleLeft size={25} />
+        ) : (
+          <BiToggleRight color="brand.green" size={25} />
+        )}
       </Modal>
     </>
   );
 };
 
 const DeleteUser = ({ row }) => {
-  const id = row.values.id;
-  const availability = row.values.availability;
+  const toast = useToast();
+  const id = row.values.driver_id;
+  const availability = row.values.driver_status;
   const { onClose } = useDisclosure();
-  const { mutate: deleteUser } = useDelete();
+  const { mutateAsync } = useUpdateStatus();
 
   return (
     <>
@@ -55,11 +83,29 @@ const DeleteUser = ({ row }) => {
         title="Confirm Rejection"
         color="#6E2594"
         hColor="#8344a5"
-        handler={() => {
-          deleteUser({ id });
-          onClose();
+        let
+        endpoint=""
+        handler={async () => {
+          const data = { action: "delete" };
+          let endpoint = `api/admin/drivers/${id}/delete-or-disable/`;
+          try {
+            const response = await mutateAsync({ id, data, endpoint });
+            toast({
+              position: "top-right",
+              title: `${response}`,
+              status: "success",
+              isClosable: true,
+            });
+          } catch (e) {
+            toast({
+              position: "top-right",
+              title: `Error Occured`,
+              status: "error",
+              isClosable: true,
+            });
+          }
         }}
-        disable={availability == "In Ride" ? true : false}
+        disable={availability == "available" ? true : false}
       >
         <DeleteIcon color="brand.red" />
       </Modal>
@@ -69,15 +115,15 @@ const DeleteUser = ({ row }) => {
 const COLUMNS = [
   {
     Header: "Driver ID",
-    accessor: "id",
+    accessor: "driver_id",
   },
   {
     Header: "Driver Name",
-    accessor: "username",
+    accessor: "driver_name",
   },
   {
     Header: "Taxi Number",
-    accessor: "taxi_details.taxi_no",
+    accessor: "taxi_num",
   },
   {
     Header: "Total Rides",
@@ -85,7 +131,7 @@ const COLUMNS = [
   },
   {
     Header: "Current Status",
-    accessor: "availability",
+    accessor: "driver_status",
   },
   {
     Header: "Disable/Enable",
@@ -99,7 +145,7 @@ const COLUMNS = [
   },
   {
     Header: "Earnings",
-    accessor: (data) => <>&#8377; {data.earnings.total_earnings}</>,
+    accessor: (data) => <>&#8377; {data?.total_earning}</>,
   },
   {
     Header: "View",
@@ -109,19 +155,19 @@ const COLUMNS = [
 ];
 
 export const CarsAndDrivers = () => {
-  const { isLoading, error, data } = useData("driverDetails", "drivers", {
-    refetchInterval: 1000,
-  });
-
+  const { isLoading, error, data, isSuccess } = useData(
+    "driver_Details",
+    "api/admin/drivers/list/",
+    { refetchInterval: 1000 }
+  );
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
-
   return (
     <div>
       <Breadcrumb />
       <TableHolder>
-        <Table columns={COLUMNS} data={data} />
+        <Table columns={COLUMNS} data={data?.drivers} />
       </TableHolder>
     </div>
   );

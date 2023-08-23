@@ -4,46 +4,63 @@ import { Table } from "@components/Table";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../hooks/useData";
 import { TableHolder } from "../components/TableHolder/TableHolder";
+import { Text } from "@chakra-ui/react";
 
 const ViewButton = ({ row }) => {
   const navigate = useNavigate();
 
-  const id = row.values.id;
-  return <button onClick={() => navigate(`/ongoing_rides/${id}`)}>View</button>;
+  const id = row.values.rideId;
+  return (
+    <Text
+      color="brand.purple"
+      cursor="pointer"
+      onClick={() => navigate(`/rides/${id}`)}
+    >
+      View
+    </Text>
+  );
 };
 
 const COLUMNS = [
   {
     Header: "Ride ID",
-    accessor: "id",
+    accessor: "rideId",
   },
   {
     Header: "Passenger",
-    accessor: "pass_name",
+    accessor: "passenger_name",
   },
   {
     Header: "From",
-    accessor: "from",
+    accessor: "start_from",
   },
   {
-    Header: "To",
-    accessor: "to",
+    Header: "Destination",
+    accessor: "destination",
   },
   {
     Header: "Start Time",
-    accessor: "start_time",
-  },
-  {
-    Header: "Expected Time",
-    accessor: "expected_time",
+    accessor: (data) => {
+      const date = new Date(data.starting_time);
+      let time = date.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+      if (data.starting_time != null) {
+        return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} ${time}`;
+      } else {
+        return "-";
+      }
+    },
   },
   {
     Header: "Chance Pooled Rides",
-    accessor: (data) => `${data.percentage} %`,
+    accessor: (data) => `${data.carpoolPercent} %`,
   },
   {
     Header: "Expected Amount",
-    accessor: (data) => <>&#8377; {data.exp_amount}</>,
+    accessor: (data) => <>&#8377; {data.expectedDriverPay}</>,
   },
   {
     Header: "Status",
@@ -57,14 +74,12 @@ const COLUMNS = [
 ];
 
 export const Ongoing = () => {
-  const { isLoading, error, data } = useData(
-    "ongoing_req",
-    "req_rides?driverId=1&status_ne=pending&status_ne=canceled&status_ne=reached"
-  );
+  const { isLoading, error, data } = useData("ongoing_req", "api/ongoingrides");
 
   if (isLoading) return "Loading...";
 
   if (error) return "An error has occurred: " + error.message;
+  console.log(data);
 
   return (
     <div>
