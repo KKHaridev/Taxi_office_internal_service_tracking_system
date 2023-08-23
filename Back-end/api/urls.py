@@ -70,6 +70,8 @@ urlpatterns = [
     
     path('api/update-driver-profile/', views.update_driver_profile, name='update-driver-profile'),
 
+    path('api/retention/',views.get_retention, name = 'retention' )
+
 
 ]
 
