@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics, status
 from .serializers import DriverSerializer,CreateDriverSerializer, CreateTaxiDetailSerializer,ReceivedSerializer, CompletedRideSerializer, EarningsSerializer, OngoingRideSerializer, CancelledRideSerializer, CreateNewRideSerializer, DriverDashboardSerializer, AdminDashboardSerializer
 
-from api.mlmodel import predict_fare_amount
+from api.mlmodel.predict import predict_fare_amount
 
 from .models import NewDriver, TaxiDetail,NewRideDetail,Earning
 from rest_framework.views import APIView
