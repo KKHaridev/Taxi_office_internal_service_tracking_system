@@ -113,9 +113,9 @@ def predict_carpool_percentage(ride):
 
     trip_time = 954
 
-    
-    # Prepare the input features for prediction
-    features1 = [
+    sc = StandardScaler()
+
+    features1 = sc.fit_transform([[
         PULocationID,
         DOLocationID, 
         tripdistance, 
@@ -123,7 +123,17 @@ def predict_carpool_percentage(ride):
         wav_request_flag, 
         requestdateime,
         shared_request_flag,
-        shared_match_flag]
+        shared_match_flag],
+        [PULocationID,
+        DOLocationID, 
+        tripdistance, 
+        trip_time,
+        wav_request_flag, 
+        requestdateime,
+        shared_request_flag,
+        shared_match_flag]])
+    # Prepare the input features for prediction
+    
     
 
 
